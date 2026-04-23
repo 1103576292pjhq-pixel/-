@@ -16,7 +16,7 @@
 当前仓库已经具备：
 
 - `E4M3` / `E8M0` 基础解码模块
-- 三级流水版 `dot32` 列级原型 `llmt_col`
+- 三级流水版 `dot32` 列级原型 `llmt_col`，其 Stage-1 已显式做成 `4x8` 分组归约树
 - `32x16` 顶层阵列原型
 - 单列 smoke test、corner test、阵列 smoke test
 - 支持尾 tile 的文件驱动矩阵级 testbench `tb_mx_array_dataset`
@@ -30,7 +30,7 @@
 - 完整报告图表和结论
 
 ## 4. 已落地的验证链路
-- `llmt_col` 当前采用三段流水：`S1` 寄存 `dot32` 整数和与指数偏移，`S2` 寄存 `fixed_to_fp32` 结果，`S3` 做 `FP32` 累加写回；接口与数值语义保持不变。
+- `llmt_col` 当前采用三段流水：`S1` 先把 32 个 lane 切成 4 组、各自累加出 partial sums，再经过两级合并得到 `dot32` 整数和与指数偏移并寄存；`S2` 寄存 `fixed_to_fp32` 结果；`S3` 做 `FP32` 累加写回。接口与数值语义保持不变，但 Stage-1 更接近显式 reduction tree，而不是单条 32 项串行加法链。
 - `sim/run_iverilog.ps1` 当前默认运行 7 个 testbench，其中：
   - `tb_llmt_col_back_to_back`：验证三级流水在连续 `valid_i` 输入下仍能按顺序输出 `FP32` 累加结果
   - `vectors/matmul_4x16x64_smoke/`：`M=4`、`N=16`、`K=64`，验证单 tile、`K_BLOCKS=2`
@@ -50,6 +50,7 @@
 - `tb_mx_array_dataset` burst 模式：用于确认阵列级矩阵回归在整 tile 和尾 tile 场景下都能在连续每拍输入时保持最终结果正确
 
 这意味着当前列核虽然仍是保守版三级流水，但已经能在更贴近矩阵级场景的固定数据集上稳定跑通。
+同时，Stage-1 归约结构已经从“串行累加”收敛到更接近竞赛版思路的分组归约树，为后续继续推进更深的 reduction / scheduling 微架构留出了更清晰的结构基础。
 
 ## 6. 当前 `4096x4096` 抽样结果
 以 `seed = 20260423`、`samples = 2048`、有限值输入为例，当前参考实现得到：

@@ -28,5 +28,5 @@
 - 能用自己的话复述“输入 block 怎么一步步变成输出 FP32”
 
 ## 当前状态
-当前已经补出 `llmt_col` 三级流水文档，以及 `tb_mx_array_dataset` 的矩阵级 burst / tail tile 驱动讲解。  
+当前已经补出 `llmt_col` 三级流水文档（已同步到 `4x8` 分组归约树版本），以及 `tb_mx_array_dataset` 的矩阵级 burst / tail tile 驱动讲解。  
 后续 `P7` 会继续把其他文件拆成独立讲解文档，做到“逐文件逐段解释”。

@@ -11,3 +11,5 @@
 [2026-04-23 23:20:21 +08:00] Converted tb_mx_array_dataset to burst-drive each tile's K blocks and re-ran both fixed datasets under continuous per-cycle array input without mismatches.
 [2026-04-23 23:32:31 +08:00] Extended tb_mx_array_dataset to support tail tiles where N is not a multiple of 16 by zero-padding inactive lanes and checking padded outputs stay zero.
 [2026-04-23 23:32:31 +08:00] Added vectors/matmul_5x20x96_tail and wired a new default iverilog regression to cover odd-row, K=96, partial-column-tile matrix input.
+[2026-04-23 23:39:59 +08:00] Refactored rtl/llmt_col.v Stage-1 dot32 reduction into four 8-lane partial sums plus two merge levels, preserving the existing interface and 3-stage pipeline contract.
+[2026-04-23 23:39:59 +08:00] Re-ran the full default iverilog regression after the reduction-tree change; all column and matrix datasets still pass.
