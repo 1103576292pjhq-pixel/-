@@ -20,7 +20,7 @@
 - `32x16` 顶层阵列原型
 - 单列 smoke test、corner test、阵列 smoke test
 - 支持尾 tile 的文件驱动矩阵级 testbench `tb_mx_array_dataset`
-- Python 参考模型自检、向量导出、`4096x4096` 抽样误差统计
+- Python 参考模型自检、向量导出、`4096x4096` 抽样误差统计与 profile sweep
 
 当前仍需完成：
 
@@ -43,6 +43,7 @@
 - `tools/mx_ref.py --emit-matmul-dataset` 已支持 `--finite-only`，并把导出的 `NaN` 统一规范化为 canonical `0x7fc00000`，便于让软件黄金模型与 RTL 的 `QNaN` 语义保持一致。
 - `sim/run_matmul_stats.ps1` 默认会生成 `reports/matmul_stats_4096x4096x4096.json`，用于快速查看大矩阵抽样误差摘要。
 - `sim/run_matmul_stats_sweep.ps1` 会额外生成 `reports/matmul_stats_4096x4096x4096_seed*.json` 与 `reports/matmul_stats_4096x4096x4096_sweep.json`，用于比较多组 seed 下的误差波动。
+- `sim/run_matmul_stats_profiles.ps1` 会在此基础上继续生成 baseline `[-8,8]`、`finite_exp32` `[-32,32]`、`finite_exp64` `[-64,64]` 三档 profile 摘要，并把 finite 误差统计与 nonfinite mismatch 计数分开写入 JSON。
 
 ## 5. 当前固定数据集回归结论
 本轮默认 Verilog 回归对六组固定数据集均已通过：
@@ -78,6 +79,14 @@
 - `max_of_max_rel_error = 6.59e-4`，worst seed 为 `20260503`
 
 这说明平均误差量级在多 seed 下仍然稳定，但最坏相对误差会比单份报告更高一些，后续如果继续扩大 exponent 范围或引入 mixed nonfinite sweep，需要继续跟踪这个 worst-case 尾部。
+
+在此基础上，本轮又把统计扩展成三档 exponent profile：
+
+- baseline `[-8,8]`：`6144` 个样本全部保持 finite，`mean_of_mean_rel_error = 4.81e-7`，`max_of_max_rel_error = 6.59e-4`
+- `finite_exp32` `[-32,32]`：`6144` 个样本仍全部 finite，`mean_of_mean_rel_error = 8.88e-8`，`max_of_max_rel_error = 1.16e-5`；说明指数范围放宽后，绝对误差显著增大，但 finite 子集上的相对误差仍维持在可读量级
+- `finite_exp64` `[-64,64]`：`6144` 个样本里只剩 `2484` 个 finite，同时出现 `2928` 个 `inf`、`732` 个 `NaN` 和 `3660` 个 nonfinite mismatch；例如 `seed=20260423` 的第一处 mismatch 就是 `row=0,col=0` 上 `project_value=-inf`、`ideal_value≈-8.87e40`
+
+这组 profile 结果说明：一旦把 `E8M0` 指数范围放宽到 `[-64,64]`，当前“每个 block 先转 `FP32` 再逐 block 累加”的数值路径会比理想双精度累加更早进入 overflow / invalid 区间。新的统计脚本会把这类样本单独计数，因此即使 sweep 中混入大量 nonfinite 输出，有限值子集上的均值/极值误差仍然可以单独解读。
 
 ## 7. 报告后续章节规划
 - MXFP8 格式与数值语义

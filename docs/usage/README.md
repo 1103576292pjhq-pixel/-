@@ -92,6 +92,18 @@ python ./tools/mx_ref.py --emit-matmul-dataset --m 6 --n 33 --k 160 --seed 20260
 ./sim/run_matmul_stats.ps1 -M 1024 -N 1024 -K 2048 -Samples 512 -Seed 7
 ```
 
+如需跑更宽的有限值指数范围，建议补一个 tag，避免覆盖默认报告：
+```powershell
+./sim/run_matmul_stats.ps1 -ScaleExpMin -32 -ScaleExpMax 32 -Tag finite_exp32
+```
+
+如果确实要观测非有限值输入，可显式关闭 `finite-only`：
+```powershell
+./sim/run_matmul_stats.ps1 -AllowNonFinite -Tag mixed_nonfinite
+```
+
+此时 JSON 会额外给出 `matched_nonfinite_count` / `mismatched_nonfinite_count`，而 `mean_*` / `max_*` 只对 finite samples 统计，不会被 `inf` / `NaN` 直接污染成 `nan`。
+
 ## 8. 生成 `4096x4096` 多 seed sweep
 ```powershell
 ./sim/run_matmul_stats_sweep.ps1
@@ -105,12 +117,33 @@ python ./tools/mx_ref.py --emit-matmul-dataset --m 6 --n 33 --k 160 --seed 20260
   - `reports/matmul_stats_4096x4096x4096_seed*.json`
   - `reports/matmul_stats_4096x4096x4096_sweep.json`
 
+该脚本现支持 `-Tag`、`-ScaleExpMin` / `-ScaleExpMax` 与 `-AllowNonFinite`。如果 sweep 中出现 `inf` / `NaN`，摘要会把 finite / nonfinite 计数分别列出，并把 `matched_nonfinite_count` / `mismatched_nonfinite_count` 单独统计。
+
 如需自定义：
 ```powershell
-./sim/run_matmul_stats_sweep.ps1 -Samples 1024 -Seeds 1,2,3 -OutFile ./reports/custom_sweep.json
+./sim/run_matmul_stats_sweep.ps1 -Samples 1024 -Seeds 1,2,3 -ScaleExpMin -32 -ScaleExpMax 32 -Tag finite_exp32 -OutFile ./reports/custom_sweep.json
 ```
 
-## 9. 目录说明
+## 9. 生成 `4096x4096` profile sweep
+```powershell
+./sim/run_matmul_stats_profiles.ps1
+```
+
+默认会跑三档 profile：
+- baseline `[-8, 8]`
+- `finite_exp32` `[-32, 32]`
+- `finite_exp64` `[-64, 64]`
+
+输出包括：
+- `reports/matmul_stats_4096x4096x4096_finite_exp32_seed*.json`
+- `reports/matmul_stats_4096x4096x4096_finite_exp32_sweep.json`
+- `reports/matmul_stats_4096x4096x4096_finite_exp64_seed*.json`
+- `reports/matmul_stats_4096x4096x4096_finite_exp64_sweep.json`
+- `reports/matmul_stats_4096x4096x4096_profiles.json`
+
+其中 `finite_exp64` 会显式暴露 `inf_count` / `nan_count` / `mismatched_nonfinite_count`，用于定位“逐 block 转 `FP32` 再累加”在极宽指数范围下何时开始早于理想双精度累加发生溢出或无效化。
+
+## 10. 目录说明
 - `rtl/`：纯 Verilog RTL
 - `tb/`：Verilog testbench
 - `tools/`：Python 工具

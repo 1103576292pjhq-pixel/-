@@ -23,3 +23,5 @@
 [2026-04-24 00:23:16 +08:00] Re-ran the full default iverilog regression after extending P3 coverage to 9x65x192; all existing finite-only and mixed nonfinite datasets still pass.
 [2026-04-24 00:31:27 +08:00] Added sim/run_matmul_stats_sweep.ps1 and generated three finite-only 4096x4096x4096 sampled-stat reports plus an aggregate sweep summary.
 [2026-04-24 00:31:27 +08:00] The current 3-seed sweep reports mean_of_mean_rel_error ~= 4.81e-7 and max_of_max_rel_error ~= 6.59e-4 (worst seed 20260503), extending the error-stat chain beyond a single report.
+[2026-04-24 00:59:39 +08:00] Extended tools/mx_ref.py sampled-stat reporting so finite-value error metrics stay separate from inf/NaN mismatches, and added tagged single-run / sweep / profile scripts for 4096x4096x4096 stats.
+[2026-04-24 00:59:39 +08:00] Generated baseline, finite_exp32, and finite_exp64 profile reports; finite_exp64 aggregated 2484 finite samples, 2928 inf samples, 732 NaN samples, and 3660 nonfinite mismatches, showing the projected FP32 path overflows/invalidates far earlier than the ideal double accumulator under [-64,64] scales.
