@@ -1,0 +1,42 @@
+{
+  "kind": "matmul_sampled_stats",
+  "m": 4096,
+  "n": 4096,
+  "k": 4096,
+  "k_blocks": 128,
+  "seed": 20260504,
+  "samples": 2048,
+  "sample_ratio": 0.0001220703125,
+  "finite_only": true,
+  "scale_exp_min": -8,
+  "scale_exp_max": 8,
+  "project_checksum_xor": "0x1926b2d0",
+  "finite_count": 2048,
+  "inf_count": 0,
+  "nan_count": 0,
+  "max_project_abs": 28421212160.0,
+  "mean_abs_error": 344.47760695311354,
+  "mean_rel_error": 4.2935251583248524e-07,
+  "max_abs_error": 6086.620456695557,
+  "max_rel_error": 7.753179748152317e-05,
+  "worst_abs_case": {
+    "row": 598,
+    "col": 1715,
+    "project_bits": "0xd01698e6",
+    "project_value": -10106411008.0,
+    "ideal_value": -10106417094.620457,
+    "abs_error": 6086.620456695557,
+    "rel_error": 6.022530437552793e-07
+  },
+  "worst_rel_case": {
+    "row": 3359,
+    "col": 2851,
+    "project_bits": "0x498e9e6d",
+    "project_value": 1168333.625,
+    "ideal_value": 1168424.2150296122,
+    "abs_error": 90.59002961218357,
+    "rel_error": 7.753179748152317e-05
+  },
+  "unique_rows": 1599,
+  "unique_cols": 1580
+}
