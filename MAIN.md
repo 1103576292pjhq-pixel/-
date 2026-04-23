@@ -33,7 +33,7 @@
 - P7：逐文件逐段代码讲解
 
 ## Current Repo Reality
-- 已有：纯 Verilog 三级流水 RTL（`llmt_col` 的 Stage-1 已收敛为 `4x8` 分组归约树）、单列/阵列 smoke 与 corner test、`4x16x64` / `5x20x96` / `8x32x128` 文件驱动矩阵级数据集回归（覆盖单 tile、尾 tile、多 tile）、Python 参考模型与 `4096x4096` 抽样统计脚本
+- 已有：纯 Verilog 三级流水 RTL（`llmt_col` 的 Stage-1 已收敛为 `4x8` 分组归约树）、单列/阵列 smoke 与 corner test、`4x16x64` / `5x20x96` / `8x32x128` 有限值矩阵数据集回归，以及 `3x18x64` mixed nonfinite 矩阵数据集回归（覆盖单 tile、尾 tile、多 tile、finite / inf / NaN 语义）、Python 参考模型与 `4096x4096` 抽样统计脚本
 - 缺少：更激进的竞赛版微架构切分、更多矩阵规模的硬件回归、综合脚本实测结果、正式报告扩写、更多逐段讲解文档
 
 ## Immediate Next Targets
