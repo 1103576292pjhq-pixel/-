@@ -64,8 +64,17 @@ module tb_llmt_col_corner;
       @(negedge clk);
       valid_i = 1'b0;
       acc_clear_i = 1'b0;
+    end
+  endtask
 
-      @(posedge clk);
+  task wait_for_output;
+    begin
+      while (valid_o === 1'b1) begin
+        @(negedge clk);
+      end
+      while (valid_o !== 1'b1) begin
+        @(negedge clk);
+      end
       #1;
     end
   endtask
@@ -98,10 +107,12 @@ module tb_llmt_col_corner;
 
     fill_block(8'h00, 8'h00, E8M0_ONE, E8M0_ONE);
     pulse_valid(1'b1);
+    wait_for_output();
     check_acc(FP32_ZERO, "zero block");
 
     fill_block(E4M3_NEG_ONE, E4M3_POS_ONE, E8M0_ONE, E8M0_ONE);
     pulse_valid(1'b1);
+    wait_for_output();
     check_acc(FP32_NEG32, "negative ones");
 
     @(negedge clk);
@@ -115,10 +126,12 @@ module tb_llmt_col_corner;
 
     fill_block(E4M3_SUB_ONE, E4M3_POS_ONE, E8M0_ONE, E8M0_ONE);
     pulse_valid(1'b1);
+    wait_for_output();
     check_acc(FP32_SUBSUM, "subnormal path");
 
     fill_block(E4M3_POS_ONE, E4M3_POS_ONE, E8M0_NAN, E8M0_ONE);
     pulse_valid(1'b1);
+    wait_for_output();
     check_acc(FP32_QNAN, "scale nan");
 
     @(negedge clk);
@@ -132,6 +145,7 @@ module tb_llmt_col_corner;
     fill_block(E4M3_POS_ONE, E4M3_POS_ONE, E8M0_ONE, E8M0_ONE);
     a_elems_i[7:0] = E4M3_NAN;
     pulse_valid(1'b1);
+    wait_for_output();
     check_acc(FP32_QNAN, "element nan");
 
     $display("PASS: llmt_col corner test completed.");

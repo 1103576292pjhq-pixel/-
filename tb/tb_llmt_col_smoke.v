@@ -43,6 +43,18 @@ module tb_llmt_col_smoke;
     end
   endtask
 
+  task wait_for_output;
+    begin
+      while (valid_o === 1'b1) begin
+        @(negedge clk);
+      end
+      while (valid_o !== 1'b1) begin
+        @(negedge clk);
+      end
+      #1;
+    end
+  endtask
+
   always #5 clk = ~clk;
 
   initial begin
@@ -68,7 +80,7 @@ module tb_llmt_col_smoke;
     valid_i = 1'b0;
     acc_clear_i = 1'b0;
 
-    @(posedge clk);
+    wait_for_output();
     if (acc_o !== FP32_32) begin
       $display("FAIL: expected 32.0 got %h", acc_o);
       $fatal;
@@ -80,7 +92,7 @@ module tb_llmt_col_smoke;
     @(negedge clk);
     valid_i = 1'b0;
 
-    @(posedge clk);
+    wait_for_output();
     if (acc_o !== FP32_64) begin
       $display("FAIL: expected 64.0 got %h", acc_o);
       $fatal;

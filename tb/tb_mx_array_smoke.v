@@ -83,6 +83,18 @@ module tb_mx_array_smoke;
     end
   endtask
 
+  task wait_for_output;
+    begin
+      while (valid_o[0] === 1'b1) begin
+        @(negedge clk);
+      end
+      while (valid_o[0] !== 1'b1) begin
+        @(negedge clk);
+      end
+      #1;
+    end
+  endtask
+
   always #5 clk = ~clk;
 
   initial begin
@@ -108,7 +120,7 @@ module tb_mx_array_smoke;
     valid_i = 1'b0;
     acc_clear_i = {`MX_COLS{1'b0}};
 
-    @(posedge clk);
+    wait_for_output();
     check_all_cols(FP32_32);
 
     @(negedge clk);
@@ -118,7 +130,7 @@ module tb_mx_array_smoke;
     @(negedge clk);
     valid_i = 1'b0;
 
-    @(posedge clk);
+    wait_for_output();
     check_all_cols(FP32_64);
 
     $display("PASS: mx_array_32x16 smoke test completed.");

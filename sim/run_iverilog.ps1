@@ -2,6 +2,8 @@ $ErrorActionPreference = "Stop"
 
 $workdir = Split-Path -Parent $PSScriptRoot
 $buildDir = Join-Path $workdir "sim"
+$rtlIncludeDir = Join-Path $workdir "rtl"
+$tbIncludeDir = Join-Path $workdir "tb"
 $rtlFiles = @(
   (Join-Path $workdir "rtl\\e4m3_decode.v"),
   (Join-Path $workdir "rtl\\e8m0_scale_decode.v"),
@@ -19,7 +21,7 @@ function Invoke-IverilogTest {
   )
 
   $outFile = Join-Path $buildDir "$Name.vvp"
-  & iverilog -g2001 -I (Join-Path $workdir "rtl") @Defines -o $outFile @rtlFiles $Testbench
+  & iverilog -g2001 -I $rtlIncludeDir -I $tbIncludeDir @Defines -o $outFile @rtlFiles $Testbench
   & vvp $outFile
 }
 
@@ -34,3 +36,6 @@ Invoke-IverilogTest `
     "-DTB_N=16",
     "-DTB_K_BLOCKS=2"
   )
+Invoke-IverilogTest `
+  -Name "tb_mx_array_dataset_8x32x128" `
+  -Testbench (Join-Path $workdir "tb\\tb_mx_array_dataset_8x32x128.v")

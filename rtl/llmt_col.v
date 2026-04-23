@@ -33,8 +33,16 @@ module llmt_col (
   reg signed [9:0] a_scale_exp;
   reg signed [9:0] b_scale_exp;
   reg signed [`MX_DOT_EXP_W-1:0] dot_exp_shift;
+  reg valid_s1;
+  reg acc_clear_s1;
+  reg signed [`MX_DOT_W-1:0] dot_sum_s1;
+  reg signed [`MX_DOT_EXP_W-1:0] dot_exp_shift_s1;
+  reg any_nan_s1;
+  reg valid_s2;
+  reg acc_clear_s2;
+  reg [31:0] dot_fp32_s2;
   reg [31:0] acc_reg;
-  wire [31:0] dot_fp32;
+  wire [31:0] dot_fp32_s1;
   wire [31:0] acc_next;
   integer idx;
 
@@ -65,29 +73,56 @@ module llmt_col (
   end
 
   fixed_to_fp32 dot_cast_u (
-    .value_i(dot_sum_int),
-    .exp_shift_i(dot_exp_shift),
-    .nan_i(any_nan),
-    .fp32_o(dot_fp32)
+    .value_i(dot_sum_s1),
+    .exp_shift_i(dot_exp_shift_s1),
+    .nan_i(any_nan_s1),
+    .fp32_o(dot_fp32_s1)
   );
 
   fp32_add_rne acc_add_u (
     .a_i(acc_reg),
-    .b_i(dot_fp32),
+    .b_i(dot_fp32_s2),
     .sum_o(acc_next)
   );
 
   always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
+      valid_s1 <= 1'b0;
+      acc_clear_s1 <= 1'b0;
+      dot_sum_s1 <= {`MX_DOT_W{1'b0}};
+      dot_exp_shift_s1 <= {`MX_DOT_EXP_W{1'b0}};
+      any_nan_s1 <= 1'b0;
+      valid_s2 <= 1'b0;
+      acc_clear_s2 <= 1'b0;
+      dot_fp32_s2 <= `MX_FP32_ZERO;
+      acc_reg <= `MX_FP32_ZERO;
+      valid_o <= 1'b0;
+    end else if (acc_clear_i && !valid_i) begin
+      valid_s1 <= 1'b0;
+      acc_clear_s1 <= 1'b0;
+      dot_sum_s1 <= {`MX_DOT_W{1'b0}};
+      dot_exp_shift_s1 <= {`MX_DOT_EXP_W{1'b0}};
+      any_nan_s1 <= 1'b0;
+      valid_s2 <= 1'b0;
+      acc_clear_s2 <= 1'b0;
+      dot_fp32_s2 <= `MX_FP32_ZERO;
       acc_reg <= `MX_FP32_ZERO;
       valid_o <= 1'b0;
     end else begin
-      valid_o <= valid_i;
-      if (acc_clear_i && !valid_i) begin
-        acc_reg <= `MX_FP32_ZERO;
-      end else if (valid_i) begin
-        if (acc_clear_i) begin
-          acc_reg <= dot_fp32;
+      valid_s1 <= valid_i;
+      acc_clear_s1 <= acc_clear_i;
+      dot_sum_s1 <= dot_sum_int;
+      dot_exp_shift_s1 <= dot_exp_shift;
+      any_nan_s1 <= any_nan;
+
+      valid_s2 <= valid_s1;
+      acc_clear_s2 <= acc_clear_s1;
+      dot_fp32_s2 <= dot_fp32_s1;
+
+      valid_o <= valid_s2;
+      if (valid_s2) begin
+        if (acc_clear_s2) begin
+          acc_reg <= dot_fp32_s2;
         end else begin
           acc_reg <= acc_next;
         end

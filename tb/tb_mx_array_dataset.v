@@ -125,7 +125,12 @@ module tb_mx_array_dataset;
     reg [31:0] expected_bits;
     reg [31:0] got_bits;
     begin
-      @(posedge clk);
+      while (valid_o[0] === 1'b1) begin
+        @(negedge clk);
+      end
+      while (valid_o[0] !== 1'b1) begin
+        @(negedge clk);
+      end
       #1;
       for (lane_idx_t = 0; lane_idx_t < `MX_COLS; lane_idx_t = lane_idx_t + 1) begin
         y_mem_idx = (row_idx_t * N) + (tile_idx_t * `MX_COLS) + lane_idx_t;
