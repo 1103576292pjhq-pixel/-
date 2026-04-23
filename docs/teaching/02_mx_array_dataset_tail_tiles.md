@@ -82,7 +82,7 @@
 - 前一个 tile 的结果残留在没用到的 lane 里
 - 把“行内 `NaN` 传播”误判成“padded lane 应该永远是零”
 
-## 6. 三组关键数据集为什么都有价值
+## 6. 四组关键数据集为什么都有价值
 `5x20x96` 这组有限值数据集同时覆盖了三种之前没一起出现过的边界：
 
 - `M=5`：奇数行
@@ -102,10 +102,16 @@
 - mixed finite / `inf` / `NaN` 语义继续保留
 - 新数据集还顺带暴露出“黄金模型导出的 `QNaN` 必须统一 canonical 化”的问题，避免宿主平台保留 NaN 符号位时造成伪回归失败
 
-这三组数据集一起用，才算把“尾 tile”从纯有限值场景扩到更真实的数值语义，并开始覆盖三列 tile 的调度边界。
+`9x65x192_five_tiles` 则补上了另一个方向：
+
+- `N=65`：一共 5 个列 tile，最后一个 tile 同样只剩 1 个真实输出列
+- `K=192`：一共 6 个 `K_BLOCKS`
+- 仍然保持 finite-only，方便把注意力集中在“更大多 tile 调度 + 更长累加链”而不是 NaN 传播上
+
+这四组数据集一起用，才算把“尾 tile”从纯有限值场景扩到更真实的数值语义，并开始覆盖从 1 个 tile 一直推到 5 个列 tile 的调度边界。
 
 ## 7. 读完这篇后应该记住什么
 - `tb_mx_array_dataset` 是当前矩阵级主回归，不只是“读文件然后比较”
 - 用 `valid_o[0]` 等待只是简化写法，真正的前提是 `valid_o` 必须整向量同步变化；现在 testbench 已把这个前提显式检查掉
 - 尾 tile 的核心做法是“固定宽度接口 + 空 lane 零填充 + 按行语义检查 padded 输出”
-- `tb_mx_array_dataset_5x20x96.v`、`tb_mx_array_dataset_3x18x64_nonfinite.v`、`tb_mx_array_dataset_6x33x160_nonfinite.v` 的作用，是把有限值边界、mixed nonfinite 语义和三列 tile 组合边界一起纳入默认回归，而不是手工偶尔跑一次
+- `tb_mx_array_dataset_5x20x96.v`、`tb_mx_array_dataset_3x18x64_nonfinite.v`、`tb_mx_array_dataset_6x33x160_nonfinite.v`、`tb_mx_array_dataset_9x65x192.v` 的作用，是把有限值边界、mixed nonfinite 语义和 1 到 5 个列 tile 的组合边界一起纳入默认回归，而不是手工偶尔跑一次

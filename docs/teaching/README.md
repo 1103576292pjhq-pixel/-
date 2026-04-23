@@ -28,5 +28,5 @@
 - 能用自己的话复述“输入 block 怎么一步步变成输出 FP32”
 
 ## 当前状态
-当前已经补出 `llmt_col` 三级流水文档（已同步到 partial-sum 寄存化版本），以及 `tb_mx_array_dataset` 的矩阵级 burst / tail tile / mixed nonfinite 驱动讲解；后者现已同步到 `valid_o` 全列一致性检查与 `6x33x160` 三列 tile 数据集版本。  
+当前已经补出 `llmt_col` 三级流水文档（已同步到 partial-sum 寄存化版本），以及 `tb_mx_array_dataset` 的矩阵级 burst / tail tile / mixed nonfinite 驱动讲解；后者现已同步到 `valid_o` 全列一致性检查、`6x33x160` 三列 tile mixed nonfinite 与 `9x65x192` 五列 tile finite-only 版本。  
 后续 `P7` 会继续把其他文件拆成独立讲解文档，做到“逐文件逐段解释”。

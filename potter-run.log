@@ -19,3 +19,5 @@
 [2026-04-23 23:56:51 +08:00] Re-ran the default iverilog regression after the partial-sum register retiming; valid_o behavior and all current matrix datasets remain unchanged.
 [2026-04-24 00:14:08 +08:00] Added vectors/matmul_6x33x160_nonfinite and wired a new default matrix regression that covers three column tiles, a one-lane tail tile, and K_BLOCKS=5 in one mixed nonfinite scenario.
 [2026-04-24 00:14:08 +08:00] Hardened tb_mx_array_dataset with a uniform valid_o vector check and canonicalized Python-emitted NaNs to 0x7fc00000 after the new dataset exposed sign-dependent QNaN expectations.
+[2026-04-24 00:23:16 +08:00] Added vectors/matmul_9x65x192_five_tiles and wired a new default finite-only matrix regression that covers five column tiles, a one-lane tail tile, and K_BLOCKS=6.
+[2026-04-24 00:23:16 +08:00] Re-ran the full default iverilog regression after extending P3 coverage to 9x65x192; all existing finite-only and mixed nonfinite datasets still pass.

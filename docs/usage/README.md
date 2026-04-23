@@ -20,6 +20,7 @@
 - `tb_mx_array_dataset_6x33x160_nonfinite`：读取 `vectors/matmul_6x33x160_nonfinite/` 的 `.hex` 数据，覆盖三列 tile、最后一 tile 只剩 1 个有效 lane、`K=160` 与 mixed finite / `inf` / `NaN` 并存场景
 - `tb_mx_array_dataset_5x20x96`：读取 `vectors/matmul_5x20x96_tail/` 的 `.hex` 数据，覆盖 `N=20` 尾 tile 零填充、`K=96` 与奇数行场景
 - `tb_mx_array_dataset_8x32x128`：读取 `vectors/matmul_8x32x128_smoke/` 的 `.hex` 数据并覆盖双 tile、`K=128` 场景
+- `tb_mx_array_dataset_9x65x192`：读取 `vectors/matmul_9x65x192_five_tiles/` 的 `.hex` 数据，覆盖五列 tile、最后一 tile 只剩 1 个有效 lane、`K=192` 与更大的有限值矩阵组合
 
 其中 `tb_mx_array_dataset` 现已支持 `N` 不是 `16` 整数倍的情况：最后一个 tile 未使用的列 lane 会自动喂入零 block。对于有限值行，这些 padded lane 在收尾时应保持 `FP32 zero`；如果该行本身含 `NaN`，则 padded lane 也可能合法地产生 `QNaN`，testbench 会按行内容建模这个期望值。与此同时，testbench 会显式检查 `valid_o` 只能 16 位同时为 0 或同时为 1，因此用 `valid_o[0]` 作为等待条件不会掩盖单列失步。
 
@@ -51,6 +52,11 @@ python ./tools/mx_ref.py --emit-matmul-dataset --m 4 --n 16 --k 64 --seed 202604
 更长 `K` / 多 tile 数据集示例：
 ```powershell
 python ./tools/mx_ref.py --emit-matmul-dataset --m 8 --n 32 --k 128 --seed 20260424 --finite-only --outdir ./vectors/matmul_8x32x128_smoke
+```
+
+五列 tile 数据集示例：
+```powershell
+python ./tools/mx_ref.py --emit-matmul-dataset --m 9 --n 65 --k 192 --seed 20260502 --finite-only --outdir ./vectors/matmul_9x65x192_five_tiles
 ```
 
 尾 tile 数据集示例：
