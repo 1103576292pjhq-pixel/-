@@ -14,6 +14,8 @@
   "finite_count": 2048,
   "inf_count": 0,
   "nan_count": 0,
+  "matched_nonfinite_count": 0,
+  "mismatched_nonfinite_count": 0,
   "max_project_abs": 27053342720.0,
   "mean_abs_error": 341.0646487462011,
   "mean_rel_error": 3.900008372080036e-07,
@@ -37,6 +39,7 @@
     "abs_error": 482.65513372421265,
     "rel_error": 7.920360179504847e-05
   },
+  "first_mismatched_nonfinite_case": null,
   "unique_rows": 1605,
   "unique_cols": 1626
 }

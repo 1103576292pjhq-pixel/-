@@ -1,0 +1,90 @@
+﻿{
+    "kind":  "matmul_sampled_stats_profile_sweep",
+    "m":  4096,
+    "n":  4096,
+    "k":  4096,
+    "samples":  2048,
+    "seeds":  [
+                  20260423,
+                  20260503,
+                  20260504
+              ],
+    "profile_count":  3,
+    "profiles":  [
+                     {
+                         "name":  "finite_exp8",
+                         "description":  "finite-only exponent range [-8, 8]",
+                         "summary_file":  "matmul_stats_4096x4096x4096_sweep.json",
+                         "finite_only":  true,
+                         "scale_exp_min":  -8,
+                         "scale_exp_max":  8,
+                         "total_finite_count":  6144,
+                         "total_inf_count":  0,
+                         "total_nan_count":  0,
+                         "total_matched_nonfinite_count":  0,
+                         "total_mismatched_nonfinite_count":  0,
+                         "mean_of_mean_abs_error":  341.72226118170852,
+                         "mean_of_mean_rel_error":  4.8064487786413481E-07,
+                         "max_of_max_abs_error":  6442.1805763244629,
+                         "max_of_max_rel_error":  0.00065938246589590586,
+                         "worst_seed_by_max_abs_error":  {
+                                                             "seed":  20260423,
+                                                             "max_abs_error":  6442.1805763244629
+                                                         },
+                         "worst_seed_by_max_rel_error":  {
+                                                             "seed":  20260503,
+                                                             "max_rel_error":  0.00065938246589590586
+                                                         }
+                     },
+                     {
+                         "name":  "finite_exp32",
+                         "description":  "finite-only exponent range [-32, 32]",
+                         "summary_file":  "matmul_stats_4096x4096x4096_finite_exp32_sweep.json",
+                         "finite_only":  true,
+                         "scale_exp_min":  -32,
+                         "scale_exp_max":  32,
+                         "total_finite_count":  6144,
+                         "total_inf_count":  0,
+                         "total_nan_count":  0,
+                         "total_matched_nonfinite_count":  0,
+                         "total_mismatched_nonfinite_count":  0,
+                         "mean_of_mean_abs_error":  3785618500937939.5,
+                         "mean_of_mean_rel_error":  8.879006148545135E-08,
+                         "max_of_max_abs_error":  3.6760650319396864E+17,
+                         "max_of_max_rel_error":  1.1563487692803309E-05,
+                         "worst_seed_by_max_abs_error":  {
+                                                             "seed":  20260503,
+                                                             "max_abs_error":  3.6760650319396864E+17
+                                                         },
+                         "worst_seed_by_max_rel_error":  {
+                                                             "seed":  20260504,
+                                                             "max_rel_error":  1.1563487692803309E-05
+                                                         }
+                     },
+                     {
+                         "name":  "finite_exp64",
+                         "description":  "finite-only exponent range [-64, 64]",
+                         "summary_file":  "matmul_stats_4096x4096x4096_finite_exp64_sweep.json",
+                         "finite_only":  true,
+                         "scale_exp_min":  -64,
+                         "scale_exp_max":  64,
+                         "total_finite_count":  2484,
+                         "total_inf_count":  2928,
+                         "total_nan_count":  732,
+                         "total_matched_nonfinite_count":  0,
+                         "total_mismatched_nonfinite_count":  3660,
+                         "mean_of_mean_abs_error":  2.1444314731593323E+30,
+                         "mean_of_mean_rel_error":  7.9542233812695221E-08,
+                         "max_of_max_abs_error":  4.4420192298262431E+31,
+                         "max_of_max_rel_error":  1.775332392492065E-05,
+                         "worst_seed_by_max_abs_error":  {
+                                                             "seed":  20260423,
+                                                             "max_abs_error":  4.4420192298262431E+31
+                                                         },
+                         "worst_seed_by_max_rel_error":  {
+                                                             "seed":  20260423,
+                                                             "max_rel_error":  1.775332392492065E-05
+                                                         }
+                     }
+                 ]
+}

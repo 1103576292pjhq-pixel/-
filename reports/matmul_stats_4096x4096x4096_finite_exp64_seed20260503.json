@@ -1,0 +1,51 @@
+{
+  "kind": "matmul_sampled_stats",
+  "m": 4096,
+  "n": 4096,
+  "k": 4096,
+  "k_blocks": 128,
+  "seed": 20260503,
+  "samples": 2048,
+  "sample_ratio": 0.0001220703125,
+  "finite_only": true,
+  "scale_exp_min": -64,
+  "scale_exp_max": 64,
+  "project_checksum_xor": "0x1e4750b0",
+  "finite_count": 799,
+  "inf_count": 997,
+  "nan_count": 252,
+  "matched_nonfinite_count": 0,
+  "mismatched_nonfinite_count": 1249,
+  "max_project_abs": 3.398059128369391e+38,
+  "mean_abs_error": 2.1370796580975904e+30,
+  "mean_rel_error": 9.021060596806532e-08,
+  "max_abs_error": 2.9285477879472253e+31,
+  "max_rel_error": 1.5809562103884466e-05,
+  "worst_abs_case": {
+    "row": 2822,
+    "col": 901,
+    "project_bits": "0x7f636124",
+    "project_value": 3.022391380051995e+38,
+    "ideal_value": 3.022391672906774e+38,
+    "abs_error": 2.9285477879472253e+31,
+    "rel_error": 9.68950455428798e-08
+  },
+  "worst_rel_case": {
+    "row": 577,
+    "col": 570,
+    "project_bits": "0xfa352feb",
+    "project_value": -2.3519440581609157e+35,
+    "ideal_value": -2.3519812419544276e+35,
+    "abs_error": 3.718379351184984e+30,
+    "rel_error": 1.5809562103884466e-05
+  },
+  "first_mismatched_nonfinite_case": {
+    "row": 0,
+    "col": 0,
+    "project_bits": "0x7fc00000",
+    "project_value": "nan",
+    "ideal_value": 2.4655166485960223e+40
+  },
+  "unique_rows": 1592,
+  "unique_cols": 1594
+}

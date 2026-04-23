@@ -6,6 +6,8 @@ param(
   [int]$Seed = 20260423,
   [int]$ScaleExpMin = -8,
   [int]$ScaleExpMax = 8,
+  [switch]$AllowNonFinite,
+  [string]$Tag = "",
   [string]$OutFile = ""
 )
 
@@ -13,17 +15,32 @@ $ErrorActionPreference = "Stop"
 
 $workdir = Split-Path -Parent $PSScriptRoot
 if (-not $OutFile) {
-  $OutFile = Join-Path $workdir ("reports\\matmul_stats_{0}x{1}x{2}.json" -f $M, $N, $K)
+  $suffix = ""
+  if ($Tag) {
+    $suffix = "_$Tag"
+  } elseif ($AllowNonFinite) {
+    $suffix = "_mixed_nonfinite"
+  }
+  $OutFile = Join-Path $workdir ("reports\\matmul_stats_{0}x{1}x{2}{3}.json" -f $M, $N, $K, $suffix)
 }
 
-python (Join-Path $workdir "tools\\mx_ref.py") `
-  --report-matmul-stats `
-  --m $M `
-  --n $N `
-  --k $K `
-  --samples $Samples `
-  --seed $Seed `
-  --finite-only `
-  --scale-exp-min $ScaleExpMin `
-  --scale-exp-max $ScaleExpMax `
-  --summary-out $OutFile
+$pythonArgs = @(
+  (Join-Path $workdir "tools\\mx_ref.py"),
+  "--report-matmul-stats",
+  "--m", "$M",
+  "--n", "$N",
+  "--k", "$K",
+  "--samples", "$Samples",
+  "--seed", "$Seed",
+  "--summary-out", "$OutFile"
+)
+
+if (-not $AllowNonFinite) {
+  $pythonArgs += @(
+    "--finite-only",
+    "--scale-exp-min", "$ScaleExpMin",
+    "--scale-exp-max", "$ScaleExpMax"
+  )
+}
+
+& python @pythonArgs

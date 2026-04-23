@@ -520,6 +520,8 @@ def report_matmul_stats(
     finite_count = 0
     inf_count = 0
     nan_count = 0
+    matched_nonfinite_count = 0
+    mismatched_nonfinite_count = 0
     abs_err_sum = 0.0
     rel_err_sum = 0.0
     max_abs_err = -1.0
@@ -527,6 +529,7 @@ def report_matmul_stats(
     max_project_abs = 0.0
     worst_abs_case: dict[str, object] | None = None
     worst_rel_case: dict[str, object] | None = None
+    first_mismatched_nonfinite_case: dict[str, object] | None = None
 
     for row_idx, col_idx in sample_points:
         if row_idx not in row_cache:
@@ -573,12 +576,37 @@ def report_matmul_stats(
 
         if math.isnan(project_value) or math.isnan(ideal_acc):
             nan_count += 1
+            if math.isnan(project_value) and math.isnan(ideal_acc):
+                matched_nonfinite_count += 1
+            else:
+                mismatched_nonfinite_count += 1
+                if first_mismatched_nonfinite_case is None:
+                    first_mismatched_nonfinite_case = {
+                        "row": row_idx,
+                        "col": col_idx,
+                        "project_bits": f"0x{project_acc:08x}",
+                        "project_value": sanitize_json_value(project_value),
+                        "ideal_value": sanitize_json_value(ideal_acc),
+                    }
             continue
         if math.isinf(project_value) or math.isinf(ideal_acc):
             inf_count += 1
-        else:
-            finite_count += 1
-            max_project_abs = max(max_project_abs, abs(project_value))
+            if project_value == ideal_acc:
+                matched_nonfinite_count += 1
+            else:
+                mismatched_nonfinite_count += 1
+                if first_mismatched_nonfinite_case is None:
+                    first_mismatched_nonfinite_case = {
+                        "row": row_idx,
+                        "col": col_idx,
+                        "project_bits": f"0x{project_acc:08x}",
+                        "project_value": sanitize_json_value(project_value),
+                        "ideal_value": sanitize_json_value(ideal_acc),
+                    }
+            continue
+
+        finite_count += 1
+        max_project_abs = max(max_project_abs, abs(project_value))
 
         abs_err = abs(project_value - ideal_acc)
         rel_err = abs_err / max(abs(ideal_acc), 1e-30)
@@ -608,7 +636,6 @@ def report_matmul_stats(
                 "rel_error": sanitize_json_value(rel_err),
             }
 
-    measured_count = finite_count + inf_count
     summary = {
         "kind": "matmul_sampled_stats",
         "m": m,
@@ -625,13 +652,16 @@ def report_matmul_stats(
         "finite_count": finite_count,
         "inf_count": inf_count,
         "nan_count": nan_count,
+        "matched_nonfinite_count": matched_nonfinite_count,
+        "mismatched_nonfinite_count": mismatched_nonfinite_count,
         "max_project_abs": sanitize_json_value(max_project_abs),
-        "mean_abs_error": sanitize_json_value(abs_err_sum / max(measured_count, 1)),
-        "mean_rel_error": sanitize_json_value(rel_err_sum / max(measured_count, 1)),
+        "mean_abs_error": sanitize_json_value(abs_err_sum / finite_count) if finite_count else None,
+        "mean_rel_error": sanitize_json_value(rel_err_sum / finite_count) if finite_count else None,
         "max_abs_error": sanitize_json_value(max_abs_err if max_abs_err >= 0 else None),
         "max_rel_error": sanitize_json_value(max_rel_err if max_rel_err >= 0 else None),
         "worst_abs_case": worst_abs_case,
         "worst_rel_case": worst_rel_case,
+        "first_mismatched_nonfinite_case": first_mismatched_nonfinite_case,
         "unique_rows": len(row_cache),
         "unique_cols": len(col_cache),
     }
