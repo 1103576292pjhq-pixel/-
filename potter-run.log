@@ -15,3 +15,5 @@
 [2026-04-23 23:39:59 +08:00] Re-ran the full default iverilog regression after the reduction-tree change; all column and matrix datasets still pass.
 [2026-04-23 23:49:16 +08:00] Added vectors/matmul_3x18x64_nonfinite and wired a new default matrix regression that mixes finite, inf, and QNaN outputs.
 [2026-04-23 23:49:16 +08:00] Updated tb_mx_array_dataset padded-lane checking: finite-only tail rows still expect FP32 zero, while rows carrying NaN now legally expect QNaN on padded lanes under zero-padded B inputs.
+[2026-04-23 23:56:51 +08:00] Retimed rtl/llmt_col.v again so Stage-1 now registers only the four 8-lane partial sums, while the final merge happens in the next stage before fixed_to_fp32.
+[2026-04-23 23:56:51 +08:00] Re-ran the default iverilog regression after the partial-sum register retiming; valid_o behavior and all current matrix datasets remain unchanged.

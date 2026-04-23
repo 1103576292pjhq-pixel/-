@@ -33,10 +33,10 @@
 - P7：逐文件逐段代码讲解
 
 ## Current Repo Reality
-- 已有：纯 Verilog 三级流水 RTL（`llmt_col` 的 Stage-1 已收敛为 `4x8` 分组归约树）、单列/阵列 smoke 与 corner test、`4x16x64` / `5x20x96` / `8x32x128` 有限值矩阵数据集回归，以及 `3x18x64` mixed nonfinite 矩阵数据集回归（覆盖单 tile、尾 tile、多 tile、finite / inf / NaN 语义）、Python 参考模型与 `4096x4096` 抽样统计脚本
+- 已有：纯 Verilog 三级流水 RTL（`llmt_col` 的 Stage-1 已收敛为只寄存 `4x8` partial sums，final merge 挪到下一段再进入 `fixed_to_fp32`）、单列/阵列 smoke 与 corner test、`4x16x64` / `5x20x96` / `8x32x128` 有限值矩阵数据集回归，以及 `3x18x64` mixed nonfinite 矩阵数据集回归（覆盖单 tile、尾 tile、多 tile、finite / inf / NaN 语义）、Python 参考模型与 `4096x4096` 抽样统计脚本
 - 缺少：更激进的竞赛版微架构切分、更多矩阵规模的硬件回归、综合脚本实测结果、正式报告扩写、更多逐段讲解文档
 
 ## Immediate Next Targets
-- 基于当前 `4x8` 分组归约树的三级流水 `llmt_col` 继续推进更接近竞赛目标的 reduction / issue 微架构
+- 基于当前 `4x8` partial-sum 寄存化的三级流水 `llmt_col` 继续推进更接近竞赛目标的 reduction / issue 微架构
 - 扩大 P3 覆盖：在现有单 tile / 尾 tile / 多 tile 基础上继续增加更多 `M,N` 组合与更强边界场景，并继续保留 `4096x4096` 抽样统计
 - 把流水划分、tail tile 回归结论和代码讲解继续写进报告/usage/primer/teaching 文档
