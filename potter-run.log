@@ -9,3 +9,5 @@
 [2026-04-23 23:10:17 +08:00] Synced MAIN.md / STATUS.md / docs/report / docs/usage / docs/teaching for the pipelined LLMT milestone; no persistent Potter runner was launched.
 [2026-04-23 23:16:38 +08:00] Added tb_llmt_col_back_to_back and verified the pipelined llmt_col accepts consecutive valid_i inputs with ordered FP32 accumulation outputs.
 [2026-04-23 23:20:21 +08:00] Converted tb_mx_array_dataset to burst-drive each tile's K blocks and re-ran both fixed datasets under continuous per-cycle array input without mismatches.
+[2026-04-23 23:32:31 +08:00] Extended tb_mx_array_dataset to support tail tiles where N is not a multiple of 16 by zero-padding inactive lanes and checking padded outputs stay zero.
+[2026-04-23 23:32:31 +08:00] Added vectors/matmul_5x20x96_tail and wired a new default iverilog regression to cover odd-row, K=96, partial-column-tile matrix input.

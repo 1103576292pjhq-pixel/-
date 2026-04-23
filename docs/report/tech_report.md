@@ -19,7 +19,7 @@
 - 三级流水版 `dot32` 列级原型 `llmt_col`
 - `32x16` 顶层阵列原型
 - 单列 smoke test、corner test、阵列 smoke test
-- 文件驱动矩阵级 testbench `tb_mx_array_dataset`
+- 支持尾 tile 的文件驱动矩阵级 testbench `tb_mx_array_dataset`
 - Python 参考模型自检、向量导出、`4096x4096` 抽样误差统计
 
 当前仍需完成：
@@ -31,21 +31,23 @@
 
 ## 4. 已落地的验证链路
 - `llmt_col` 当前采用三段流水：`S1` 寄存 `dot32` 整数和与指数偏移，`S2` 寄存 `fixed_to_fp32` 结果，`S3` 做 `FP32` 累加写回；接口与数值语义保持不变。
-- `sim/run_iverilog.ps1` 当前默认运行 6 个 testbench，其中：
+- `sim/run_iverilog.ps1` 当前默认运行 7 个 testbench，其中：
   - `tb_llmt_col_back_to_back`：验证三级流水在连续 `valid_i` 输入下仍能按顺序输出 `FP32` 累加结果
   - `vectors/matmul_4x16x64_smoke/`：`M=4`、`N=16`、`K=64`，验证单 tile、`K_BLOCKS=2`
+  - `vectors/matmul_5x20x96_tail/`：`M=5`、`N=20`、`K=96`，验证奇数行、`K_BLOCKS=3` 与尾 tile 只激活前 4 列
   - `vectors/matmul_8x32x128_smoke/`：`M=8`、`N=32`、`K=128`，验证双 tile、`K_BLOCKS=4`
-- `tb_mx_array_dataset` 现已改成 burst 驱动：同一个 tile 的 `K_BLOCKS` 连续每拍送入阵列，不再插入空拍，再在一整串 `valid_o` 输出结束后核对最终 tile 结果。
+- `tb_mx_array_dataset` 现已改成 burst 驱动：同一个 tile 的 `K_BLOCKS` 连续每拍送入阵列，不再插入空拍，再在一整串 `valid_o` 输出结束后核对最终 tile 结果；若最后一个 tile 不满 `16` 列，则用零 block/零贡献 scale 填充未使用 lane，并额外检查这些 lane 的输出保持 `FP32 zero`。
 - `tools/mx_ref.py --emit-matmul-dataset` 已支持 `--finite-only`，便于生成稳定的硬件回归数据集。
 - `sim/run_matmul_stats.ps1` 默认会生成 `reports/matmul_stats_4096x4096x4096.json`，用于快速查看大矩阵抽样误差摘要。
 
 ## 5. 当前固定数据集回归结论
-本轮默认 Verilog 回归对两组固定数据集均已通过：
+本轮默认 Verilog 回归对三组固定数据集均已通过：
 
 - `4x16x64`：用于快速确认基础 tile 驱动与两段 block 累加
+- `5x20x96`：用于确认尾 tile 零填充、奇数行循环与 `K=96` 三段 block 累加
 - `8x32x128`：用于确认更长 `K`、双 tile 读数和流水 `valid_o` 时序
 - `tb_llmt_col_back_to_back`：用于确认三级流水具备连续每拍输入、连续每拍输出的基本吞吐能力
-- `tb_mx_array_dataset` burst 模式：用于确认阵列级矩阵回归也能在连续每拍输入场景下保持最终结果正确
+- `tb_mx_array_dataset` burst 模式：用于确认阵列级矩阵回归在整 tile 和尾 tile 场景下都能在连续每拍输入时保持最终结果正确
 
 这意味着当前列核虽然仍是保守版三级流水，但已经能在更贴近矩阵级场景的固定数据集上稳定跑通。
 

@@ -19,6 +19,7 @@
 
 首篇讲解文档：
 - [llmt_col 三级流水讲解](/D:/github/-/docs/teaching/01_llmt_col_pipeline.md)
+- [矩阵级数据集回归与尾 tile 讲解](/D:/github/-/docs/teaching/02_mx_array_dataset_tail_tiles.md)
 
 ## 讲解目标
 - 知道每个文件是干什么的
@@ -27,5 +28,5 @@
 - 能用自己的话复述“输入 block 怎么一步步变成输出 FP32”
 
 ## 当前状态
-当前已经补出第一篇专门讲 `rtl/llmt_col.v` 的三级流水文档。  
+当前已经补出 `llmt_col` 三级流水文档，以及 `tb_mx_array_dataset` 的矩阵级 burst / tail tile 驱动讲解。  
 后续 `P7` 会继续把其他文件拆成独立讲解文档，做到“逐文件逐段解释”。
