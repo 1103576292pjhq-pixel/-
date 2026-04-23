@@ -42,6 +42,7 @@
 - `tb_mx_array_dataset` 现已改成 burst 驱动：同一个 tile 的 `K_BLOCKS` 连续每拍送入阵列，不再插入空拍，再在一整串 `valid_o` 输出结束后核对最终 tile 结果；若最后一个 tile 不满 `16` 列，则用零 block/零贡献 scale 填充未使用 lane，并根据当前行是否带 `NaN` 来建模 padded lane 期望值：有限值行保持 `FP32 zero`，含 `NaN` 的行允许 padded lane 落成 `QNaN`。同时，testbench 还会显式检查 `valid_o` 必须整向量同时拉高/拉低，避免某几列先出结果时被代表性 lane 掩盖。
 - `tools/mx_ref.py --emit-matmul-dataset` 已支持 `--finite-only`，并把导出的 `NaN` 统一规范化为 canonical `0x7fc00000`，便于让软件黄金模型与 RTL 的 `QNaN` 语义保持一致。
 - `sim/run_matmul_stats.ps1` 默认会生成 `reports/matmul_stats_4096x4096x4096.json`，用于快速查看大矩阵抽样误差摘要。
+- `sim/run_matmul_stats_sweep.ps1` 会额外生成 `reports/matmul_stats_4096x4096x4096_seed*.json` 与 `reports/matmul_stats_4096x4096x4096_sweep.json`，用于比较多组 seed 下的误差波动。
 
 ## 5. 当前固定数据集回归结论
 本轮默认 Verilog 回归对六组固定数据集均已通过：
@@ -68,6 +69,15 @@
 - `max_abs_error = 6442.18`
 
 这些数字说明：当前“每个 block 做 dot32，再做 FP32 累加”的参考数值路径，相对未逐步舍入的理想双精度累加，误差量级已经比较可控，后续可以把重点转向竞赛版微架构与更系统的验证覆盖。
+
+为了避免只盯住一份单点报告，本轮还新增了 3 组 seed 的 finite-only sweep（`20260423`、`20260503`、`20260504`）：
+
+- `mean_of_mean_abs_error = 341.72`
+- `mean_of_mean_rel_error = 4.81e-7`
+- `max_of_max_abs_error = 6442.18`
+- `max_of_max_rel_error = 6.59e-4`，worst seed 为 `20260503`
+
+这说明平均误差量级在多 seed 下仍然稳定，但最坏相对误差会比单份报告更高一些，后续如果继续扩大 exponent 范围或引入 mixed nonfinite sweep，需要继续跟踪这个 worst-case 尾部。
 
 ## 7. 报告后续章节规划
 - MXFP8 格式与数值语义

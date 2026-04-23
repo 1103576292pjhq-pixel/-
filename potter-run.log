@@ -21,3 +21,5 @@
 [2026-04-24 00:14:08 +08:00] Hardened tb_mx_array_dataset with a uniform valid_o vector check and canonicalized Python-emitted NaNs to 0x7fc00000 after the new dataset exposed sign-dependent QNaN expectations.
 [2026-04-24 00:23:16 +08:00] Added vectors/matmul_9x65x192_five_tiles and wired a new default finite-only matrix regression that covers five column tiles, a one-lane tail tile, and K_BLOCKS=6.
 [2026-04-24 00:23:16 +08:00] Re-ran the full default iverilog regression after extending P3 coverage to 9x65x192; all existing finite-only and mixed nonfinite datasets still pass.
+[2026-04-24 00:31:27 +08:00] Added sim/run_matmul_stats_sweep.ps1 and generated three finite-only 4096x4096x4096 sampled-stat reports plus an aggregate sweep summary.
+[2026-04-24 00:31:27 +08:00] The current 3-seed sweep reports mean_of_mean_rel_error ~= 4.81e-7 and max_of_max_rel_error ~= 6.59e-4 (worst seed 20260503), extending the error-stat chain beyond a single report.

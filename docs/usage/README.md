@@ -92,7 +92,25 @@ python ./tools/mx_ref.py --emit-matmul-dataset --m 6 --n 33 --k 160 --seed 20260
 ./sim/run_matmul_stats.ps1 -M 1024 -N 1024 -K 2048 -Samples 512 -Seed 7
 ```
 
-## 8. 目录说明
+## 8. 生成 `4096x4096` 多 seed sweep
+```powershell
+./sim/run_matmul_stats_sweep.ps1
+```
+
+默认行为：
+- seeds：`20260423`、`20260503`、`20260504`
+- 规模：`4096 x 4096 x 4096`
+- 采样：每个 seed `2048` 个输出点
+- 输出：
+  - `reports/matmul_stats_4096x4096x4096_seed*.json`
+  - `reports/matmul_stats_4096x4096x4096_sweep.json`
+
+如需自定义：
+```powershell
+./sim/run_matmul_stats_sweep.ps1 -Samples 1024 -Seeds 1,2,3 -OutFile ./reports/custom_sweep.json
+```
+
+## 9. 目录说明
 - `rtl/`：纯 Verilog RTL
 - `tb/`：Verilog testbench
 - `tools/`：Python 工具

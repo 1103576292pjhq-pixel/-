@@ -19,4 +19,5 @@
 - Verilog 回归脚本：[sim/run_iverilog.ps1](/D:/github/-/sim/run_iverilog.ps1)
 - Python 参考模型脚本：[sim/run_python_ref.ps1](/D:/github/-/sim/run_python_ref.ps1)
 - `4096x4096` 抽样统计脚本：[sim/run_matmul_stats.ps1](/D:/github/-/sim/run_matmul_stats.ps1)
+- `4096x4096` 多 seed sweep 脚本：[sim/run_matmul_stats_sweep.ps1](/D:/github/-/sim/run_matmul_stats_sweep.ps1)
 - 使用说明：[docs/usage/README.md](/D:/github/-/docs/usage/README.md)
