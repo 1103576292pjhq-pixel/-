@@ -62,6 +62,9 @@
 2. 再等这一串 `valid_o` 拉低
 3. 最后一次性读取 `acc_o`
 
+这里虽然仍然拿 `valid_o[0]` 作为“代表 lane”去等待，但 testbench 另外有一条持续检查：`valid_o` 只能是全 0 或全 1。  
+也就是说，只要出现“某几列先出结果、某几列还没出”的失步情况，testbench 会直接报错，不会被 `valid_o[0]` 这个简化等待条件掩盖掉。
+
 原因是当前阵列验证的重点是“tile 最终结果对不对”，不是做逐拍波形级 scoreboard。
 
 对真实列：
@@ -79,7 +82,7 @@
 - 前一个 tile 的结果残留在没用到的 lane 里
 - 把“行内 `NaN` 传播”误判成“padded lane 应该永远是零”
 
-## 6. 两组关键数据集为什么都有价值
+## 6. 三组关键数据集为什么都有价值
 `5x20x96` 这组有限值数据集同时覆盖了三种之前没一起出现过的边界：
 
 - `M=5`：奇数行
@@ -92,9 +95,17 @@
 - 第二个 tile 仍然是不满 `16` 列
 - 可以验证 padded lane 在非有限值行上是否按预期落成 `QNaN`
 
-这两组数据集一起用，才算把“尾 tile”从纯有限值场景扩到更真实的数值语义。
+`6x33x160_nonfinite` 则把边界再往前推了一步：
+
+- `N=33`：一共 3 个列 tile，最后一个 tile 只剩 1 个真实输出列
+- `K=160`：一共 5 个 `K_BLOCKS`，连续 burst 更长
+- mixed finite / `inf` / `NaN` 语义继续保留
+- 新数据集还顺带暴露出“黄金模型导出的 `QNaN` 必须统一 canonical 化”的问题，避免宿主平台保留 NaN 符号位时造成伪回归失败
+
+这三组数据集一起用，才算把“尾 tile”从纯有限值场景扩到更真实的数值语义，并开始覆盖三列 tile 的调度边界。
 
 ## 7. 读完这篇后应该记住什么
 - `tb_mx_array_dataset` 是当前矩阵级主回归，不只是“读文件然后比较”
+- 用 `valid_o[0]` 等待只是简化写法，真正的前提是 `valid_o` 必须整向量同步变化；现在 testbench 已把这个前提显式检查掉
 - 尾 tile 的核心做法是“固定宽度接口 + 空 lane 零填充 + 按行语义检查 padded 输出”
-- `tb_mx_array_dataset_5x20x96.v` 和 `tb_mx_array_dataset_3x18x64_nonfinite.v` 的作用，是把有限值边界和 mixed nonfinite 语义一起纳入默认回归，而不是手工偶尔跑一次
+- `tb_mx_array_dataset_5x20x96.v`、`tb_mx_array_dataset_3x18x64_nonfinite.v`、`tb_mx_array_dataset_6x33x160_nonfinite.v` 的作用，是把有限值边界、mixed nonfinite 语义和三列 tile 组合边界一起纳入默认回归，而不是手工偶尔跑一次

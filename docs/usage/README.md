@@ -17,10 +17,11 @@
 - `tb_mx_array_smoke`
 - `tb_mx_array_dataset`：读取 `vectors/matmul_4x16x64_smoke/` 的 `.hex` 数据，按 burst 方式连续送入一个 tile 的全部 `K_BLOCKS`，再逐 tile 对比 `expected_y.hex`
 - `tb_mx_array_dataset_3x18x64_nonfinite`：读取 `vectors/matmul_3x18x64_nonfinite/` 的 `.hex` 数据，覆盖 mixed finite / `inf` / `NaN` 输出与尾 tile 并存场景
+- `tb_mx_array_dataset_6x33x160_nonfinite`：读取 `vectors/matmul_6x33x160_nonfinite/` 的 `.hex` 数据，覆盖三列 tile、最后一 tile 只剩 1 个有效 lane、`K=160` 与 mixed finite / `inf` / `NaN` 并存场景
 - `tb_mx_array_dataset_5x20x96`：读取 `vectors/matmul_5x20x96_tail/` 的 `.hex` 数据，覆盖 `N=20` 尾 tile 零填充、`K=96` 与奇数行场景
 - `tb_mx_array_dataset_8x32x128`：读取 `vectors/matmul_8x32x128_smoke/` 的 `.hex` 数据并覆盖双 tile、`K=128` 场景
 
-其中 `tb_mx_array_dataset` 现已支持 `N` 不是 `16` 整数倍的情况：最后一个 tile 未使用的列 lane 会自动喂入零 block。对于有限值行，这些 padded lane 在收尾时应保持 `FP32 zero`；如果该行本身含 `NaN`，则 padded lane 也可能合法地产生 `QNaN`，testbench 会按行内容建模这个期望值。
+其中 `tb_mx_array_dataset` 现已支持 `N` 不是 `16` 整数倍的情况：最后一个 tile 未使用的列 lane 会自动喂入零 block。对于有限值行，这些 padded lane 在收尾时应保持 `FP32 zero`；如果该行本身含 `NaN`，则 padded lane 也可能合法地产生 `QNaN`，testbench 会按行内容建模这个期望值。与此同时，testbench 会显式检查 `valid_o` 只能 16 位同时为 0 或同时为 1，因此用 `valid_o[0]` 作为等待条件不会掩盖单列失步。
 
 ## 3. 运行 Python 参考模型自检
 ```powershell
@@ -61,6 +62,13 @@ mixed nonfinite 数据集示例：
 ```powershell
 python ./tools/mx_ref.py --emit-matmul-dataset --m 3 --n 18 --k 64 --seed 20260430 --outdir ./vectors/matmul_3x18x64_nonfinite
 ```
+
+三列 tile mixed nonfinite 数据集示例：
+```powershell
+python ./tools/mx_ref.py --emit-matmul-dataset --m 6 --n 33 --k 160 --seed 20260501 --outdir ./vectors/matmul_6x33x160_nonfinite
+```
+
+`tools/mx_ref.py` 在导出 `.hex` 时会把所有 `NaN` 统一规范化为 canonical `0x7fc00000`，避免宿主平台保留 NaN 符号位时把硬件/黄金模型的语义对齐误判成失败。
 
 ## 7. 生成 `4096x4096` 抽样统计
 ```powershell

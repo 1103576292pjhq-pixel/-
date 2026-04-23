@@ -7,7 +7,7 @@
 - 设计一个 `32x16` 的 `MXFP8` 计算阵列
 - 输入 `A/B` 为 `MXFP8`，输出累加为 `FP32`
 - 代码语言保持纯 Verilog，当前 `llmt_col` 为三级流水，且 Stage-1 只寄存 `4x8` partial sums
-- 默认 Verilog 回归已覆盖 `4x16x64`、`5x20x96` 尾 tile、`8x32x128` 三组有限值矩阵数据集，以及 `3x18x64` mixed finite / `inf` / `NaN` 矩阵数据集
+- 默认 Verilog 回归已覆盖 `4x16x64`、`5x20x96` 尾 tile、`8x32x128` 三组有限值矩阵数据集，以及 `3x18x64`、`6x33x160` 两组 mixed finite / `inf` / `NaN` 矩阵数据集
 - 文档同时覆盖：
   - 面向比赛提交的正式技术报告
   - 面向 0 基础读者的 NPU 背景教程和代码讲解

@@ -17,3 +17,5 @@
 [2026-04-23 23:49:16 +08:00] Updated tb_mx_array_dataset padded-lane checking: finite-only tail rows still expect FP32 zero, while rows carrying NaN now legally expect QNaN on padded lanes under zero-padded B inputs.
 [2026-04-23 23:56:51 +08:00] Retimed rtl/llmt_col.v again so Stage-1 now registers only the four 8-lane partial sums, while the final merge happens in the next stage before fixed_to_fp32.
 [2026-04-23 23:56:51 +08:00] Re-ran the default iverilog regression after the partial-sum register retiming; valid_o behavior and all current matrix datasets remain unchanged.
+[2026-04-24 00:14:08 +08:00] Added vectors/matmul_6x33x160_nonfinite and wired a new default matrix regression that covers three column tiles, a one-lane tail tile, and K_BLOCKS=5 in one mixed nonfinite scenario.
+[2026-04-24 00:14:08 +08:00] Hardened tb_mx_array_dataset with a uniform valid_o vector check and canonicalized Python-emitted NaNs to 0x7fc00000 after the new dataset exposed sign-dependent QNaN expectations.
