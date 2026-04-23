@@ -19,16 +19,33 @@
 - `dot32` 列级原型 `llmt_col`
 - `32x16` 顶层阵列原型
 - 单列 smoke test、corner test、阵列 smoke test
-- Python 参考模型自检
+- 文件驱动矩阵级 testbench `tb_mx_array_dataset`
+- Python 参考模型自检、向量导出、`4096x4096` 抽样误差统计
 
 当前仍需完成：
 
 - 面向比赛频率目标的竞赛版 `LLMT` 微架构
-- `4096x4096` 级验证与误差统计
+- 更大覆盖面的阵列级回归与正式验证结论
 - 综合脚本、约束与PPA报告
 - 完整报告图表和结论
 
-## 4. 报告后续章节规划
+## 4. 已落地的验证链路
+- `sim/run_iverilog.ps1` 已接入 `tb_mx_array_dataset`，可读取 `vectors/matmul_4x16x64_smoke/` 里的 `a_blocks.hex`、`b_blocks.hex`、`expected_y.hex` 做逐 tile 校验。
+- `tools/mx_ref.py --emit-matmul-dataset` 已支持 `--finite-only`，便于生成稳定的硬件回归数据集。
+- `sim/run_matmul_stats.ps1` 默认会生成 `reports/matmul_stats_4096x4096x4096.json`，用于快速查看大矩阵抽样误差摘要。
+
+## 5. 当前 `4096x4096` 抽样结果
+以 `seed = 20260423`、`samples = 2048`、有限值输入为例，当前参考实现得到：
+
+- `finite_count = 2048`，`nan_count = 0`，`inf_count = 0`
+- `mean_rel_error = 3.90e-7`
+- `max_rel_error = 7.92e-5`
+- `mean_abs_error = 341.06`
+- `max_abs_error = 6442.18`
+
+这些数字说明：当前“每个 block 做 dot32，再做 FP32 累加”的参考数值路径，相对未逐步舍入的理想双精度累加，误差量级已经比较可控，后续可以把重点转向竞赛版微架构与更系统的验证覆盖。
+
+## 6. 报告后续章节规划
 - MXFP8 格式与数值语义
 - 总体架构与数据流
 - `LLMT` 微架构与流水线划分

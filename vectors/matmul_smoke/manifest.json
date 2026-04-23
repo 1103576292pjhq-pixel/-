@@ -5,10 +5,15 @@
   "k": 64,
   "k_blocks": 2,
   "seed": 2026,
+  "finite_only": true,
+  "scale_exp_min": -8,
+  "scale_exp_max": 8,
   "packing": "element0_in_lsb_byte",
   "y_stats": {
-    "max_abs": 1.1401065689115662e+37,
-    "nan_count": 12,
-    "checksum_xor": "0xa9acd7c9"
+    "max_abs": 4226403.5,
+    "nan_count": 0,
+    "inf_count": 0,
+    "finite_count": 16,
+    "checksum_xor": "0x8d4e5b43"
   }
 }

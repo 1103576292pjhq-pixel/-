@@ -14,6 +14,7 @@
 - `tb_llmt_col_smoke`
 - `tb_llmt_col_corner`
 - `tb_mx_array_smoke`
+- `tb_mx_array_dataset`：读取 `vectors/matmul_4x16x64_smoke/` 的 `.hex` 数据并逐 tile 对比 `expected_y.hex`
 
 ## 3. 运行 Python 参考模型自检
 ```powershell
@@ -35,7 +36,28 @@ python ./tools/mx_ref.py --emit-dot32-vectors 64 --seed 1234 --outdir ./vectors/
 python ./tools/mx_ref.py --emit-matmul-dataset --m 8 --n 8 --k 64 --seed 1234 --outdir ./vectors/matmul_demo
 ```
 
-## 7. 目录说明
+如果希望导出更稳定、便于硬件回归的有限值数据集：
+```powershell
+python ./tools/mx_ref.py --emit-matmul-dataset --m 4 --n 16 --k 64 --seed 20260423 --finite-only --outdir ./vectors/matmul_4x16x64_smoke
+```
+
+## 7. 生成 `4096x4096` 抽样统计
+```powershell
+./sim/run_matmul_stats.ps1
+```
+
+默认行为：
+- 规模：`4096 x 4096 x 4096`
+- 采样：`2048` 个输出点
+- 输入：有限值 `MXFP8` 随机块，`E8M0` 指数范围 `[-8, 8]`
+- 输出：`reports/matmul_stats_4096x4096x4096.json`
+
+如需自定义：
+```powershell
+./sim/run_matmul_stats.ps1 -M 1024 -N 1024 -K 2048 -Samples 512 -Seed 7
+```
+
+## 8. 目录说明
 - `rtl/`：纯 Verilog RTL
 - `tb/`：Verilog testbench
 - `tools/`：Python 工具

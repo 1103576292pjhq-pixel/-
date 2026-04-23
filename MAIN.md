@@ -33,10 +33,10 @@
 - P7：逐文件逐段代码讲解
 
 ## Current Repo Reality
-- 已有：纯 Verilog 参考 RTL、基础 smoke/corner test、Python 参考模型
-- 缺少：竞赛版微架构、矩阵级验证链路、综合脚本、正式报告、背景教程、逐段讲解文档
+- 已有：纯 Verilog 参考 RTL、单列/阵列 smoke 与 corner test、文件驱动矩阵级数据集回归、Python 参考模型与 `4096x4096` 抽样统计脚本
+- 缺少：竞赛版微架构、长流水 `LLMT` 切分、更多矩阵规模的硬件回归、综合脚本实测结果、正式报告扩写、逐段讲解文档
 
 ## Immediate Next Targets
-- 固化工程目录和状态文件
-- 把 Python 参考模型扩成可导出向量与矩阵数据的工具
-- 产出首版技术/教学文档骨架，便于后续 `CodexPotter` 接手长跑
+- 把 `llmt_col` 从参考版单拍实现推进到更接近竞赛目标的流水微架构
+- 扩大 P3 覆盖：增加更长 `K` 和更多 tile 组合的阵列级回归
+- 把验证结果、脚本入口和代码讲解继续写进报告/usage/teaching 文档
