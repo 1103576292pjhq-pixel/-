@@ -1,0 +1,14 @@
+{
+  "kind": "matmul_dataset",
+  "m": 4,
+  "n": 16,
+  "k": 64,
+  "k_blocks": 2,
+  "seed": 20260423,
+  "packing": "element0_in_lsb_byte",
+  "y_stats": {
+    "max_abs": Infinity,
+    "nan_count": 42,
+    "checksum_xor": "0xde4fc2d8"
+  }
+}

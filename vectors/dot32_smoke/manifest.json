@@ -1,0 +1,65 @@
+{
+  "kind": "dot32_vectors",
+  "count": 8,
+  "seed": 1234,
+  "block_k": 32,
+  "packing": "element0_in_lsb_byte",
+  "cases": [
+    {
+      "index": 0,
+      "a_scale": "0x4c",
+      "b_scale": "0xf4",
+      "dot_bits": "0x7fc00000",
+      "acc_bits": "0x7fc00000"
+    },
+    {
+      "index": 1,
+      "a_scale": "0x7f",
+      "b_scale": "0xe8",
+      "dot_bits": "0xfc2400d4",
+      "acc_bits": "0x7fc00000"
+    },
+    {
+      "index": 2,
+      "a_scale": "0xa8",
+      "b_scale": "0x07",
+      "dot_bits": "0x1eb09131",
+      "acc_bits": "0x7fc00000"
+    },
+    {
+      "index": 3,
+      "a_scale": "0xe2",
+      "b_scale": "0x0b",
+      "dot_bits": "0x7fc00000",
+      "acc_bits": "0x7fc00000"
+    },
+    {
+      "index": 4,
+      "a_scale": "0xc1",
+      "b_scale": "0x99",
+      "dot_bits": "0x74ef6487",
+      "acc_bits": "0x7fc00000"
+    },
+    {
+      "index": 5,
+      "a_scale": "0xcf",
+      "b_scale": "0xe3",
+      "dot_bits": "0x7fc00000",
+      "acc_bits": "0x7fc00000"
+    },
+    {
+      "index": 6,
+      "a_scale": "0x8f",
+      "b_scale": "0x85",
+      "dot_bits": "0x7fc00000",
+      "acc_bits": "0x7fc00000"
+    },
+    {
+      "index": 7,
+      "a_scale": "0x72",
+      "b_scale": "0x75",
+      "dot_bits": "0x7fc00000",
+      "acc_bits": "0x7fc00000"
+    }
+  ]
+}
