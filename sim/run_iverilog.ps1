@@ -26,6 +26,7 @@ function Invoke-IverilogTest {
 }
 
 Invoke-IverilogTest -Name "tb_llmt_col_smoke" -Testbench (Join-Path $workdir "tb\\tb_llmt_col_smoke.v")
+Invoke-IverilogTest -Name "tb_llmt_col_back_to_back" -Testbench (Join-Path $workdir "tb\\tb_llmt_col_back_to_back.v")
 Invoke-IverilogTest -Name "tb_llmt_col_corner" -Testbench (Join-Path $workdir "tb\\tb_llmt_col_corner.v")
 Invoke-IverilogTest -Name "tb_mx_array_smoke" -Testbench (Join-Path $workdir "tb\\tb_mx_array_smoke.v")
 Invoke-IverilogTest `

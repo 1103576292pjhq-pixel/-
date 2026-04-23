@@ -12,6 +12,7 @@
 
 当前会运行：
 - `tb_llmt_col_smoke`
+- `tb_llmt_col_back_to_back`
 - `tb_llmt_col_corner`
 - `tb_mx_array_smoke`
 - `tb_mx_array_dataset`：读取 `vectors/matmul_4x16x64_smoke/` 的 `.hex` 数据并逐 tile 对比 `expected_y.hex`
