@@ -25,6 +25,9 @@ module llmt_col (
 
   reg valid_o;
   reg signed [`MX_DOT_W-1:0] dot_sum_int;
+  reg signed [`MX_DOT_W-1:0] dot_quad_sum [0:3];
+  reg signed [`MX_DOT_W-1:0] dot_half_sum0;
+  reg signed [`MX_DOT_W-1:0] dot_half_sum1;
   reg any_nan;
   reg signed [`MX_ELEM_FIXED_W-1:0] a_fixed;
   reg signed [`MX_ELEM_FIXED_W-1:0] b_fixed;
@@ -44,26 +47,39 @@ module llmt_col (
   reg [31:0] acc_reg;
   wire [31:0] dot_fp32_s1;
   wire [31:0] acc_next;
-  integer idx;
+  integer quad_idx;
+  integer lane_idx;
+  integer elem_idx;
 
   `include "mx_funcs.vh"
 
   always @* begin
-    dot_sum_int = {`MX_DOT_W{1'b0}};
     any_nan = e8m0_is_nan(a_scale_i) || e8m0_is_nan(b_scale_i);
+    dot_half_sum0 = {`MX_DOT_W{1'b0}};
+    dot_half_sum1 = {`MX_DOT_W{1'b0}};
 
-    for (idx = 0; idx < `MX_BLOCK_K; idx = idx + 1) begin
-      if (e4m3_is_nan(a_elems_i[idx*`MX_ELEM_W +: `MX_ELEM_W]) ||
-          e4m3_is_nan(b_elems_i[idx*`MX_ELEM_W +: `MX_ELEM_W])) begin
-        any_nan = 1'b1;
+    // Split the 32-lane dot product into four 8-lane partial sums so Stage-1
+    // is closer to a reduction tree instead of a single long adder chain.
+    for (quad_idx = 0; quad_idx < 4; quad_idx = quad_idx + 1) begin
+      dot_quad_sum[quad_idx] = {`MX_DOT_W{1'b0}};
+      for (lane_idx = 0; lane_idx < 8; lane_idx = lane_idx + 1) begin
+        elem_idx = (quad_idx * 8) + lane_idx;
+        if (e4m3_is_nan(a_elems_i[elem_idx*`MX_ELEM_W +: `MX_ELEM_W]) ||
+            e4m3_is_nan(b_elems_i[elem_idx*`MX_ELEM_W +: `MX_ELEM_W])) begin
+          any_nan = 1'b1;
+        end
+
+        a_fixed = e4m3_to_fixed(a_elems_i[elem_idx*`MX_ELEM_W +: `MX_ELEM_W]);
+        b_fixed = e4m3_to_fixed(b_elems_i[elem_idx*`MX_ELEM_W +: `MX_ELEM_W]);
+        lane_prod = a_fixed * b_fixed;
+        lane_prod_ext = {{(`MX_DOT_W-`MX_PROD_W){lane_prod[`MX_PROD_W-1]}}, lane_prod};
+        dot_quad_sum[quad_idx] = dot_quad_sum[quad_idx] + lane_prod_ext;
       end
-
-      a_fixed = e4m3_to_fixed(a_elems_i[idx*`MX_ELEM_W +: `MX_ELEM_W]);
-      b_fixed = e4m3_to_fixed(b_elems_i[idx*`MX_ELEM_W +: `MX_ELEM_W]);
-      lane_prod = a_fixed * b_fixed;
-      lane_prod_ext = {{(`MX_DOT_W-`MX_PROD_W){lane_prod[`MX_PROD_W-1]}}, lane_prod};
-      dot_sum_int = dot_sum_int + lane_prod_ext;
     end
+
+    dot_half_sum0 = dot_quad_sum[0] + dot_quad_sum[1];
+    dot_half_sum1 = dot_quad_sum[2] + dot_quad_sum[3];
+    dot_sum_int = dot_half_sum0 + dot_half_sum1;
   end
 
   always @* begin
