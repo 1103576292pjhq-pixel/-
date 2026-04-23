@@ -67,6 +67,8 @@ module tb_mx_array_dataset;
   integer lane_idx;
   integer mismatch_count;
 
+  `include "mx_funcs.vh"
+
   mx_array_32x16 dut (
     .clk(clk),
     .rst_n(rst_n),
@@ -129,6 +131,7 @@ module tb_mx_array_dataset;
     input integer row_idx_t;
     input integer tile_idx_t;
     integer lane_idx_t;
+    integer global_col_t;
     integer y_mem_idx;
     reg [31:0] expected_bits;
     reg [31:0] got_bits;
@@ -141,12 +144,13 @@ module tb_mx_array_dataset;
       end
       #1;
       for (lane_idx_t = 0; lane_idx_t < `MX_COLS; lane_idx_t = lane_idx_t + 1) begin
-        y_mem_idx = (row_idx_t * N) + (tile_idx_t * `MX_COLS) + lane_idx_t;
+        global_col_t = (tile_idx_t * `MX_COLS) + lane_idx_t;
+        y_mem_idx = (row_idx_t * N) + global_col_t;
         got_bits = acc_o[(lane_idx_t * 32) +: 32];
-        if (((tile_idx_t * `MX_COLS) + lane_idx_t) < N) begin
+        if (global_col_t < N) begin
           expected_bits = y_expected_mem[y_mem_idx];
         end else begin
-          expected_bits = `MX_FP32_ZERO;
+          expected_bits = expected_padded_lane_bits(row_idx_t);
         end
 
         if (got_bits !== expected_bits) begin
@@ -165,6 +169,29 @@ module tb_mx_array_dataset;
       end
     end
   endtask
+
+  function [31:0] expected_padded_lane_bits;
+    input integer row_idx_t;
+    integer kb_idx_t;
+    integer elem_idx_t;
+    integer a_mem_idx_t;
+    reg row_has_nan_t;
+    begin
+      row_has_nan_t = 1'b0;
+      for (kb_idx_t = 0; kb_idx_t < K_BLOCKS; kb_idx_t = kb_idx_t + 1) begin
+        a_mem_idx_t = (row_idx_t * K_BLOCKS) + kb_idx_t;
+        if (e8m0_is_nan(a_scales_mem[a_mem_idx_t])) begin
+          row_has_nan_t = 1'b1;
+        end
+        for (elem_idx_t = 0; elem_idx_t < `MX_BLOCK_K; elem_idx_t = elem_idx_t + 1) begin
+          if (e4m3_is_nan(a_blocks_mem[a_mem_idx_t][elem_idx_t*`MX_ELEM_W +: `MX_ELEM_W])) begin
+            row_has_nan_t = 1'b1;
+          end
+        end
+      end
+      expected_padded_lane_bits = row_has_nan_t ? `MX_FP32_QNAN : `MX_FP32_ZERO;
+    end
+  endfunction
 
   always #5 clk = ~clk;
 
