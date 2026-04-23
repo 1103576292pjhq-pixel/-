@@ -35,6 +35,7 @@
   - `tb_llmt_col_back_to_back`：验证三级流水在连续 `valid_i` 输入下仍能按顺序输出 `FP32` 累加结果
   - `vectors/matmul_4x16x64_smoke/`：`M=4`、`N=16`、`K=64`，验证单 tile、`K_BLOCKS=2`
   - `vectors/matmul_8x32x128_smoke/`：`M=8`、`N=32`、`K=128`，验证双 tile、`K_BLOCKS=4`
+- `tb_mx_array_dataset` 现已改成 burst 驱动：同一个 tile 的 `K_BLOCKS` 连续每拍送入阵列，不再插入空拍，再在一整串 `valid_o` 输出结束后核对最终 tile 结果。
 - `tools/mx_ref.py --emit-matmul-dataset` 已支持 `--finite-only`，便于生成稳定的硬件回归数据集。
 - `sim/run_matmul_stats.ps1` 默认会生成 `reports/matmul_stats_4096x4096x4096.json`，用于快速查看大矩阵抽样误差摘要。
 
@@ -44,6 +45,7 @@
 - `4x16x64`：用于快速确认基础 tile 驱动与两段 block 累加
 - `8x32x128`：用于确认更长 `K`、双 tile 读数和流水 `valid_o` 时序
 - `tb_llmt_col_back_to_back`：用于确认三级流水具备连续每拍输入、连续每拍输出的基本吞吐能力
+- `tb_mx_array_dataset` burst 模式：用于确认阵列级矩阵回归也能在连续每拍输入场景下保持最终结果正确
 
 这意味着当前列核虽然仍是保守版三级流水，但已经能在更贴近矩阵级场景的固定数据集上稳定跑通。
 

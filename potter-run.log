@@ -8,3 +8,4 @@
 [2026-04-23 23:10:17 +08:00] Updated column/array testbenches to wait on valid_o instead of single-cycle assumptions; default Verilog regression now also runs the 8x32x128 finite-only matrix dataset.
 [2026-04-23 23:10:17 +08:00] Synced MAIN.md / STATUS.md / docs/report / docs/usage / docs/teaching for the pipelined LLMT milestone; no persistent Potter runner was launched.
 [2026-04-23 23:16:38 +08:00] Added tb_llmt_col_back_to_back and verified the pipelined llmt_col accepts consecutive valid_i inputs with ordered FP32 accumulation outputs.
+[2026-04-23 23:20:21 +08:00] Converted tb_mx_array_dataset to burst-drive each tile's K blocks and re-ran both fixed datasets under continuous per-cycle array input without mismatches.

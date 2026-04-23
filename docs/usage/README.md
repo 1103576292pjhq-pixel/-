@@ -15,7 +15,7 @@
 - `tb_llmt_col_back_to_back`
 - `tb_llmt_col_corner`
 - `tb_mx_array_smoke`
-- `tb_mx_array_dataset`：读取 `vectors/matmul_4x16x64_smoke/` 的 `.hex` 数据并逐 tile 对比 `expected_y.hex`
+- `tb_mx_array_dataset`：读取 `vectors/matmul_4x16x64_smoke/` 的 `.hex` 数据，按 burst 方式连续送入一个 tile 的全部 `K_BLOCKS`，再逐 tile 对比 `expected_y.hex`
 - `tb_mx_array_dataset_8x32x128`：读取 `vectors/matmul_8x32x128_smoke/` 的 `.hex` 数据并覆盖双 tile、`K=128` 场景
 
 ## 3. 运行 Python 参考模型自检

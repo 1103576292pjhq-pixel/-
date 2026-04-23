@@ -1,6 +1,6 @@
 # STATUS
 
 - 当前批次：P2/P3 流水微架构与验证扩展
-- 本批已完成：`llmt_col` 三级流水化、补齐 back-to-back 吞吐回归、列级/阵列级 testbench 改为按 `valid_o` 对齐结果、默认 Verilog 回归新增 `8x32x128` 有限值数据集、报告/usage/teaching 同步到最新覆盖
+- 本批已完成：`llmt_col` 三级流水化、补齐 back-to-back 吞吐回归、`tb_mx_array_dataset` 改为 burst 驱动并在连续每拍输入下跑通两组固定数据集、列级/阵列级 testbench 按 `valid_o` 对齐结果、默认 Verilog 回归新增 `8x32x128` 有限值数据集、报告/usage/teaching 同步到最新覆盖
 - 下一步：在当前三级流水基础上继续推进更接近竞赛目标的 `LLMT` 微架构，补综合/PPA实测，并继续扩大矩阵级回归和教学文档覆盖
 - 阻塞项：无；当前为交互会话内推进，未启动独立长期 runner

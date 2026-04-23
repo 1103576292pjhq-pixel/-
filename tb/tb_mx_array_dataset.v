@@ -102,14 +102,16 @@ module tb_mx_array_dataset;
     end
   endtask
 
-  task drive_block;
+  task drive_tile_burst;
     input integer row_idx_t;
     input integer tile_idx_t;
-    input integer kb_idx_t;
+    integer kb_idx_t;
     begin
-      @(negedge clk);
-      load_step_inputs(row_idx_t, tile_idx_t, kb_idx_t);
-      valid_i = 1'b1;
+      for (kb_idx_t = 0; kb_idx_t < K_BLOCKS; kb_idx_t = kb_idx_t + 1) begin
+        @(negedge clk);
+        load_step_inputs(row_idx_t, tile_idx_t, kb_idx_t);
+        valid_i = 1'b1;
+      end
 
       @(negedge clk);
       valid_i = 1'b0;
@@ -125,10 +127,10 @@ module tb_mx_array_dataset;
     reg [31:0] expected_bits;
     reg [31:0] got_bits;
     begin
-      while (valid_o[0] === 1'b1) begin
+      while (valid_o[0] !== 1'b1) begin
         @(negedge clk);
       end
-      while (valid_o[0] !== 1'b1) begin
+      while (valid_o[0] === 1'b1) begin
         @(negedge clk);
       end
       #1;
@@ -182,9 +184,7 @@ module tb_mx_array_dataset;
 
     for (row_idx = 0; row_idx < M; row_idx = row_idx + 1) begin
       for (tile_idx = 0; tile_idx < COL_TILES; tile_idx = tile_idx + 1) begin
-        for (kb_idx = 0; kb_idx < K_BLOCKS; kb_idx = kb_idx + 1) begin
-          drive_block(row_idx, tile_idx, kb_idx);
-        end
+        drive_tile_burst(row_idx, tile_idx);
         check_tile_results(row_idx, tile_idx);
       end
     end
