@@ -28,7 +28,10 @@ def float32(value: float) -> float:
 
 
 def float_to_bits(value: float) -> int:
-    return struct.unpack("<I", struct.pack("<f", float32(value)))[0]
+    fp32_value = float32(value)
+    if math.isnan(fp32_value):
+        return FP32_QNAN_BITS
+    return struct.unpack("<I", struct.pack("<f", fp32_value))[0]
 
 
 def bits_to_float(bits: int) -> float:
@@ -234,6 +237,9 @@ def build_cases() -> list[Case]:
 
 
 def run_selftest() -> None:
+    if float_to_bits(math.nan) != FP32_QNAN_BITS:
+        raise SystemExit("nan canonicalization mismatch")
+
     for case in build_cases():
         got = dot32_to_bits(case.a_elems, case.a_scale, case.b_elems, case.b_scale)
         if got != case.expected_bits:
@@ -247,6 +253,12 @@ def run_selftest() -> None:
     acc = acc_add_bits(acc, dot32_to_bits(case.a_elems, case.a_scale, case.b_elems, case.b_scale))
     if acc != 0x42800000:
         raise SystemExit(f"accumulate mismatch: expected 0x42800000, got 0x{acc:08x}")
+
+    inf_minus_inf = acc_add_bits(float_to_bits(math.inf), float_to_bits(-math.inf))
+    if inf_minus_inf != FP32_QNAN_BITS:
+        raise SystemExit(
+            f"inf-plus-neg-inf mismatch: expected 0x{FP32_QNAN_BITS:08x}, got 0x{inf_minus_inf:08x}"
+        )
 
     a_blocks = [[[0x38] * MX_BLOCK_K, [0x38] * MX_BLOCK_K]]
     a_scales = [[0x7F, 0x7F]]

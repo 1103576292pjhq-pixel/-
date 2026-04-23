@@ -41,6 +41,9 @@ Invoke-IverilogTest `
   -Name "tb_mx_array_dataset_3x18x64_nonfinite" `
   -Testbench (Join-Path $workdir "tb\\tb_mx_array_dataset_3x18x64_nonfinite.v")
 Invoke-IverilogTest `
+  -Name "tb_mx_array_dataset_6x33x160_nonfinite" `
+  -Testbench (Join-Path $workdir "tb\\tb_mx_array_dataset_6x33x160_nonfinite.v")
+Invoke-IverilogTest `
   -Name "tb_mx_array_dataset_8x32x128" `
   -Testbench (Join-Path $workdir "tb\\tb_mx_array_dataset_8x32x128.v")
 Invoke-IverilogTest `

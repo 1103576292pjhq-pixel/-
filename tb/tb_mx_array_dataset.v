@@ -193,6 +193,15 @@ module tb_mx_array_dataset;
     end
   endfunction
 
+  always @(posedge clk) begin
+    if (rst_n) begin
+      if (!((valid_o === {`MX_COLS{1'b0}}) || (valid_o === {`MX_COLS{1'b1}}))) begin
+        $display("FAIL: valid_o must remain uniform across columns, got %b", valid_o);
+        $fatal;
+      end
+    end
+  end
+
   always #5 clk = ~clk;
 
   initial begin
