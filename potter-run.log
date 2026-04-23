@@ -4,3 +4,6 @@
 [2026-04-23 22:46:08 +08:00] Added file-driven matrix regression via tb_mx_array_dataset and wired it into sim/run_iverilog.ps1.
 [2026-04-23 22:46:08 +08:00] Generated finite-only matmul smoke datasets and refreshed vectors/matmul_4x16x64_smoke + vectors/matmul_smoke.
 [2026-04-23 22:46:08 +08:00] Recorded sampled 4096x4096 stats in reports/matmul_stats_4096x4096x4096.json; no persistent Potter runner was launched.
+[2026-04-23 23:10:17 +08:00] Refactored rtl/llmt_col.v into a conservative 3-stage LLMT pipeline while preserving the original external interface and FP32 accumulation semantics.
+[2026-04-23 23:10:17 +08:00] Updated column/array testbenches to wait on valid_o instead of single-cycle assumptions; default Verilog regression now also runs the 8x32x128 finite-only matrix dataset.
+[2026-04-23 23:10:17 +08:00] Synced MAIN.md / STATUS.md / docs/report / docs/usage / docs/teaching for the pipelined LLMT milestone; no persistent Potter runner was launched.

@@ -15,6 +15,7 @@
 - `tb_llmt_col_corner`
 - `tb_mx_array_smoke`
 - `tb_mx_array_dataset`：读取 `vectors/matmul_4x16x64_smoke/` 的 `.hex` 数据并逐 tile 对比 `expected_y.hex`
+- `tb_mx_array_dataset_8x32x128`：读取 `vectors/matmul_8x32x128_smoke/` 的 `.hex` 数据并覆盖双 tile、`K=128` 场景
 
 ## 3. 运行 Python 参考模型自检
 ```powershell
@@ -39,6 +40,11 @@ python ./tools/mx_ref.py --emit-matmul-dataset --m 8 --n 8 --k 64 --seed 1234 --
 如果希望导出更稳定、便于硬件回归的有限值数据集：
 ```powershell
 python ./tools/mx_ref.py --emit-matmul-dataset --m 4 --n 16 --k 64 --seed 20260423 --finite-only --outdir ./vectors/matmul_4x16x64_smoke
+```
+
+更长 `K` / 多 tile 数据集示例：
+```powershell
+python ./tools/mx_ref.py --emit-matmul-dataset --m 8 --n 32 --k 128 --seed 20260424 --finite-only --outdir ./vectors/matmul_8x32x128_smoke
 ```
 
 ## 7. 生成 `4096x4096` 抽样统计
