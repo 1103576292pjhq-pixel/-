@@ -1,6 +1,6 @@
 # STATUS
 
-- 当前批次：P3 `4096x4096` profile 误差 sweep
-- 本批已完成：新增 `sim/run_matmul_stats_profiles.ps1`，并把单次/多 seed 统计扩展成 baseline `[-8,8]`、`finite_exp32` `[-32,32]`、`finite_exp64` `[-64,64]` 三档 profile；baseline 仍为 `mean_of_mean_rel_error ≈ 4.81e-7`、`max_of_max_rel_error ≈ 6.59e-4`，`finite_exp32` 为 `8.88e-8 / 1.16e-5`，`finite_exp64` 则出现 `2484` 个 finite、`2928` 个 `inf`、`732` 个 `NaN` 与 `3660` 个 nonfinite mismatch；状态/报告/使用文档/本地 KB 已同步
-- 下一步：继续推进 `LLMT` 的 issue / reduction 微架构，并在现有五列 tile 覆盖基础上继续扩大更大矩阵、稀疏 mixed-nonfinite 场景与硬件侧极值回归
+- 当前批次：P3 sparse mixed-nonfinite 回归与统计补强
+- 本批已完成：`tools/mx_ref.py` 新增 `--elem-nan-stride` / `--scale-nan-stride`，可在有限值底座上稳定注入 sparse nonfinite；`sim/run_matmul_stats*.ps1` 已接通对应参数并修正 `-Seeds 1,2,3` 的 PowerShell 解析；默认 `iverilog` 回归新增 `7x49x224_sparse_nonfinite`，覆盖四列 tile、单 lane 尾 tile、`K=224` 与 scale-NaN，数据集当前为 `222` 个 finite / `121` 个 `NaN` / `0` 个 `inf`；同时补出 `reports/matmul_stats_4096x4096x4096_sparse_nonfinite.json`，其 `2048` 个样本中有 `2004` 个 finite、`44` 个 `NaN`、`0` 个 nonfinite mismatch，finite 子集 `mean_rel_error ≈ 3.91e-7`
+- 下一步：继续推进 `LLMT` 的 issue / reduction 微架构，并把 sparse mixed-nonfinite 从单点 spot-check 扩展到多 seed sweep 或更极端硬件回归
 - 阻塞项：无；当前为交互会话内推进，未启动独立长期 runner

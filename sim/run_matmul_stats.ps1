@@ -6,6 +6,8 @@ param(
   [int]$Seed = 20260423,
   [int]$ScaleExpMin = -8,
   [int]$ScaleExpMax = 8,
+  [int]$ElemNanStride = 0,
+  [int]$ScaleNanStride = 0,
   [switch]$AllowNonFinite,
   [string]$Tag = "",
   [string]$OutFile = ""
@@ -18,6 +20,8 @@ if (-not $OutFile) {
   $suffix = ""
   if ($Tag) {
     $suffix = "_$Tag"
+  } elseif (($ElemNanStride -gt 0) -or ($ScaleNanStride -gt 0)) {
+    $suffix = "_sparse_nonfinite"
   } elseif ($AllowNonFinite) {
     $suffix = "_mixed_nonfinite"
   }
@@ -35,7 +39,18 @@ $pythonArgs = @(
   "--summary-out", "$OutFile"
 )
 
-if (-not $AllowNonFinite) {
+if (($ElemNanStride -gt 0) -or ($ScaleNanStride -gt 0)) {
+  $pythonArgs += @(
+    "--scale-exp-min", "$ScaleExpMin",
+    "--scale-exp-max", "$ScaleExpMax"
+  )
+  if ($ElemNanStride -gt 0) {
+    $pythonArgs += @("--elem-nan-stride", "$ElemNanStride")
+  }
+  if ($ScaleNanStride -gt 0) {
+    $pythonArgs += @("--scale-nan-stride", "$ScaleNanStride")
+  }
+} elseif (-not $AllowNonFinite) {
   $pythonArgs += @(
     "--finite-only",
     "--scale-exp-min", "$ScaleExpMin",

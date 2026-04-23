@@ -3,11 +3,27 @@ param(
   [int]$N = 4096,
   [int]$K = 4096,
   [int]$Samples = 2048,
-  [int[]]$Seeds = @(20260423, 20260503, 20260504),
+  [object[]]$Seeds = @(20260423, 20260503, 20260504),
   [string]$OutFile = ""
 )
 
 $ErrorActionPreference = "Stop"
+
+function Resolve-IntArray {
+  param(
+    [Parameter(Mandatory = $true)][object[]]$Values
+  )
+
+  $resolved = @()
+  foreach ($Value in $Values) {
+    foreach ($Part in "$Value".Split(",", [System.StringSplitOptions]::RemoveEmptyEntries)) {
+      $resolved += [int]$Part.Trim()
+    }
+  }
+  return ,$resolved
+}
+
+$Seeds = Resolve-IntArray -Values $Seeds
 
 $workdir = Split-Path -Parent $PSScriptRoot
 $reportDir = Join-Path $workdir "reports"
@@ -39,6 +55,18 @@ $profiles = @(
     allow_nonfinite = $false
     scale_exp_min = -64
     scale_exp_max = 64
+    elem_nan_stride = 0
+    scale_nan_stride = 0
+  },
+  [ordered]@{
+    name = "sparse_nonfinite"
+    description = "finite base [-8, 8] with sparse elem/scale NaN injection"
+    tag = "sparse_nonfinite"
+    allow_nonfinite = $true
+    scale_exp_min = -8
+    scale_exp_max = 8
+    elem_nan_stride = 524288
+    scale_nan_stride = 262144
   }
 )
 
@@ -53,6 +81,10 @@ foreach ($profile in $profiles) {
       -Samples $Samples `
       -Seeds $Seeds `
       -AllowNonFinite `
+      -ScaleExpMin $profile.scale_exp_min `
+      -ScaleExpMax $profile.scale_exp_max `
+      -ElemNanStride $profile.elem_nan_stride `
+      -ScaleNanStride $profile.scale_nan_stride `
       -Tag $profile.tag | Out-Null
   } else {
     if ($profile.tag) {
@@ -85,6 +117,9 @@ foreach ($profile in $profiles) {
     description = $profile.description
     summary_file = [IO.Path]::GetFileName($summaryFile)
     finite_only = [bool]$summary.finite_only
+    sparse_nonfinite = [bool]$summary.sparse_nonfinite
+    elem_nan_stride = $summary.elem_nan_stride
+    scale_nan_stride = $summary.scale_nan_stride
     scale_exp_min = $summary.scale_exp_min
     scale_exp_max = $summary.scale_exp_max
     total_finite_count = [int]$summary.total_finite_count

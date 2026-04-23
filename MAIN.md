@@ -33,10 +33,10 @@
 - P7：逐文件逐段代码讲解
 
 ## Current Repo Reality
-- 已有：纯 Verilog 三级流水 RTL（`llmt_col` 的 Stage-1 已收敛为只寄存 `4x8` partial sums，final merge 挪到下一段再进入 `fixed_to_fp32`）、单列/阵列 smoke 与 corner test、`4x16x64` / `5x20x96` / `8x32x128` / `9x65x192` 有限值矩阵数据集回归，以及 `3x18x64` / `6x33x160` mixed nonfinite 矩阵数据集回归（覆盖单 tile、尾 tile、多 tile，当前已到最大 5 个列 tile，并包含 finite / inf / NaN 语义）；`tb_mx_array_dataset` 现会显式检查 `valid_o` 只能整向量同时拉高/拉低，Python 参考模型也已把导出的 `NaN` 统一规范化到 canonical `0x7fc00000`；`4096x4096x4096` 抽样统计已扩展成 baseline `[-8, 8]`、`finite_exp32` `[-32, 32]`、`finite_exp64` `[-64, 64]` 三档 profile sweep，其中 `finite_exp64` 的 `6144` 个样本里出现 `2484` 个 finite、`2928` 个 `inf`、`732` 个 `NaN`，`tools/mx_ref.py` 现会把这类非有限值 mismatch 单独计数，不再污染有限值误差均值
+- 已有：纯 Verilog 三级流水 RTL（`llmt_col` 的 Stage-1 已收敛为只寄存 `4x8` partial sums，final merge 挪到下一段再进入 `fixed_to_fp32`）、单列/阵列 smoke 与 corner test、`4x16x64` / `5x20x96` / `8x32x128` / `9x65x192` 有限值矩阵数据集回归，以及 `3x18x64` / `6x33x160` / `7x49x224` mixed nonfinite 矩阵数据集回归（覆盖单 tile、尾 tile、多 tile，当前已到最大 5 个列 tile；其中 `7x49x224` 额外锁定 sparse scale-NaN / element-NaN 语义）；`tb_mx_array_dataset` 现会显式检查 `valid_o` 只能整向量同时拉高/拉低，Python 参考模型也已把导出的 `NaN` 统一规范化到 canonical `0x7fc00000`，并支持用 `--elem-nan-stride` / `--scale-nan-stride` 生成有限值底座上的 sparse nonfinite 数据集；`4096x4096x4096` 抽样统计已扩展成 baseline `[-8, 8]`、`finite_exp32` `[-32, 32]`、`finite_exp64` `[-64, 64]` 三档 profile sweep，并补出一份 `sparse_nonfinite` spot-check（`2004` 个 finite、`44` 个 `NaN`、`0` 个 nonfinite mismatch），说明 sparse 非有限值传播已能和 finite 误差统计分开解读
 - 缺少：更激进的竞赛版微架构切分、更大 `M,N,K` 与更极端/更稀疏的非有限值硬件回归、综合脚本实测结果、正式报告扩写、更多逐段讲解文档
 
 ## Immediate Next Targets
 - 基于当前 `4x8` partial-sum 寄存化的三级流水 `llmt_col` 继续推进更接近竞赛目标的 reduction / issue 微架构
-- 扩大 P3 覆盖：在现有单 tile / 尾 tile / 多 tile（最大 5 个列 tile）基础上继续增加更多 `M,N,K` 组合与更强边界场景，并基于现有 profile sweep 继续补更稀疏的 mixed-nonfinite 或硬件侧极值回归
+- 扩大 P3 覆盖：在现有单 tile / 尾 tile / 多 tile（最大 5 个列 tile）基础上继续增加更多 `M,N,K` 组合与更强边界场景，并在当前 sparse mixed-nonfinite 单点统计基础上继续补多 seed sparse sweep 或硬件侧极值回归
 - 把流水划分、tail tile 回归结论和代码讲解继续写进报告/usage/primer/teaching 文档

@@ -18,6 +18,7 @@
 - `tb_mx_array_dataset`：读取 `vectors/matmul_4x16x64_smoke/` 的 `.hex` 数据，按 burst 方式连续送入一个 tile 的全部 `K_BLOCKS`，再逐 tile 对比 `expected_y.hex`
 - `tb_mx_array_dataset_3x18x64_nonfinite`：读取 `vectors/matmul_3x18x64_nonfinite/` 的 `.hex` 数据，覆盖 mixed finite / `inf` / `NaN` 输出与尾 tile 并存场景
 - `tb_mx_array_dataset_6x33x160_nonfinite`：读取 `vectors/matmul_6x33x160_nonfinite/` 的 `.hex` 数据，覆盖三列 tile、最后一 tile 只剩 1 个有效 lane、`K=160` 与 mixed finite / `inf` / `NaN` 并存场景
+- `tb_mx_array_dataset_7x49x224_sparse_nonfinite`：读取 `vectors/matmul_7x49x224_sparse_nonfinite/` 的 `.hex` 数据，覆盖四列 tile、最后一 tile 只剩 1 个有效 lane、`K=224`，并在有限值底座上稀疏注入 scale-NaN 与 element-NaN
 - `tb_mx_array_dataset_5x20x96`：读取 `vectors/matmul_5x20x96_tail/` 的 `.hex` 数据，覆盖 `N=20` 尾 tile 零填充、`K=96` 与奇数行场景
 - `tb_mx_array_dataset_8x32x128`：读取 `vectors/matmul_8x32x128_smoke/` 的 `.hex` 数据并覆盖双 tile、`K=128` 场景
 - `tb_mx_array_dataset_9x65x192`：读取 `vectors/matmul_9x65x192_five_tiles/` 的 `.hex` 数据，覆盖五列 tile、最后一 tile 只剩 1 个有效 lane、`K=192` 与更大的有限值矩阵组合
@@ -74,6 +75,11 @@ python ./tools/mx_ref.py --emit-matmul-dataset --m 3 --n 18 --k 64 --seed 202604
 python ./tools/mx_ref.py --emit-matmul-dataset --m 6 --n 33 --k 160 --seed 20260501 --outdir ./vectors/matmul_6x33x160_nonfinite
 ```
 
+稀疏 mixed nonfinite 数据集示例：
+```powershell
+python ./tools/mx_ref.py --emit-matmul-dataset --m 7 --n 49 --k 224 --seed 20260509 --elem-nan-stride 1009 --scale-nan-stride 149 --outdir ./vectors/matmul_7x49x224_sparse_nonfinite
+```
+
 `tools/mx_ref.py` 在导出 `.hex` 时会把所有 `NaN` 统一规范化为 canonical `0x7fc00000`，避免宿主平台保留 NaN 符号位时把硬件/黄金模型的语义对齐误判成失败。
 
 ## 7. 生成 `4096x4096` 抽样统计
@@ -102,6 +108,11 @@ python ./tools/mx_ref.py --emit-matmul-dataset --m 6 --n 33 --k 160 --seed 20260
 ./sim/run_matmul_stats.ps1 -AllowNonFinite -Tag mixed_nonfinite
 ```
 
+如果想保留大多数 finite 样本、只稀疏注入少量 `NaN`，可以直接传 stride：
+```powershell
+./sim/run_matmul_stats.ps1 -ElemNanStride 524288 -ScaleNanStride 262144 -Tag sparse_nonfinite
+```
+
 此时 JSON 会额外给出 `matched_nonfinite_count` / `mismatched_nonfinite_count`，而 `mean_*` / `max_*` 只对 finite samples 统计，不会被 `inf` / `NaN` 直接污染成 `nan`。
 
 ## 8. 生成 `4096x4096` 多 seed sweep
@@ -117,7 +128,7 @@ python ./tools/mx_ref.py --emit-matmul-dataset --m 6 --n 33 --k 160 --seed 20260
   - `reports/matmul_stats_4096x4096x4096_seed*.json`
   - `reports/matmul_stats_4096x4096x4096_sweep.json`
 
-该脚本现支持 `-Tag`、`-ScaleExpMin` / `-ScaleExpMax` 与 `-AllowNonFinite`。如果 sweep 中出现 `inf` / `NaN`，摘要会把 finite / nonfinite 计数分别列出，并把 `matched_nonfinite_count` / `mismatched_nonfinite_count` 单独统计。
+该脚本现支持 `-Tag`、`-ScaleExpMin` / `-ScaleExpMax`、`-AllowNonFinite` 与 `-ElemNanStride` / `-ScaleNanStride`。如果 sweep 中出现 `inf` / `NaN`，摘要会把 finite / nonfinite 计数分别列出，并把 `matched_nonfinite_count` / `mismatched_nonfinite_count` 单独统计；`-Seeds 1,2,3` 这类逗号分隔写法也已做兼容处理。
 
 如需自定义：
 ```powershell
@@ -129,19 +140,22 @@ python ./tools/mx_ref.py --emit-matmul-dataset --m 6 --n 33 --k 160 --seed 20260
 ./sim/run_matmul_stats_profiles.ps1
 ```
 
-默认会跑三档 profile：
+默认会跑四档 profile：
 - baseline `[-8, 8]`
 - `finite_exp32` `[-32, 32]`
 - `finite_exp64` `[-64, 64]`
+- `sparse_nonfinite`：有限值底座 `[-8,8]` + 稀疏 `NaN` 注入
 
 输出包括：
 - `reports/matmul_stats_4096x4096x4096_finite_exp32_seed*.json`
 - `reports/matmul_stats_4096x4096x4096_finite_exp32_sweep.json`
 - `reports/matmul_stats_4096x4096x4096_finite_exp64_seed*.json`
 - `reports/matmul_stats_4096x4096x4096_finite_exp64_sweep.json`
+- `reports/matmul_stats_4096x4096x4096_sparse_nonfinite_seed*.json`
+- `reports/matmul_stats_4096x4096x4096_sparse_nonfinite_sweep.json`
 - `reports/matmul_stats_4096x4096x4096_profiles.json`
 
-其中 `finite_exp64` 会显式暴露 `inf_count` / `nan_count` / `mismatched_nonfinite_count`，用于定位“逐 block 转 `FP32` 再累加”在极宽指数范围下何时开始早于理想双精度累加发生溢出或无效化。
+其中 `finite_exp64` 会显式暴露 `inf_count` / `nan_count` / `mismatched_nonfinite_count`，用于定位“逐 block 转 `FP32` 再累加”在极宽指数范围下何时开始早于理想双精度累加发生溢出或无效化；`sparse_nonfinite` 则用于验证少量 `NaN` 注入时，finite 子集误差统计和 nonfinite 传播能否被稳定分开观察。
 
 ## 10. 目录说明
 - `rtl/`：纯 Verilog RTL

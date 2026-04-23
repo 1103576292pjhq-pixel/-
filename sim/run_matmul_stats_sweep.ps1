@@ -3,9 +3,11 @@ param(
   [int]$N = 4096,
   [int]$K = 4096,
   [int]$Samples = 2048,
-  [int[]]$Seeds = @(20260423, 20260503, 20260504),
+  [object[]]$Seeds = @(20260423, 20260503, 20260504),
   [int]$ScaleExpMin = -8,
   [int]$ScaleExpMax = 8,
+  [int]$ElemNanStride = 0,
+  [int]$ScaleNanStride = 0,
   [switch]$AllowNonFinite,
   [string]$Tag = "",
   [string]$OutFile = ""
@@ -13,11 +15,29 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+function Resolve-IntArray {
+  param(
+    [Parameter(Mandatory = $true)][object[]]$Values
+  )
+
+  $resolved = @()
+  foreach ($Value in $Values) {
+    foreach ($Part in "$Value".Split(",", [System.StringSplitOptions]::RemoveEmptyEntries)) {
+      $resolved += [int]$Part.Trim()
+    }
+  }
+  return ,$resolved
+}
+
+$Seeds = Resolve-IntArray -Values $Seeds
+
 $workdir = Split-Path -Parent $PSScriptRoot
 $reportDir = Join-Path $workdir "reports"
 $suffix = ""
 if ($Tag) {
   $suffix = "_$Tag"
+} elseif (($ElemNanStride -gt 0) -or ($ScaleNanStride -gt 0)) {
+  $suffix = "_sparse_nonfinite"
 } elseif ($AllowNonFinite) {
   $suffix = "_mixed_nonfinite"
 }
@@ -38,7 +58,18 @@ foreach ($Seed in $Seeds) {
     "--seed", "$Seed",
     "--summary-out", "$seedFile"
   )
-  if (-not $AllowNonFinite) {
+  if (($ElemNanStride -gt 0) -or ($ScaleNanStride -gt 0)) {
+    $pythonArgs += @(
+      "--scale-exp-min", "$ScaleExpMin",
+      "--scale-exp-max", "$ScaleExpMax"
+    )
+    if ($ElemNanStride -gt 0) {
+      $pythonArgs += @("--elem-nan-stride", "$ElemNanStride")
+    }
+    if ($ScaleNanStride -gt 0) {
+      $pythonArgs += @("--scale-nan-stride", "$ScaleNanStride")
+    }
+  } elseif (-not $AllowNonFinite) {
     $pythonArgs += @(
       "--finite-only",
       "--scale-exp-min", "$ScaleExpMin",
@@ -91,12 +122,15 @@ $summary = [ordered]@{
   m = $M
   n = $N
   k = $K
-  finite_only = (-not $AllowNonFinite)
+  finite_only = ((-not $AllowNonFinite) -and ($ElemNanStride -le 0) -and ($ScaleNanStride -le 0))
   samples = $Samples
   seeds = $Seeds
-  tag = if ($Tag) { $Tag } elseif ($AllowNonFinite) { "mixed_nonfinite" } else { $null }
-  scale_exp_min = if ($AllowNonFinite) { $null } else { $ScaleExpMin }
-  scale_exp_max = if ($AllowNonFinite) { $null } else { $ScaleExpMax }
+  sparse_nonfinite = (($ElemNanStride -gt 0) -or ($ScaleNanStride -gt 0))
+  tag = if ($Tag) { $Tag } elseif (($ElemNanStride -gt 0) -or ($ScaleNanStride -gt 0)) { "sparse_nonfinite" } elseif ($AllowNonFinite) { "mixed_nonfinite" } else { $null }
+  elem_nan_stride = if ($ElemNanStride -gt 0) { $ElemNanStride } else { $null }
+  scale_nan_stride = if ($ScaleNanStride -gt 0) { $ScaleNanStride } else { $null }
+  scale_exp_min = if ($AllowNonFinite -and ($ElemNanStride -le 0) -and ($ScaleNanStride -le 0)) { $null } else { $ScaleExpMin }
+  scale_exp_max = if ($AllowNonFinite -and ($ElemNanStride -le 0) -and ($ScaleNanStride -le 0)) { $null } else { $ScaleExpMax }
   run_count = $runs.Count
   total_finite_count = ($runs | Measure-Object -Property finite_count -Sum).Sum
   total_inf_count = ($runs | Measure-Object -Property inf_count -Sum).Sum

@@ -18,6 +18,24 @@ E4M3_NAN_VALUES = tuple(
 FINITE_E4M3_VALUES = tuple(enc for enc in range(256) if enc not in E4M3_NAN_VALUES)
 
 
+@dataclass(frozen=True)
+class SparseNonfiniteConfig:
+    elem_nan_stride: int = 0
+    scale_nan_stride: int = 0
+
+    @property
+    def enabled(self) -> bool:
+        return self.elem_nan_stride > 0 or self.scale_nan_stride > 0
+
+
+@dataclass
+class BlockStream:
+    blocks: list[list[int]]
+    scales: list[int]
+    elem_nan_injections: int = 0
+    scale_nan_injections: int = 0
+
+
 def float32(value: float) -> float:
     try:
         return struct.unpack("<f", struct.pack("<f", float(value)))[0]
@@ -145,6 +163,67 @@ def choose_e8m0(
     if finite_only:
         return random_finite_e8m0(rng, scale_exp_min, scale_exp_max)
     return random_e8m0(rng)
+
+
+def uses_finite_base(finite_only: bool, sparse_nonfinite: SparseNonfiniteConfig) -> bool:
+    return finite_only or sparse_nonfinite.enabled
+
+
+def mix_u32(value: int) -> int:
+    value &= 0xFFFFFFFF
+    value ^= value >> 16
+    value = (value * 0x7FEB352D) & 0xFFFFFFFF
+    value ^= value >> 15
+    value = (value * 0x846CA68B) & 0xFFFFFFFF
+    value ^= value >> 16
+    return value
+
+
+def sparse_nonfinite_hash(
+    seed: int,
+    axis_tag: int,
+    outer_idx: int,
+    kb_idx: int,
+    item_idx: int,
+    salt: int,
+) -> int:
+    mixed = seed & 0xFFFFFFFF
+    for component in (axis_tag, outer_idx, kb_idx, item_idx, salt):
+        mixed = mix_u32(mixed ^ (component & 0xFFFFFFFF))
+    return mixed
+
+
+def build_block_with_sparse_nonfinite(
+    rng: random.Random,
+    seed: int,
+    axis_tag: int,
+    outer_idx: int,
+    kb_idx: int,
+    finite_only: bool,
+    scale_exp_min: int,
+    scale_exp_max: int,
+    sparse_nonfinite: SparseNonfiniteConfig,
+) -> tuple[list[int], int, int, int]:
+    finite_base = uses_finite_base(finite_only, sparse_nonfinite)
+    elems = [choose_e4m3(rng, finite_base) for _ in range(MX_BLOCK_K)]
+    scale = choose_e8m0(rng, finite_base, scale_exp_min, scale_exp_max)
+    elem_nan_injections = 0
+    scale_nan_injections = 0
+
+    if sparse_nonfinite.scale_nan_stride > 0:
+        scale_hash = sparse_nonfinite_hash(seed, axis_tag, outer_idx, kb_idx, -1, 0x53434C45)
+        if scale_hash % sparse_nonfinite.scale_nan_stride == 0:
+            scale = 0xFF
+            scale_nan_injections = 1
+
+    if sparse_nonfinite.elem_nan_stride > 0:
+        for elem_idx in range(MX_BLOCK_K):
+            elem_hash = sparse_nonfinite_hash(seed, axis_tag, outer_idx, kb_idx, elem_idx, 0x454C454D)
+            if elem_hash % sparse_nonfinite.elem_nan_stride == 0:
+                elems[elem_idx] = E4M3_NAN_VALUES[elem_hash % len(E4M3_NAN_VALUES)]
+                elem_nan_injections += 1
+
+    return elems, scale, elem_nan_injections, scale_nan_injections
 
 
 def dot32_to_bits(a_elems: list[int], a_scale: int, b_elems: list[int], b_scale: int) -> int:
@@ -357,6 +436,8 @@ def emit_matmul_dataset(
     finite_only: bool = False,
     scale_exp_min: int = -8,
     scale_exp_max: int = 8,
+    elem_nan_stride: int = 0,
+    scale_nan_stride: int = 0,
 ) -> None:
     if k % MX_BLOCK_K != 0:
         raise SystemExit(f"k must be a multiple of {MX_BLOCK_K}, got {k}")
@@ -364,18 +445,39 @@ def emit_matmul_dataset(
     rng = random.Random(seed)
     outdir.mkdir(parents=True, exist_ok=True)
     k_blocks = k // MX_BLOCK_K
+    sparse_nonfinite = SparseNonfiniteConfig(
+        elem_nan_stride=elem_nan_stride,
+        scale_nan_stride=scale_nan_stride,
+    )
 
     a_blocks: list[list[list[int]]] = []
     a_scales: list[list[int]] = []
     b_blocks: list[list[list[int]]] = []
     b_scales: list[list[int]] = []
+    a_elem_nan_injections = 0
+    a_scale_nan_injections = 0
+    b_elem_nan_injections = 0
+    b_scale_nan_injections = 0
 
     for row in range(m):
         row_blocks: list[list[int]] = []
         row_scales: list[int] = []
         for kb in range(k_blocks):
-            row_blocks.append([choose_e4m3(rng, finite_only) for _ in range(MX_BLOCK_K)])
-            row_scales.append(choose_e8m0(rng, finite_only, scale_exp_min, scale_exp_max))
+            block, scale, elem_nan_injections, scale_nan_injections = build_block_with_sparse_nonfinite(
+                rng,
+                seed,
+                axis_tag=0xA,
+                outer_idx=row,
+                kb_idx=kb,
+                finite_only=finite_only,
+                scale_exp_min=scale_exp_min,
+                scale_exp_max=scale_exp_max,
+                sparse_nonfinite=sparse_nonfinite,
+            )
+            row_blocks.append(block)
+            row_scales.append(scale)
+            a_elem_nan_injections += elem_nan_injections
+            a_scale_nan_injections += scale_nan_injections
         a_blocks.append(row_blocks)
         a_scales.append(row_scales)
 
@@ -383,8 +485,21 @@ def emit_matmul_dataset(
         col_blocks: list[list[int]] = []
         col_scales: list[int] = []
         for kb in range(k_blocks):
-            col_blocks.append([choose_e4m3(rng, finite_only) for _ in range(MX_BLOCK_K)])
-            col_scales.append(choose_e8m0(rng, finite_only, scale_exp_min, scale_exp_max))
+            block, scale, elem_nan_injections, scale_nan_injections = build_block_with_sparse_nonfinite(
+                rng,
+                seed,
+                axis_tag=0xB,
+                outer_idx=col,
+                kb_idx=kb,
+                finite_only=finite_only,
+                scale_exp_min=scale_exp_min,
+                scale_exp_max=scale_exp_max,
+                sparse_nonfinite=sparse_nonfinite,
+            )
+            col_blocks.append(block)
+            col_scales.append(scale)
+            b_elem_nan_injections += elem_nan_injections
+            b_scale_nan_injections += scale_nan_injections
         b_blocks.append(col_blocks)
         b_scales.append(col_scales)
 
@@ -433,9 +548,18 @@ def emit_matmul_dataset(
                 "k_blocks": k_blocks,
                 "seed": seed,
                 "finite_only": finite_only,
-                "scale_exp_min": scale_exp_min if finite_only else None,
-                "scale_exp_max": scale_exp_max if finite_only else None,
+                "sparse_nonfinite": sparse_nonfinite.enabled,
+                "elem_nan_stride": elem_nan_stride if elem_nan_stride > 0 else None,
+                "scale_nan_stride": scale_nan_stride if scale_nan_stride > 0 else None,
+                "scale_exp_min": scale_exp_min if uses_finite_base(finite_only, sparse_nonfinite) else None,
+                "scale_exp_max": scale_exp_max if uses_finite_base(finite_only, sparse_nonfinite) else None,
                 "packing": "element0_in_lsb_byte",
+                "injections": {
+                    "a_elem_nan_injections": a_elem_nan_injections,
+                    "a_scale_nan_injections": a_scale_nan_injections,
+                    "b_elem_nan_injections": b_elem_nan_injections,
+                    "b_scale_nan_injections": b_scale_nan_injections,
+                },
                 "y_stats": {
                     "max_abs": sanitize_json_value(max_abs),
                     "nan_count": nan_count,
@@ -460,14 +584,40 @@ def generate_row_or_col_blocks(
     finite_only: bool,
     scale_exp_min: int,
     scale_exp_max: int,
-) -> tuple[list[list[int]], list[int]]:
+    elem_nan_stride: int,
+    scale_nan_stride: int,
+) -> BlockStream:
     rng = random.Random((seed << 20) ^ (axis_tag << 12) ^ outer_idx)
     blocks: list[list[int]] = []
     scales: list[int] = []
-    for _ in range(k_blocks):
-        blocks.append([choose_e4m3(rng, finite_only) for _ in range(MX_BLOCK_K)])
-        scales.append(choose_e8m0(rng, finite_only, scale_exp_min, scale_exp_max))
-    return blocks, scales
+    elem_nan_injections = 0
+    scale_nan_injections = 0
+    sparse_nonfinite = SparseNonfiniteConfig(
+        elem_nan_stride=elem_nan_stride,
+        scale_nan_stride=scale_nan_stride,
+    )
+    for kb in range(k_blocks):
+        block, scale, block_elem_nan_injections, block_scale_nan_injections = build_block_with_sparse_nonfinite(
+            rng,
+            seed,
+            axis_tag=axis_tag,
+            outer_idx=outer_idx,
+            kb_idx=kb,
+            finite_only=finite_only,
+            scale_exp_min=scale_exp_min,
+            scale_exp_max=scale_exp_max,
+            sparse_nonfinite=sparse_nonfinite,
+        )
+        blocks.append(block)
+        scales.append(scale)
+        elem_nan_injections += block_elem_nan_injections
+        scale_nan_injections += block_scale_nan_injections
+    return BlockStream(
+        blocks=blocks,
+        scales=scales,
+        elem_nan_injections=elem_nan_injections,
+        scale_nan_injections=scale_nan_injections,
+    )
 
 
 def build_sample_points(m: int, n: int, samples: int, seed: int) -> list[tuple[int, int]]:
@@ -506,6 +656,8 @@ def report_matmul_stats(
     finite_only: bool,
     scale_exp_min: int,
     scale_exp_max: int,
+    elem_nan_stride: int = 0,
+    scale_nan_stride: int = 0,
     summary_out: Path | None = None,
 ) -> dict[str, object]:
     if k % MX_BLOCK_K != 0:
@@ -513,8 +665,12 @@ def report_matmul_stats(
 
     k_blocks = k // MX_BLOCK_K
     sample_points = build_sample_points(m, n, samples, seed)
-    row_cache: dict[int, tuple[list[list[int]], list[int]]] = {}
-    col_cache: dict[int, tuple[list[list[int]], list[int]]] = {}
+    row_cache: dict[int, BlockStream] = {}
+    col_cache: dict[int, BlockStream] = {}
+    sparse_nonfinite = SparseNonfiniteConfig(
+        elem_nan_stride=elem_nan_stride,
+        scale_nan_stride=scale_nan_stride,
+    )
 
     project_checksum = 0
     finite_count = 0
@@ -541,6 +697,8 @@ def report_matmul_stats(
                 finite_only=finite_only,
                 scale_exp_min=scale_exp_min,
                 scale_exp_max=scale_exp_max,
+                elem_nan_stride=elem_nan_stride,
+                scale_nan_stride=scale_nan_stride,
             )
         if col_idx not in col_cache:
             col_cache[col_idx] = generate_row_or_col_blocks(
@@ -551,10 +709,16 @@ def report_matmul_stats(
                 finite_only=finite_only,
                 scale_exp_min=scale_exp_min,
                 scale_exp_max=scale_exp_max,
+                elem_nan_stride=elem_nan_stride,
+                scale_nan_stride=scale_nan_stride,
             )
 
-        row_blocks, row_scales = row_cache[row_idx]
-        col_blocks, col_scales = col_cache[col_idx]
+        row_stream = row_cache[row_idx]
+        col_stream = col_cache[col_idx]
+        row_blocks = row_stream.blocks
+        row_scales = row_stream.scales
+        col_blocks = col_stream.blocks
+        col_scales = col_stream.scales
 
         project_acc = 0
         ideal_acc = 0.0
@@ -646,14 +810,21 @@ def report_matmul_stats(
         "samples": len(sample_points),
         "sample_ratio": len(sample_points) / (m * n),
         "finite_only": finite_only,
-        "scale_exp_min": scale_exp_min if finite_only else None,
-        "scale_exp_max": scale_exp_max if finite_only else None,
+        "sparse_nonfinite": sparse_nonfinite.enabled,
+        "elem_nan_stride": elem_nan_stride if elem_nan_stride > 0 else None,
+        "scale_nan_stride": scale_nan_stride if scale_nan_stride > 0 else None,
+        "scale_exp_min": scale_exp_min if uses_finite_base(finite_only, sparse_nonfinite) else None,
+        "scale_exp_max": scale_exp_max if uses_finite_base(finite_only, sparse_nonfinite) else None,
         "project_checksum_xor": f"0x{project_checksum:08x}",
         "finite_count": finite_count,
         "inf_count": inf_count,
         "nan_count": nan_count,
         "matched_nonfinite_count": matched_nonfinite_count,
         "mismatched_nonfinite_count": mismatched_nonfinite_count,
+        "row_elem_nan_injections": sum(stream.elem_nan_injections for stream in row_cache.values()),
+        "row_scale_nan_injections": sum(stream.scale_nan_injections for stream in row_cache.values()),
+        "col_elem_nan_injections": sum(stream.elem_nan_injections for stream in col_cache.values()),
+        "col_scale_nan_injections": sum(stream.scale_nan_injections for stream in col_cache.values()),
         "max_project_abs": sanitize_json_value(max_project_abs),
         "mean_abs_error": sanitize_json_value(abs_err_sum / finite_count) if finite_count else None,
         "mean_rel_error": sanitize_json_value(rel_err_sum / finite_count) if finite_count else None,
@@ -698,6 +869,8 @@ def main() -> None:
     parser.add_argument("--finite-only", action="store_true", help="avoid NaN payloads and clamp scales")
     parser.add_argument("--scale-exp-min", type=int, default=-8, help="minimum E8M0 exponent for finite-only modes")
     parser.add_argument("--scale-exp-max", type=int, default=8, help="maximum E8M0 exponent for finite-only modes")
+    parser.add_argument("--elem-nan-stride", type=int, default=0, help="inject one E4M3 NaN every N hashed element slots")
+    parser.add_argument("--scale-nan-stride", type=int, default=0, help="inject one E8M0 NaN every N hashed block scales")
     args = parser.parse_args()
 
     if args.selftest or (
@@ -721,6 +894,8 @@ def main() -> None:
             finite_only=args.finite_only,
             scale_exp_min=args.scale_exp_min,
             scale_exp_max=args.scale_exp_max,
+            elem_nan_stride=args.elem_nan_stride,
+            scale_nan_stride=args.scale_nan_stride,
         )
     if args.report_matmul_stats:
         report_matmul_stats(
@@ -732,6 +907,8 @@ def main() -> None:
             finite_only=args.finite_only,
             scale_exp_min=args.scale_exp_min,
             scale_exp_max=args.scale_exp_max,
+            elem_nan_stride=args.elem_nan_stride,
+            scale_nan_stride=args.scale_nan_stride,
             summary_out=args.summary_out,
         )
 

@@ -1,0 +1,28 @@
+{
+  "kind": "matmul_dataset",
+  "m": 7,
+  "n": 49,
+  "k": 224,
+  "k_blocks": 7,
+  "seed": 20260509,
+  "finite_only": false,
+  "sparse_nonfinite": true,
+  "elem_nan_stride": 1009,
+  "scale_nan_stride": 149,
+  "scale_exp_min": -8,
+  "scale_exp_max": 8,
+  "packing": "element0_in_lsb_byte",
+  "injections": {
+    "a_elem_nan_injections": 0,
+    "a_scale_nan_injections": 1,
+    "b_elem_nan_injections": 10,
+    "b_scale_nan_injections": 4
+  },
+  "y_stats": {
+    "max_abs": 4774459904.0,
+    "nan_count": 121,
+    "inf_count": 0,
+    "finite_count": 222,
+    "checksum_xor": "0xfe5f7f36"
+  }
+}
