@@ -38,10 +38,11 @@ module tb_mx_array_dataset;
   localparam integer M = `TB_M;
   localparam integer N = `TB_N;
   localparam integer K_BLOCKS = `TB_K_BLOCKS;
-  localparam integer COL_TILES = N / `MX_COLS;
+  localparam integer COL_TILES = (N + `MX_COLS - 1) / `MX_COLS;
   localparam integer A_BLOCK_COUNT = M * K_BLOCKS;
   localparam integer B_BLOCK_COUNT = N * K_BLOCKS;
   localparam integer Y_COUNT = M * N;
+  localparam integer ZERO_SCALE = 8'h7f;
 
   reg clk;
   reg rst_n;
@@ -95,9 +96,14 @@ module tb_mx_array_dataset;
 
       for (lane_idx_t = 0; lane_idx_t < `MX_COLS; lane_idx_t = lane_idx_t + 1) begin
         global_col_t = (tile_idx_t * `MX_COLS) + lane_idx_t;
-        b_mem_idx = (global_col_t * K_BLOCKS) + kb_idx_t;
-        b_elems_i[(lane_idx_t * BLOCK_W) +: BLOCK_W] = b_blocks_mem[b_mem_idx];
-        b_scale_i[(lane_idx_t * 8) +: 8] = b_scales_mem[b_mem_idx];
+        if (global_col_t < N) begin
+          b_mem_idx = (global_col_t * K_BLOCKS) + kb_idx_t;
+          b_elems_i[(lane_idx_t * BLOCK_W) +: BLOCK_W] = b_blocks_mem[b_mem_idx];
+          b_scale_i[(lane_idx_t * 8) +: 8] = b_scales_mem[b_mem_idx];
+        end else begin
+          b_elems_i[(lane_idx_t * BLOCK_W) +: BLOCK_W] = {BLOCK_W{1'b0}};
+          b_scale_i[(lane_idx_t * 8) +: 8] = ZERO_SCALE;
+        end
       end
     end
   endtask
@@ -136,8 +142,13 @@ module tb_mx_array_dataset;
       #1;
       for (lane_idx_t = 0; lane_idx_t < `MX_COLS; lane_idx_t = lane_idx_t + 1) begin
         y_mem_idx = (row_idx_t * N) + (tile_idx_t * `MX_COLS) + lane_idx_t;
-        expected_bits = y_expected_mem[y_mem_idx];
         got_bits = acc_o[(lane_idx_t * 32) +: 32];
+        if (((tile_idx_t * `MX_COLS) + lane_idx_t) < N) begin
+          expected_bits = y_expected_mem[y_mem_idx];
+        end else begin
+          expected_bits = `MX_FP32_ZERO;
+        end
+
         if (got_bits !== expected_bits) begin
           mismatch_count = mismatch_count + 1;
           if (mismatch_count <= 8) begin
@@ -158,8 +169,8 @@ module tb_mx_array_dataset;
   always #5 clk = ~clk;
 
   initial begin
-    if ((N % `MX_COLS) != 0) begin
-      $display("FAIL: TB_N=%0d must be a multiple of %0d", N, `MX_COLS);
+    if (N <= 0) begin
+      $display("FAIL: TB_N=%0d must be positive", N);
       $fatal;
     end
 
@@ -195,10 +206,11 @@ module tb_mx_array_dataset;
     end
 
     $display(
-      "PASS: mx_array dataset test completed. rows=%0d cols=%0d k_blocks=%0d",
+      "PASS: mx_array dataset test completed. rows=%0d cols=%0d k_blocks=%0d col_tiles=%0d",
       M,
       N,
-      K_BLOCKS
+      K_BLOCKS,
+      COL_TILES
     );
     $finish;
   end

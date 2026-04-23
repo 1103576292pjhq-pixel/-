@@ -1,0 +1,19 @@
+{
+  "kind": "matmul_dataset",
+  "m": 5,
+  "n": 20,
+  "k": 96,
+  "k_blocks": 3,
+  "seed": 20260425,
+  "finite_only": true,
+  "scale_exp_min": -8,
+  "scale_exp_max": 8,
+  "packing": "element0_in_lsb_byte",
+  "y_stats": {
+    "max_abs": 863452800.0,
+    "nan_count": 0,
+    "inf_count": 0,
+    "finite_count": 100,
+    "checksum_xor": "0x831b1be3"
+  }
+}
