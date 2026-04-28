@@ -23,6 +23,7 @@
 - [mx_array_32x16 顶层讲解](/D:/github/-/docs/teaching/03_mx_array_top.md)
 - [MX 格式 helper 讲解](/D:/github/-/docs/teaching/04_mx_format_helpers.md)
 - [Python 参考模型和脚本讲解](/D:/github/-/docs/teaching/05_python_ref_and_scripts.md)
+- [FP32 辅助模块和列级 testbench 讲解](/D:/github/-/docs/teaching/06_fp32_helpers_and_column_tests.md)
 - [代码讲解覆盖计划](/D:/github/-/docs/teaching/coverage_plan.md)
 
 ## 讲解目标
@@ -32,4 +33,4 @@
 - 能用自己的话复述“输入 block 怎么一步步变成输出 FP32”
 
 ## 当前状态
-当前已经覆盖 `llmt_col`、矩阵级 dataset testbench、阵列顶层、MX 格式 helper、Python 参考模型和脚本。后续继续按 [coverage_plan.md](/D:/github/-/docs/teaching/coverage_plan.md) 补齐 FP32 辅助模块和更多 testbench。
+当前已经覆盖 `llmt_col`、矩阵级 dataset testbench、阵列顶层、MX 格式 helper、FP32 辅助模块、列级 testbench、Python 参考模型和脚本。后续如果继续扩展，按 [coverage_plan.md](/D:/github/-/docs/teaching/coverage_plan.md) 做更细的逐行注释或答辩问答。
