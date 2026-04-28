@@ -10,6 +10,7 @@
 | `key_case_list.md` | 固定向量和 testbench 覆盖的关键 case |
 | `sampling_4096_method.md` | 4096x4096x4096 抽样统计方法 |
 | `boundary_nonfinite_coverage.md` | finite、tail、Inf/NaN、sparse nonfinite、dynamic range 边界覆盖说明 |
+| `rtl_refinement_review_2026-04-28.md` | 本轮 RTL 收口审查结论和保持 RTL 不动的依据 |
 | `waveform_capture_status.md` | 波形证据现状和后续捕获方法 |
 
 ## 当前证据状态
@@ -17,4 +18,5 @@
 - 2026-04-28 Verilog 默认回归：PASS，见 `../verification/iverilog_default.log`
 - 2026-04-28 Python 参考模型自检：PASS，见 `../verification/python_ref_default.log`
 - 2026-04-28 4096 抽样 profile：PASS，见 `../precision/matmul_stats_4096x4096x4096_profiles.json`
+- 2026-04-28 RTL 收口审查：保持 `llmt_col` 与 `mx_array_32x16` 不动，见 `rtl_refinement_review_2026-04-28.md`
 - 真实 28nm PPA：未完成，阻塞于标准单元库和综合工具，不在本证据包中伪造

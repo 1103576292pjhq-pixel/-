@@ -4,7 +4,7 @@
 
 ## 建议阅读顺序
 1. 先看 [NPU 背景教程](/D:/github/-/docs/primer/01_npu_basics.md)
-2. 再看 [技术报告初稿](/D:/github/-/docs/report/tech_report.md)
+2. 再看 [提交版技术报告目录](/D:/github/-/docs/report/README.md)
 3. 最后按下面顺序读代码：
    - `rtl/mx_defs.vh`
    - `rtl/mx_funcs.vh`

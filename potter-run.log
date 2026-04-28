@@ -43,3 +43,4 @@
 [2026-04-28 12:25:00 +08:00] Final review completed: report chapters 00-09 exist, verification logs and precision JSONs are present, mojibake scan passed, and the git worktree is clean except for the ignored CodexPotter progress file.
 [2026-04-28 12:34:00 +08:00] Follow-up strict review refreshed root MAIN.md so it now records completed handoff state, remaining external inputs, and concrete future trigger conditions instead of stale restart todo steps.
 [2026-04-28 12:48:00 +08:00] Strict review follow-up refreshed requirement traceability and submission checklist states from stale in-progress wording to current可提交/外部阻塞判断, and added FP32 helper plus column-level testbench teaching coverage.
+[2026-04-28 13:02:00 +08:00] Final index polish added the RTL refinement review to reports/evidence/README.md and updated the teaching entry to point at the current report directory instead of the old report index.
