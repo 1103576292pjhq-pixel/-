@@ -26,7 +26,7 @@ function Resolve-IntArray {
 $Seeds = Resolve-IntArray -Values $Seeds
 
 $workdir = Split-Path -Parent $PSScriptRoot
-$reportDir = Join-Path $workdir "reports"
+$reportDir = Join-Path $workdir "reports\\precision"
 if (-not $OutFile) {
   $OutFile = Join-Path $reportDir ("matmul_stats_{0}x{1}x{2}_profiles.json" -f $M, $N, $K)
 }

@@ -34,3 +34,5 @@
 [2026-04-28 11:40:00 +08:00] Rewrote root MAIN.md and STATUS.md in UTF-8 Chinese to replace mojibake state text and point to the current restart scope.
 [2026-04-28 11:40:00 +08:00] Added docs/admin/restart_audit_2026-04-28.md to record reusable assets, stale runs, external blockers, and clean restart acceptance criteria.
 [2026-04-28 11:48:00 +08:00] Rewrote docs/report/00_requirements_traceability.md and docs/report/09_submission_checklist.md with artifact links, completion states, exact blockers, and forbidden unsupported PPA claims.
+[2026-04-28 11:49:00 +08:00] Re-ran sim/run_iverilog.ps1 and sim/run_python_ref.ps1; both passed and logs were archived under reports/verification.
+[2026-04-28 11:55:00 +08:00] Re-ran sim/run_matmul_stats.ps1, sim/run_matmul_stats_sweep.ps1, and sim/run_matmul_stats_profiles.ps1; refreshed reports/precision JSONs and archived command logs under reports/verification.

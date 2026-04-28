@@ -10,7 +10,10 @@
                   20260503,
                   20260504
               ],
+    "sparse_nonfinite":  false,
     "tag":  "finite_exp64",
+    "elem_nan_stride":  null,
+    "scale_nan_stride":  null,
     "scale_exp_min":  -64,
     "scale_exp_max":  64,
     "run_count":  3,

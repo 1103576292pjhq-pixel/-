@@ -17,6 +17,7 @@ $ErrorActionPreference = "Stop"
 
 $workdir = Split-Path -Parent $PSScriptRoot
 if (-not $OutFile) {
+  $reportDir = Join-Path $workdir "reports\\precision"
   $suffix = ""
   if ($Tag) {
     $suffix = "_$Tag"
@@ -25,7 +26,7 @@ if (-not $OutFile) {
   } elseif ($AllowNonFinite) {
     $suffix = "_mixed_nonfinite"
   }
-  $OutFile = Join-Path $workdir ("reports\\matmul_stats_{0}x{1}x{2}{3}.json" -f $M, $N, $K, $suffix)
+  $OutFile = Join-Path $reportDir ("matmul_stats_{0}x{1}x{2}{3}.json" -f $M, $N, $K, $suffix)
 }
 
 $pythonArgs = @(

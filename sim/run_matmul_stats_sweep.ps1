@@ -32,7 +32,7 @@ function Resolve-IntArray {
 $Seeds = Resolve-IntArray -Values $Seeds
 
 $workdir = Split-Path -Parent $PSScriptRoot
-$reportDir = Join-Path $workdir "reports"
+$reportDir = Join-Path $workdir "reports\\precision"
 $suffix = ""
 if ($Tag) {
   $suffix = "_$Tag"
