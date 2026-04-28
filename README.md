@@ -8,7 +8,7 @@
 - 输入 `A/B` 为 `MXFP8`，输出累加为 `FP32`
 - 代码语言保持纯 Verilog，当前 `llmt_col` 为三级流水，且 Stage-1 只寄存 `4x8` partial sums
 - 默认 Verilog 回归已覆盖 `4x16x64`、`5x20x96` 尾 tile、`8x32x128`、`9x65x192` 四组有限值矩阵数据集，以及 `3x18x64`、`6x33x160`、`7x49x224` 三组 mixed finite / `inf` / `NaN` 矩阵数据集；其中 `7x49x224` 采用 sparse mixed-nonfinite 注入，覆盖四列 tile、单 lane 尾 tile、`K=224` 与 scale-NaN
-- `4096x4096x4096` 抽样统计已支持 baseline `[-8,8]`、`finite_exp32` `[-32,32]`、`finite_exp64` `[-64,64]` 三档 profile，并新增 `sparse_nonfinite` spot-check；当前 `reports/matmul_stats_4096x4096x4096_sparse_nonfinite.json` 记录了 `2004` 个 finite、`44` 个 `NaN`、`0` 个 nonfinite mismatch
+- `4096x4096x4096` 抽样统计已支持 baseline `[-8,8]`、`finite_exp32` `[-32,32]`、`finite_exp64` `[-64,64]` 和 `sparse_nonfinite` 四档 profile；当前 `reports/precision/matmul_stats_4096x4096x4096_sparse_nonfinite_sweep.json` 记录三 seed 合计 `6037` 个 finite、`107` 个 matched `NaN`、`0` 个 nonfinite mismatch
 - 文档同时覆盖：
   - 面向比赛提交的正式技术报告
   - 面向 0 基础读者的 NPU 背景教程和代码讲解
@@ -17,9 +17,12 @@
 
 - 工程总览：[MAIN.md](/D:/github/-/MAIN.md)
 - 当前状态：[STATUS.md](/D:/github/-/STATUS.md)
+- 比赛要求映射：[docs/report/00_requirements_traceability.md](/D:/github/-/docs/report/00_requirements_traceability.md)
+- 提交版报告目录：[docs/report/README.md](/D:/github/-/docs/report/README.md)
 - Verilog 回归脚本：[sim/run_iverilog.ps1](/D:/github/-/sim/run_iverilog.ps1)
 - Python 参考模型脚本：[sim/run_python_ref.ps1](/D:/github/-/sim/run_python_ref.ps1)
 - `4096x4096` 抽样统计脚本：[sim/run_matmul_stats.ps1](/D:/github/-/sim/run_matmul_stats.ps1)
 - `4096x4096` 多 seed sweep 脚本：[sim/run_matmul_stats_sweep.ps1](/D:/github/-/sim/run_matmul_stats_sweep.ps1)
 - `4096x4096` profile sweep 脚本：[sim/run_matmul_stats_profiles.ps1](/D:/github/-/sim/run_matmul_stats_profiles.ps1)
+- 报告与证据目录：[reports/README.md](/D:/github/-/reports/README.md)
 - 使用说明：[docs/usage/README.md](/D:/github/-/docs/usage/README.md)

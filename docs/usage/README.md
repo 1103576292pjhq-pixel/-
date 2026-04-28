@@ -91,7 +91,7 @@ python ./tools/mx_ref.py --emit-matmul-dataset --m 7 --n 49 --k 224 --seed 20260
 - 规模：`4096 x 4096 x 4096`
 - 采样：`2048` 个输出点
 - 输入：有限值 `MXFP8` 随机块，`E8M0` 指数范围 `[-8, 8]`
-- 输出：`reports/matmul_stats_4096x4096x4096.json`
+- 输出：`reports/precision/matmul_stats_4096x4096x4096.json`
 
 如需自定义：
 ```powershell
@@ -125,8 +125,8 @@ python ./tools/mx_ref.py --emit-matmul-dataset --m 7 --n 49 --k 224 --seed 20260
 - 规模：`4096 x 4096 x 4096`
 - 采样：每个 seed `2048` 个输出点
 - 输出：
-  - `reports/matmul_stats_4096x4096x4096_seed*.json`
-  - `reports/matmul_stats_4096x4096x4096_sweep.json`
+  - `reports/precision/matmul_stats_4096x4096x4096_seed*.json`
+  - `reports/precision/matmul_stats_4096x4096x4096_sweep.json`
 
 该脚本现支持 `-Tag`、`-ScaleExpMin` / `-ScaleExpMax`、`-AllowNonFinite` 与 `-ElemNanStride` / `-ScaleNanStride`。如果 sweep 中出现 `inf` / `NaN`，摘要会把 finite / nonfinite 计数分别列出，并把 `matched_nonfinite_count` / `mismatched_nonfinite_count` 单独统计；`-Seeds 1,2,3` 这类逗号分隔写法也已做兼容处理。
 
@@ -147,13 +147,13 @@ python ./tools/mx_ref.py --emit-matmul-dataset --m 7 --n 49 --k 224 --seed 20260
 - `sparse_nonfinite`：有限值底座 `[-8,8]` + 稀疏 `NaN` 注入
 
 输出包括：
-- `reports/matmul_stats_4096x4096x4096_finite_exp32_seed*.json`
-- `reports/matmul_stats_4096x4096x4096_finite_exp32_sweep.json`
-- `reports/matmul_stats_4096x4096x4096_finite_exp64_seed*.json`
-- `reports/matmul_stats_4096x4096x4096_finite_exp64_sweep.json`
-- `reports/matmul_stats_4096x4096x4096_sparse_nonfinite_seed*.json`
-- `reports/matmul_stats_4096x4096x4096_sparse_nonfinite_sweep.json`
-- `reports/matmul_stats_4096x4096x4096_profiles.json`
+- `reports/precision/matmul_stats_4096x4096x4096_finite_exp32_seed*.json`
+- `reports/precision/matmul_stats_4096x4096x4096_finite_exp32_sweep.json`
+- `reports/precision/matmul_stats_4096x4096x4096_finite_exp64_seed*.json`
+- `reports/precision/matmul_stats_4096x4096x4096_finite_exp64_sweep.json`
+- `reports/precision/matmul_stats_4096x4096x4096_sparse_nonfinite_seed*.json`
+- `reports/precision/matmul_stats_4096x4096x4096_sparse_nonfinite_sweep.json`
+- `reports/precision/matmul_stats_4096x4096x4096_profiles.json`
 
 其中 `finite_exp64` 会显式暴露 `inf_count` / `nan_count` / `mismatched_nonfinite_count`，用于定位“逐 block 转 `FP32` 再累加”在极宽指数范围下何时开始早于理想双精度累加发生溢出或无效化；`sparse_nonfinite` 则用于验证少量 `NaN` 注入时，finite 子集误差统计和 nonfinite 传播能否被稳定分开观察。
 
@@ -164,5 +164,8 @@ python ./tools/mx_ref.py --emit-matmul-dataset --m 7 --n 49 --k 224 --seed 20260
 - `sim/`：回归脚本
 - `constraints/`：时序约束
 - `synth/`：综合脚本模板
-- `reports/`：综合/验证报告输出位
+- `reports/verification/`：回归日志
+- `reports/precision/`：误差统计 JSON
+- `reports/synthesis/`：综合/PPA报告
+- `reports/evidence/`：波形/截图/证据索引
 - `docs/`：技术与教学文档

@@ -1,7 +1,8 @@
-# MXFP8 计算阵列技术报告（索引）
+# 提交版报告目录
 
-本文件保留为旧入口，正式提交版报告已重组为以下章节：
+本目录按比赛提交物和评分项重组，不再沿用开发阶段的松散文档方式。
 
+## 章节顺序
 1. [00_requirements_traceability.md](/D:/github/-/docs/report/00_requirements_traceability.md)
 2. [01_problem_and_goals.md](/D:/github/-/docs/report/01_problem_and_goals.md)
 3. [02_mx_format_and_numeric_rules.md](/D:/github/-/docs/report/02_mx_format_and_numeric_rules.md)
@@ -13,4 +14,6 @@
 9. [08_optimization_and_finals_outlook.md](/D:/github/-/docs/report/08_optimization_and_finals_outlook.md)
 10. [09_submission_checklist.md](/D:/github/-/docs/report/09_submission_checklist.md)
 
-如果后续要对外导出初赛提交版，优先以以上章节为主，而不是继续扩写本文件。
+## 使用方式
+- 对外提交时，优先按本目录导出/合并成正式技术报告。
+- 开发日志、阶段性结论和旧入口文档仅作为补充材料。
