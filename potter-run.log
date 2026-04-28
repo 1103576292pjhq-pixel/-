@@ -38,3 +38,4 @@
 [2026-04-28 11:55:00 +08:00] Re-ran sim/run_matmul_stats.ps1, sim/run_matmul_stats_sweep.ps1, and sim/run_matmul_stats_profiles.ps1; refreshed reports/precision JSONs and archived command logs under reports/verification.
 [2026-04-28 12:02:00 +08:00] Rewrote docs/report/03_architecture_and_dataflow.md through 07_synthesis_and_ppa.md as report-ready chapters linked to current logs, precision JSONs, RTL interfaces, and RTL/backend handoff PPA boundaries.
 [2026-04-28 12:08:00 +08:00] Completed reports/evidence index files for regression logs, key cases, 4096 sampling method, boundary/nonfinite coverage, and waveform capture planning.
+[2026-04-28 12:12:00 +08:00] Reviewed llmt_col and mx_array_32x16 for low-risk refinement opportunities; kept RTL unchanged and recorded the rationale in reports/evidence/rtl_refinement_review_2026-04-28.md.
