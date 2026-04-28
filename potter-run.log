@@ -33,3 +33,4 @@
 [2026-04-28 11:40:00 +08:00] Restarted the workspace as the 2026-04-28 GPT5.5 mainline for MXFP8 NPU contest handoff packaging.
 [2026-04-28 11:40:00 +08:00] Rewrote root MAIN.md and STATUS.md in UTF-8 Chinese to replace mojibake state text and point to the current restart scope.
 [2026-04-28 11:40:00 +08:00] Added docs/admin/restart_audit_2026-04-28.md to record reusable assets, stale runs, external blockers, and clean restart acceptance criteria.
+[2026-04-28 11:48:00 +08:00] Rewrote docs/report/00_requirements_traceability.md and docs/report/09_submission_checklist.md with artifact links, completion states, exact blockers, and forbidden unsupported PPA claims.

@@ -1,0 +1,67 @@
+# 09 提交清单
+
+本清单用于最终打包前逐项检查。状态分为：`可提交`、`需本轮复验`、`需补齐`、`外部阻塞`。
+
+## 1. 建议提交包结构
+
+| 类别 | 路径 | 状态 | 检查口径 |
+| --- | --- | --- | --- |
+| 纯 Verilog RTL | `rtl/` | 可提交，需复验 | 不引入 SystemVerilog；顶层接口保持稳定 |
+| Testbench | `tb/` | 可提交，需复验 | 覆盖列级、阵列级、tail tile、mixed nonfinite、sparse nonfinite |
+| 仿真脚本 | `sim/` | 可提交，需复验 | `run_iverilog.ps1`、`run_python_ref.ps1`、`run_matmul_stats*.ps1` 可执行或记录 blocker |
+| Python 参考模型 | `tools/mx_ref.py` | 可提交，需复验 | 作为 MXFP8 golden model 和统计工具 |
+| 固定向量 | `vectors/` | 可提交 | manifest、输入 hex、期望输出齐全 |
+| 技术报告 | `docs/report/` | 需补齐 | 第 03 到 07 章需和本轮证据同步 |
+| 使用文档 | `docs/usage/` | 需补齐 | 应说明环境、脚本、常见失败和输出目录 |
+| 教学资料 | `docs/primer/`、`docs/teaching/` | 需补齐 | 面向零基础队友，一周内能讲清项目 |
+| 综合模板 | `synth/`、`constraints/` | 可提交，外部阻塞真实结果 | 只作为后端移交模板，不当作真实 28nm PPA |
+| 验证证据 | `reports/verification/` | 需本轮复验 | 保存本轮日志和结果摘要 |
+| 精度证据 | `reports/precision/` | 需本轮复验 | 保存 4096 抽样统计和 profile 解释 |
+| 证据索引 | `reports/evidence/` | 需补齐 | 链接日志、统计、向量、波形方法和边界覆盖 |
+| 综合/PPA说明 | `reports/synthesis/`、`docs/report/07_synthesis_and_ppa.md` | 外部阻塞 | 明确列出缺少真实 28nm 库和工具 |
+
+## 2. 提交前必须通过或记录
+
+- Verilog 回归：运行 `sim/run_iverilog.ps1`，日志归档到 `reports/verification/iverilog_default.log`。
+- Python 自检：运行 `sim/run_python_ref.ps1`，日志归档到 `reports/verification/python_ref_default.log`。
+- 单次 4096 抽样：运行 `sim/run_matmul_stats.ps1`，结果归档到 `reports/precision/`。
+- 多 seed sweep：运行 `sim/run_matmul_stats_sweep.ps1`，结果归档到 `reports/precision/`。
+- Profile sweep：运行 `sim/run_matmul_stats_profiles.ps1`，结果归档到 `reports/precision/`。
+- 如果任何脚本因环境缺失失败，必须在日志和 `STATUS.md` 记录 exact blocker，不能只写“未完成”。
+
+## 3. 不允许出现在提交材料中的说法
+
+- 不允许声称已有真实 28nm 面积、功耗、频率或时序结果，除非实际使用了对应工艺库和工具。
+- 不允许把 synthesis template 当作 signoff 报告。
+- 不允许把前期 Potter/开发日志当作评审证据，除非报告链接到实际文件、脚本输出或统计 JSON。
+- 不允许混入 `.codexpotter`、`.omx`、运行日志缓存或临时审查文件作为正式提交物。
+
+## 4. 当前阻塞项
+
+- 主办方补充通知、提交模板和答辩规则未获得。
+- 真实 28nm 标准单元库、工艺角、线载模型和综合工具未获得。
+- 波形截图或 VCD 生成方法需要在 `reports/evidence/waveform_capture_status.md` 中补齐。
+- `docs/teaching` 还没有覆盖全部关键 RTL 文件和脚本。
+
+## 5. 最终打包建议
+
+正式包建议只包含 reader-facing 和评审相关内容：
+
+- `rtl/`
+- `tb/`
+- `tools/`
+- `sim/`
+- `vectors/`
+- `constraints/`
+- `synth/`
+- `docs/report/`
+- `docs/usage/`
+- `docs/primer/`
+- `docs/teaching/`
+- `reports/verification/`
+- `reports/precision/`
+- `reports/evidence/`
+- `reports/synthesis/`
+- `README.md`
+- `MAIN.md`
+- `STATUS.md`
