@@ -20,6 +20,10 @@
 首篇讲解文档：
 - [llmt_col 三级流水讲解](/D:/github/-/docs/teaching/01_llmt_col_pipeline.md)
 - [矩阵级数据集回归与尾 tile 讲解](/D:/github/-/docs/teaching/02_mx_array_dataset_tail_tiles.md)
+- [mx_array_32x16 顶层讲解](/D:/github/-/docs/teaching/03_mx_array_top.md)
+- [MX 格式 helper 讲解](/D:/github/-/docs/teaching/04_mx_format_helpers.md)
+- [Python 参考模型和脚本讲解](/D:/github/-/docs/teaching/05_python_ref_and_scripts.md)
+- [代码讲解覆盖计划](/D:/github/-/docs/teaching/coverage_plan.md)
 
 ## 讲解目标
 - 知道每个文件是干什么的
@@ -28,5 +32,4 @@
 - 能用自己的话复述“输入 block 怎么一步步变成输出 FP32”
 
 ## 当前状态
-当前已经补出 `llmt_col` 三级流水文档（已同步到 partial-sum 寄存化版本），以及 `tb_mx_array_dataset` 的矩阵级 burst / tail tile / mixed nonfinite 驱动讲解；后者现已同步到 `valid_o` 全列一致性检查、`6x33x160` 三列 tile mixed nonfinite、`7x49x224` sparse mixed-nonfinite 与 `9x65x192` 五列 tile finite-only 版本。
-后续 `P7` 会继续把其他文件拆成独立讲解文档，做到“逐文件逐段解释”。
+当前已经覆盖 `llmt_col`、矩阵级 dataset testbench、阵列顶层、MX 格式 helper、Python 参考模型和脚本。后续继续按 [coverage_plan.md](/D:/github/-/docs/teaching/coverage_plan.md) 补齐 FP32 辅助模块和更多 testbench。
