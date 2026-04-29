@@ -1,4 +1,4 @@
-# MXFP8 NPU 比赛重启主线
+# MXFP8 NPU 比赛主线
 
 ## 总目标
 
@@ -8,10 +8,9 @@
 
 ## 当前主线
 
-- 重启日期：2026-04-28
+- 当前批次：2026-04-29 技术方案与多角色执行计划深化
 - 执行模型：GPT5.5 / CodexPotter 长跑主线
-- 状态来源：根目录 `STATUS.md`、`potter-run.log`、当前 `.codexpotter/projects/2026/04/28/2/MAIN.md`
-- 当前批次：比赛交付重启、需求映射、证据包和报告收口
+- 状态来源：根目录 `STATUS.md`、`potter-run.log`、当前 `.codexpotter/projects/2026/04/29/1/MAIN.md`
 - 禁止项：不删除历史 `.codexpotter` 项目；不使用 GitHub/PR/team/tmux lane；不把模板或方法描述写成真实 28nm PPA 实测结论
 
 ## 技术基线
@@ -33,6 +32,13 @@
 - 报告骨架：`docs/report`、`reports/verification`、`reports/precision`、`reports/evidence`、`reports/synthesis`
 - 教学骨架：`docs/primer`、`docs/teaching`
 
+## 2026-04-29 新增决策入口
+
+- 总技术方案：`docs/report/10_technical_solution_and_execution_plan.md`
+- 多角色执行计划：`docs/admin/multi_agent_execution_plan_2026-04-29.md`
+
+这两个文件用于把比赛要求、用户要求、当前完成状态、后端移交边界、风险、阻塞项和后续执行优先级集中到一个可决策入口。它们不改变 RTL，也不把模板性 PPA 写成真实 28nm 结果。
+
 ## 已完成收口
 
 - 历史审计：`docs/admin/restart_audit_2026-04-28.md` 已记录可复用资产、过期状态、失败/中断记录、外部缺口和本轮干净主线。
@@ -42,6 +48,7 @@
 - 证据包：`reports/evidence` 已包含回归日志索引、关键 case、4096 抽样方法、边界/非有限值覆盖和波形捕获说明。
 - RTL 收口：已审查 `llmt_col` 与 `mx_array_32x16`，本批保持 RTL 不动，等待真实综合/PPA 或新增赛题约束驱动。
 - 教学资料：`docs/primer` 与 `docs/teaching` 已扩展为零基础队友一周内可跟读的学习路径。
+- 方案深化：`docs/report/10_technical_solution_and_execution_plan.md` 已补齐决策级总方案；`docs/admin/multi_agent_execution_plan_2026-04-29.md` 已补齐角色化执行计划。
 
 ## 仍然缺失的外部输入
 

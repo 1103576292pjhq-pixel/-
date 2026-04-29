@@ -12,5 +12,6 @@
 8. [07_synthesis_and_ppa.md](/D:/github/-/docs/report/07_synthesis_and_ppa.md)
 9. [08_optimization_and_finals_outlook.md](/D:/github/-/docs/report/08_optimization_and_finals_outlook.md)
 10. [09_submission_checklist.md](/D:/github/-/docs/report/09_submission_checklist.md)
+11. [10_technical_solution_and_execution_plan.md](/D:/github/-/docs/report/10_technical_solution_and_execution_plan.md)
 
 如果后续要对外导出初赛提交版，优先以以上章节为主，而不是继续扩写本文件。

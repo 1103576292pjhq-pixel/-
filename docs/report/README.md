@@ -13,7 +13,9 @@
 8. [07_synthesis_and_ppa.md](/D:/github/-/docs/report/07_synthesis_and_ppa.md)
 9. [08_optimization_and_finals_outlook.md](/D:/github/-/docs/report/08_optimization_and_finals_outlook.md)
 10. [09_submission_checklist.md](/D:/github/-/docs/report/09_submission_checklist.md)
+11. [10_technical_solution_and_execution_plan.md](/D:/github/-/docs/report/10_technical_solution_and_execution_plan.md)
 
 ## 使用方式
 - 对外提交时，优先按本目录导出/合并成正式技术报告。
+- 若需要快速判断当前交付状态、后端边界和下一步计划，先读 `10_technical_solution_and_execution_plan.md`。
 - 开发日志、阶段性结论和旧入口文档仅作为补充材料。
