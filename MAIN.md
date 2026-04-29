@@ -8,9 +8,9 @@
 
 ## 当前主线
 
-- 当前批次：2026-04-29 技术方案与多角色执行计划深化
+- 当前批次：2026-04-29 提交就绪复核与证据链收口
 - 执行模型：GPT5.5 / CodexPotter 长跑主线
-- 状态来源：根目录 `STATUS.md`、`potter-run.log`、当前 `.codexpotter/projects/2026/04/29/1/MAIN.md`
+- 状态来源：根目录 `STATUS.md`、`potter-run.log`、当前 `.codexpotter/projects/2026/04/29/2/MAIN.md`
 - 禁止项：不删除历史 `.codexpotter` 项目；不使用 GitHub/PR/team/tmux lane；不把模板或方法描述写成真实 28nm PPA 实测结论
 
 ## 技术基线
@@ -36,8 +36,9 @@
 
 - 总技术方案：`docs/report/10_technical_solution_and_execution_plan.md`
 - 多角色执行计划：`docs/admin/multi_agent_execution_plan_2026-04-29.md`
+- 提交就绪复核：`docs/admin/submission_readiness_review_2026-04-29.md`
 
-这两个文件用于把比赛要求、用户要求、当前完成状态、后端移交边界、风险、阻塞项和后续执行优先级集中到一个可决策入口。它们不改变 RTL，也不把模板性 PPA 写成真实 28nm 结果。
+这些文件用于把比赛要求、用户要求、当前完成状态、后端移交边界、风险、阻塞项、后续执行优先级和提交前复核集中到可决策入口。它们不改变 RTL，也不把模板性 PPA 写成真实 28nm 结果。
 
 ## 已完成收口
 
@@ -49,6 +50,7 @@
 - RTL 收口：已审查 `llmt_col` 与 `mx_array_32x16`，本批保持 RTL 不动，等待真实综合/PPA 或新增赛题约束驱动。
 - 教学资料：`docs/primer` 与 `docs/teaching` 已扩展为零基础队友一周内可跟读的学习路径。
 - 方案深化：`docs/report/10_technical_solution_and_execution_plan.md` 已补齐决策级总方案；`docs/admin/multi_agent_execution_plan_2026-04-29.md` 已补齐角色化执行计划。
+- 提交复核：`docs/admin/submission_readiness_review_2026-04-29.md` 已逐项收口初赛要求、证据链、后端 handoff 边界、禁止写法和打包建议。
 
 ## 仍然缺失的外部输入
 
