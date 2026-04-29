@@ -11,7 +11,7 @@
 | 仿真脚本 | `sim/` | 可提交 | `run_iverilog.ps1`、`run_python_ref.ps1`、`run_matmul_stats*.ps1` 已在 2026-04-28 执行并归档日志 |
 | Python 参考模型 | `tools/mx_ref.py` | 可提交 | 作为 MXFP8 golden model 和统计工具；自检日志已归档 |
 | 固定向量 | `vectors/` | 可提交 | manifest、输入 hex、期望输出齐全 |
-| 技术报告 | `docs/report/` | 可提交 | 第 03 到 07 章已和本轮证据同步；最终版等待主办方模板裁剪 |
+| 技术报告 | `docs/report/` | 可提交 | 第 03 到 07 章已和本轮证据同步；第 10 章提供总技术方案和执行计划入口；最终版等待主办方模板裁剪 |
 | 使用文档 | `docs/usage/` | 可提交 | 已说明环境、脚本、常见失败和输出目录 |
 | 教学资料 | `docs/primer/`、`docs/teaching/` | 可提交 | 已覆盖零基础路径和核心代码；完整逐文件扩展可作为后续教学增强 |
 | 综合模板 | `synth/`、`constraints/` | 可提交，外部阻塞真实结果 | 只作为后端移交模板，不当作真实 28nm PPA |
@@ -65,3 +65,5 @@
 - `README.md`
 - `MAIN.md`
 - `STATUS.md`
+
+打包前优先确认 `docs/report/10_technical_solution_and_execution_plan.md` 与根 `STATUS.md` 的完成状态一致。

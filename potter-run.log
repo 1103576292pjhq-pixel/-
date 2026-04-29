@@ -48,3 +48,4 @@
 [2026-04-29 10:53:20 +08:00] Reconciled current repo state against reports 00-09, evidence logs, precision JSONs, RTL top/column modules, sim scripts, and KB notes; decision remains RTL handoff package, no real 28nm PPA claim.
 [2026-04-29 10:53:20 +08:00] Added docs/report/10_technical_solution_and_execution_plan.md and docs/admin/multi_agent_execution_plan_2026-04-29.md as the decision-level technical solution and role-based execution plan.
 [2026-04-29 10:53:20 +08:00] Refreshed report indexes plus root MAIN.md and STATUS.md to point at the 2026-04-29 planning deliverables; RTL was not modified in this batch.
+[2026-04-29 10:53:20 +08:00] Follow-up consistency pass added the new decision document to README quick entries, requirements traceability, and submission checklist.

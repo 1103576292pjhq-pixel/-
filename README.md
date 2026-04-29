@@ -17,6 +17,8 @@
 
 - 工程总览：[MAIN.md](/D:/github/-/MAIN.md)
 - 当前状态：[STATUS.md](/D:/github/-/STATUS.md)
+- 总技术方案与执行计划：[docs/report/10_technical_solution_and_execution_plan.md](/D:/github/-/docs/report/10_technical_solution_and_execution_plan.md)
+- 多角色执行计划：[docs/admin/multi_agent_execution_plan_2026-04-29.md](/D:/github/-/docs/admin/multi_agent_execution_plan_2026-04-29.md)
 - 比赛要求映射：[docs/report/00_requirements_traceability.md](/D:/github/-/docs/report/00_requirements_traceability.md)
 - 提交版报告目录：[docs/report/README.md](/D:/github/-/docs/report/README.md)
 - Verilog 回归脚本：[sim/run_iverilog.ps1](/D:/github/-/sim/run_iverilog.ps1)
