@@ -59,6 +59,8 @@
 
 证据包入口在 `reports/evidence/README.md`，覆盖回归日志索引、关键 case、4096 抽样方法、finite/nonfinite/boundary 覆盖、波形捕获状态和 RTL 收口审查。
 
+提交就绪复核入口在 `docs/admin/submission_readiness_review_2026-04-29.md`，用于逐项回答当前代码、验证、精度、报告、教学和后端 handoff 分别达到什么程度。
+
 ### 4.3 报告和教学基线
 
 - 比赛报告：`docs/report/00_requirements_traceability.md` 到 `docs/report/09_submission_checklist.md`
@@ -66,7 +68,7 @@
 - 零基础 primer：`docs/primer/`
 - 代码讲解：`docs/teaching/`
 
-当前缺口不是“没有报告”，而是需要一个更高层的总方案入口和执行分工入口。本文和 `docs/admin/multi_agent_execution_plan_2026-04-29.md` 即补齐这两个入口。
+当前缺口不是“没有报告”，而是需要一个更高层的总方案入口、执行分工入口和提交就绪复核入口。本文、`docs/admin/multi_agent_execution_plan_2026-04-29.md` 和 `docs/admin/submission_readiness_review_2026-04-29.md` 即补齐这三类入口。
 
 ## 5. 具体架构方案
 
@@ -254,8 +256,9 @@ Python 参考模型 `tools/mx_ref.py` 是 RTL 比对和统计的 golden source�
 
 1. 用本文作为总技术入口，补齐 `docs/report/README.md` 和 `tech_report.md` 索引。
 2. 用 `docs/admin/multi_agent_execution_plan_2026-04-29.md` 作为后续多角色协作计划。
-3. 刷新根 `MAIN.md`、`STATUS.md` 和 `potter-run.log`，让状态指向 2026-04-29 规划深化批次。
-4. 做轻量一致性检查：确认新文档存在、索引可达、没有引入真实 28nm PPA 虚假声明。
+3. 用 `docs/admin/submission_readiness_review_2026-04-29.md` 作为提交前复核和后端 handoff 边界判断。
+4. 刷新根 `MAIN.md`、`STATUS.md` 和 `potter-run.log`，让状态指向 2026-04-29 复核收口批次。
+5. 做轻量一致性检查：确认新文档存在、索引可达、没有引入真实 28nm PPA 虚假声明。
 
 未来触发条件：
 

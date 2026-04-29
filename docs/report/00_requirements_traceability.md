@@ -6,7 +6,7 @@
 
 | 赛题要求 | 仓库产物 | 当前状态 | 证据或阻塞项 |
 | --- | --- | --- | --- |
-| 书面报告：电路实现方案、验证方案、精度测试结果、综合结果 | `docs/report/01_problem_and_goals.md` 到 `docs/report/10_technical_solution_and_execution_plan.md` | 可作为初赛报告正文 | `03` 到 `07` 已按 RTL handoff 边界重写；`10` 汇总技术方案、执行计划和后端边界；`07_synthesis_and_ppa.md` 只给综合模板和 PPA 方法，真实 28nm 结果阻塞于库和工具 |
+| 书面报告：电路实现方案、验证方案、精度测试结果、综合结果 | `docs/report/01_problem_and_goals.md` 到 `docs/report/10_technical_solution_and_execution_plan.md` | 可作为初赛报告正文 | `03` 到 `07` 已按 RTL handoff 边界重写；`10` 汇总技术方案、执行计划和后端边界；提交就绪复核见 `docs/admin/submission_readiness_review_2026-04-29.md`；`07_synthesis_and_ppa.md` 只给综合模板和 PPA 方法，真实 28nm 结果阻塞于库和工具 |
 | 仿真验证报告：含仿真波形图等 | `docs/report/05_verification_methodology.md`、`reports/verification/`、`reports/evidence/` | 日志证据具备，波形方法具备 | 2026-04-28 回归日志已归档；波形截图尚未实采，捕获方法见 `reports/evidence/waveform_capture_status.md` |
 | 可综合 RTL code | `rtl/llmt_col.v`、`rtl/mx_array_32x16.v`、`rtl/*.v`、`rtl/*.vh` | 基线具备 | RTL 保持纯 Verilog-2001；后续改动必须保持顶层接口稳定并重跑回归 |
 | 仿真工程 | `tb/`、`sim/`、`tools/mx_ref.py`、`vectors/` | 基线具备 | 覆盖列级、阵列级、多尺寸矩阵、tail tile、mixed nonfinite、sparse nonfinite |
@@ -26,7 +26,7 @@
 | RTL code 功能正确 | `rtl/`、`tb/`、`sim/run_iverilog.ps1`、`sim/run_python_ref.ps1` | 已复验 | 2026-04-28 新日志已生成在 `reports/verification/*.log` |
 | RTL code 实现高效性 | `rtl/llmt_col.v`、`rtl/mx_array_32x16.v`、`docs/report/04_llmt_microarchitecture.md` | 基线具备 | 当前有 32-lane dot、4x8 partial sum、三级流水；后续优化需由真实 PPA 或新增 benchmark 驱动 |
 | 代码风格 | `rtl/`、`docs/usage/README.md` | 基线具备 | 维持纯 Verilog；避免 SystemVerilog 语法；关键接口说明已归入报告和 usage |
-| 报告逻辑清晰 | `docs/report/README.md`、`docs/report/tech_report.md`、`docs/report/10_technical_solution_and_execution_plan.md` | 基线具备 | 章节顺序、术语边界、总方案入口和证据引用已统一；最终格式等待主办方模板 |
+| 报告逻辑清晰 | `docs/report/README.md`、`docs/report/tech_report.md`、`docs/report/10_technical_solution_and_execution_plan.md`、`docs/admin/submission_readiness_review_2026-04-29.md` | 基线具备 | 章节顺序、术语边界、总方案入口、提交就绪复核和证据引用已统一；最终格式等待主办方模板 |
 | 创新性/专项突出 | `docs/report/08_optimization_and_finals_outlook.md`、`docs/primer/` | 基线具备 | 突出 MXFP8、非有限值语义、可复验向量、零基础教学线 |
 
 ## 3. 外部输入缺口

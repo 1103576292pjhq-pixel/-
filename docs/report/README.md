@@ -18,4 +18,5 @@
 ## 使用方式
 - 对外提交时，优先按本目录导出/合并成正式技术报告。
 - 若需要快速判断当前交付状态、后端边界和下一步计划，先读 `10_technical_solution_and_execution_plan.md`。
+- 若需要提交前逐项复核，读 `../admin/submission_readiness_review_2026-04-29.md`。
 - 开发日志、阶段性结论和旧入口文档仅作为补充材料。

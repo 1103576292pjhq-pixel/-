@@ -13,6 +13,8 @@
 | `rtl_refinement_review_2026-04-28.md` | 本轮 RTL 收口审查结论和保持 RTL 不动的依据 |
 | `waveform_capture_status.md` | 波形证据现状和后续捕获方法 |
 
+提交就绪复核见 `../../docs/admin/submission_readiness_review_2026-04-29.md`。该文件不替代原始日志和 JSON，而是把本目录证据映射到初赛要求、后端 handoff 边界和禁止写法。
+
 ## 当前证据状态
 
 - 2026-04-28 Verilog 默认回归：PASS，见 `../verification/iverilog_default.log`

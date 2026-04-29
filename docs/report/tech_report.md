@@ -15,3 +15,5 @@
 11. [10_technical_solution_and_execution_plan.md](/D:/github/-/docs/report/10_technical_solution_and_execution_plan.md)
 
 如果后续要对外导出初赛提交版，优先以以上章节为主，而不是继续扩写本文件。
+
+提交前逐项复核入口：`../admin/submission_readiness_review_2026-04-29.md`。
