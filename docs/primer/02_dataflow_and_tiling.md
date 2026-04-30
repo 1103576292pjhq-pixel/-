@@ -1,77 +1,77 @@
-# NPU 背景教程 02：数据流、tile 与阵列为什么这样组织
+# 02 数据流、tile 与 `32x16`
 
-## 1. 先从矩阵乘公式开始
+## `32x16` 先不要想复杂
 
-矩阵乘的核心公式是：
-
-```text
-Y[i][j] = A[i][0] * B[0][j]
-        + A[i][1] * B[1][j]
-        + ...
-        + A[i][K-1] * B[K-1][j]
-```
-
-对固定的 `i` 和 `j`，这就是一个长度为 K 的点积。本项目把 K 每 32 个元素切成一个 block，所以一次列级计算叫 `dot32`。
-
-## 2. 为什么是 32 x 16
-
-可以把 `32 x 16` 理解成：
-
-- `32`：一次点积吃 32 个 K 方向元素。
-- `16`：同一拍并行算 16 个输出列。
-
-也就是说，同一个 A block 会广播给 16 列 B block：
+本项目里的 `32x16` 可以先拆开理解：
 
 ```text
-            B col0   B col1   ...   B col15
-              |        |              |
-A block ---> dot32   dot32    ...   dot32
-              |        |              |
-           acc[0]   acc[1]          acc[15]
+32: 一个 dot32 一次吃 32 个 K 方向元素
+16: 同时算 16 个输出列
 ```
 
-这就是 `mx_array_32x16` 顶层的组织方式。
+它不是“32 行 16 列的完整 systolic array”。更准确的说法是：一个 A block 广播给 16 个列单元，每个列单元使用自己的 B block，得到 16 个输出列的部分和。
 
-## 3. 什么是 output-stationary
+## 一个具体例子
 
-`stationary` 的意思是“某类数据尽量停在本地不动”。本项目使用 output-stationary：
-
-- 输入 A/B block 持续流过阵列。
-- 每一列的输出累加值留在本列 accumulator 中。
-- K 方向所有 block 处理完后，accumulator 就是最终输出。
-
-这样做的好处是：输出不需要每个 K block 都写回外部存储，可以减少输出搬运。
-
-## 4. 为什么要切 tile
-
-阵列一次只能输出 16 列，但真实矩阵的 N 可能远大于 16。例如 N=65：
+如果 K=64，那么 K 方向会拆成两个 block：
 
 ```text
-tile0: col  0..15
-tile1: col 16..31
-tile2: col 32..47
-tile3: col 48..63
-tile4: col 64..64  + 15 个 padding lane
+第 0 个 K block: k=0..31
+第 1 个 K block: k=32..63
 ```
 
-所以 `9x65x192` 这个回归用例很重要：它证明设计能处理 5 个列 tile，最后一个 tile 只有 1 个真实列。
+每个 block 做一次 dot32。两个 dot32 的结果在 FP32 accumulator 里累加，最后才是完整输出。
 
-## 5. 尾 tile 怎么验证
+## output-stationary 是什么
 
-尾 tile 的原则是：
+`stationary` 表示“尽量让某类数据停在本地”。本项目采用 output-stationary：
 
-- 真实列照常比对 expected output。
-- 超出 N 的 padding lane 不应该残留旧值。
-- 如果输入中有 NaN，padding lane 的语义要和 golden model 一致。
+```text
+A/B block 流进来
+dot32 计算部分和
+每列 accumulator 留住输出部分和
+下一个 K block 来了继续加
+```
 
-`tb/tb_mx_array_dataset.v` 会检查 `valid_o` 在所有列保持一致，并按 manifest 中的 M/N/K 信息逐行逐 tile 比对。
+这样可以减少输出反复写回外部的次数。对硬件来说，少搬数据通常比少算一次更重要。
 
-## 6. 一周复述要点
+## tile 为什么存在
 
-你需要能讲清楚：
+阵列一次只能并行算 16 列。如果真实矩阵有 20 列：
 
-1. `32` 是 K block 长度，不是阵列行数。
-2. `16` 是并行输出列数。
-3. A block 广播，B block 每列不同。
-4. output-stationary 表示输出 accumulator 留在列内。
-5. tile 是为了处理任意 N，tail tile 是为了处理 N 不整除 16。
+```text
+tile0: col  0..15  共 16 列
+tile1: col 16..19  共  4 列 + 12 个 padding lane
+```
+
+尾 tile 的 padding lane 不是有效输出。testbench 必须确认真实列正确，也要确认无效 lane 不残留旧结果。
+
+## valid、reset 和 acc_clear
+
+读 RTL 时先记住三个控制信号：
+
+- `rst_n`：低有效复位，把状态清到已知值。
+- `valid_i`：本拍输入是否有效。
+- `acc_clear_i`：开始一个新输出时清 accumulator，不清就表示继续累加 K block。
+
+简化时序：
+
+```text
+reset -> acc_clear + valid -> dot32 -> FP32 add -> valid_o
+```
+
+## 常见错误
+
+- 把 `acc_clear_i` 当成 reset。reset 是全局初始化，acc_clear 是开始新输出。
+- 忘记 tail tile，导致只验证 N=16、32 这种整齐尺寸。
+- 把 padding lane 当成真实列输出。
+
+## 自测题
+
+1. N=65 时需要几个 16 列 tile？
+2. K=96 时需要几个 dot32 block？
+3. 为什么 output-stationary 可以减少输出搬运？
+
+## 用自己的话复述
+
+“`32x16` 的 32 是 dot32 的 K block 长度，16 是并行输出列数。A block 广播给所有列，B block 每列不同，输出部分和留在列内 accumulator。矩阵列数不是 16 的倍数时，要用 tail tile 和 padding lane 处理。”
