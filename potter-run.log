@@ -57,3 +57,4 @@
 [2026-04-30 11:35:00 +08:00] Added optional DUMP_VCD support to representative smoke testbenches, created sim/run_waveform_smoke.ps1, generated three VCD files under reports/evidence/waveforms, and refreshed reports/verification/iverilog_default.log with a passing default regression.
 [2026-04-30 11:45:00 +08:00] Expanded docs/primer into a zero-background one-week path and strengthened docs/teaching with a major-file coverage matrix plus defense retelling map.
 [2026-04-30 11:55:00 +08:00] Added docs/report/11_frontend_handoff_and_packaging.md and updated status/evidence/report entrypoints while preserving the no-real-28nm-PPA boundary.
+[2026-04-30 20:41:00 +08:00] Final acceptance after stale runner: confirmed handoff guide, Primer V2, teaching coverage, optional waveform support, PASS logs, three archived VCDs, no tracked mojibake hits, and no unsupported real 28nm PPA completion claim; refreshed visible status/index entries only.

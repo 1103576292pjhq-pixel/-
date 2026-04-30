@@ -8,9 +8,9 @@
 
 ## 当前主线
 
-- 当前批次：2026-04-30 教学 V2、波形证据与前端 handoff 收口
+- 当前批次：2026-04-30 教学 V2、波形证据与前端 handoff 最终验收完成
 - 执行模型：GPT5.5 / CodexPotter 长跑主线
-- 状态来源：根目录 `STATUS.md`、`potter-run.log`、当前 `.codexpotter/projects/2026/04/30/1/MAIN.md`
+- 状态来源：根目录 `STATUS.md`、`potter-run.log`、当前 `.codexpotter/projects/2026/04/30/2/MAIN.md`
 - 禁止项：不删除历史 `.codexpotter` 项目；不使用 GitHub/PR/team/tmux lane；不把模板或方法描述写成真实 28nm PPA 实测结论
 
 ## 技术基线
@@ -39,6 +39,8 @@
 - 提交就绪复核：`docs/admin/submission_readiness_review_2026-04-29.md`
 - 前端到后端移交与打包：`docs/report/11_frontend_handoff_and_packaging.md`
 - 波形证据状态：`reports/evidence/waveform_capture_status.md`
+- Primer V2：`docs/primer/README.md`
+- 教学覆盖矩阵：`docs/teaching/coverage_plan.md`
 
 这些文件用于把比赛要求、用户要求、当前完成状态、后端移交边界、风险、阻塞项、后续执行优先级和提交前复核集中到可决策入口。它们不改变 RTL，也不把模板性 PPA 写成真实 28nm 结果。
 
@@ -53,7 +55,7 @@
 - 教学资料：`docs/primer` 与 `docs/teaching` 已扩展为零基础队友一周内可跟读的学习路径。
 - 方案深化：`docs/report/10_technical_solution_and_execution_plan.md` 已补齐决策级总方案；`docs/admin/multi_agent_execution_plan_2026-04-29.md` 已补齐角色化执行计划。
 - 提交复核：`docs/admin/submission_readiness_review_2026-04-29.md` 已逐项收口初赛要求、证据链、后端 handoff 边界、禁止写法和打包建议。
-- 2026-04-30 增强：已加入 opt-in VCD 波形脚本与三份小 VCD；`docs/primer` 扩成零基础一周路径；`docs/teaching` 增加主要文件覆盖矩阵和答辩复述地图；`docs/report/11_frontend_handoff_and_packaging.md` 明确后端移交和正式包排除项。
+- 2026-04-30 增强与验收：已加入 opt-in VCD 波形脚本与三份小 VCD；`docs/primer` 扩成零基础一周路径；`docs/teaching` 增加主要文件覆盖矩阵和答辩复述地图；`docs/report/11_frontend_handoff_and_packaging.md` 明确后端移交和正式包排除项；最终验收确认默认回归和波形 smoke 日志均为 PASS。
 
 ## 仍然缺失的外部输入
 
