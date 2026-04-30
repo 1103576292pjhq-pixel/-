@@ -37,6 +37,7 @@
 - 总技术方案：`docs/report/10_technical_solution_and_execution_plan.md`
 - 多角色执行计划：`docs/admin/multi_agent_execution_plan_2026-04-29.md`
 - 提交就绪复核：`docs/admin/submission_readiness_review_2026-04-29.md`
+- 前端到后端移交与打包：`docs/report/11_frontend_handoff_and_packaging.md`
 
 这些文件用于把比赛要求、用户要求、当前完成状态、后端移交边界、风险、阻塞项、后续执行优先级和提交前复核集中到可决策入口。它们不改变 RTL，也不把模板性 PPA 写成真实 28nm 结果。
 

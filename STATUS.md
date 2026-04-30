@@ -13,6 +13,7 @@
 - PPA 基线：只具备 `constraints/`、`synth/` 模板和方法说明；真实 PPA 等待后端工具链与库文件。
 - 文档基线：`docs/report/03` 到 `docs/report/07` 已按比赛提交口径重写；`docs/primer` 已形成 5 篇学习路径；`docs/teaching` 已覆盖阵列顶层、MX helper、FP32 helper、列级 testbench、Python/scripts 讲解。
 - 决策入口：`docs/report/10_technical_solution_and_execution_plan.md` 汇总赛题要求、用户要求、架构、验证、后端移交、风险和后续触发条件；`docs/admin/multi_agent_execution_plan_2026-04-29.md` 给出 Planner/Architect/RTL/DV/PPA/Writer/Critic 角色化计划；`docs/admin/submission_readiness_review_2026-04-29.md` 给出提交就绪、缺口和禁止写法复核。
+- Handoff 入口：`docs/report/11_frontend_handoff_and_packaging.md` 给出后端接收文件、顶层接口、脚本模板、验证证据、后端待补项、禁止 PPA 声称和正式包排除项。
 - 证据基线：`reports/evidence` 已包含日志索引、关键 case、4096 抽样方法、边界/非有限值覆盖和波形捕获计划。
 - RTL 收口：2026-04-28 审查决定保持 RTL 不动；后续优化等待真实综合/PPA 或新增赛题约束驱动。
 - 最新复查：报告 00-10、提交就绪复核、验证日志、精度 JSON、证据包和入口文档均已核对；`MAIN.md` 指向当前 2026-04-29 复核收口批次；提交清单、需求追踪表、证据索引和教学入口保持当前可提交/外部阻塞状态。
