@@ -97,6 +97,17 @@ module tb_mx_array_smoke;
 
   always #5 clk = ~clk;
 
+`ifdef DUMP_VCD
+  reg [1023:0] vcd_file;
+  initial begin
+    if (!$value$plusargs("VCD_FILE=%s", vcd_file)) begin
+      vcd_file = "reports/evidence/waveforms/tb_mx_array_smoke.vcd";
+    end
+    $dumpfile(vcd_file);
+    $dumpvars(0, tb_mx_array_smoke);
+  end
+`endif
+
   initial begin
     clk = 1'b0;
     rst_n = 1'b0;

@@ -1,0 +1,6085 @@
+$date
+	Thu Apr 30 11:26:31 2026
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module tb_mx_array_smoke $end
+$var wire 16 ! valid_o [15:0] $end
+$var wire 1 " ref_valid_o $end
+$var wire 32 # ref_acc_o [31:0] $end
+$var wire 512 $ acc_o [511:0] $end
+$var parameter 8 % E4M3_ONE $end
+$var parameter 8 & E8M0_ONE $end
+$var parameter 32 ' FP32_32 $end
+$var parameter 32 ( FP32_64 $end
+$var reg 256 ) a_elems_i [255:0] $end
+$var reg 8 * a_scale_i [7:0] $end
+$var reg 16 + acc_clear_i [15:0] $end
+$var reg 4096 , b_elems_i [4095:0] $end
+$var reg 128 - b_scale_i [127:0] $end
+$var reg 1 . clk $end
+$var reg 1 / rst_n $end
+$var reg 1 0 valid_i $end
+$var reg 1024 1 vcd_file [1023:0] $end
+$scope module dut $end
+$var wire 256 2 a_elems_i [255:0] $end
+$var wire 8 3 a_scale_i [7:0] $end
+$var wire 16 4 acc_clear_i [15:0] $end
+$var wire 512 5 acc_o [511:0] $end
+$var wire 4096 6 b_elems_i [4095:0] $end
+$var wire 128 7 b_scale_i [127:0] $end
+$var wire 1 . clk $end
+$var wire 1 / rst_n $end
+$var wire 1 0 valid_i $end
+$var wire 16 8 valid_o [15:0] $end
+$var wire 16 9 valid_int [15:0] $end
+$var wire 512 : acc_int [511:0] $end
+$scope begin gen_cols[0] $end
+$var wire 256 ; b_elems_col [255:0] $end
+$var wire 8 < b_scale_col [7:0] $end
+$var parameter 2 = col $end
+$scope module col_u $end
+$var wire 256 > a_elems_i [255:0] $end
+$var wire 8 ? a_scale_i [7:0] $end
+$var wire 1 @ acc_clear_i $end
+$var wire 32 A acc_o [31:0] $end
+$var wire 256 B b_elems_i [255:0] $end
+$var wire 8 C b_scale_i [7:0] $end
+$var wire 1 . clk $end
+$var wire 1 / rst_n $end
+$var wire 1 0 valid_i $end
+$var wire 44 D dot_sum_s1 [43:0] $end
+$var wire 44 E dot_half_sum1_s1 [43:0] $end
+$var wire 44 F dot_half_sum0_s1 [43:0] $end
+$var wire 32 G dot_fp32_s1 [31:0] $end
+$var wire 32 H acc_next [31:0] $end
+$var reg 19 I a_fixed [18:0] $end
+$var reg 10 J a_scale_exp [9:0] $end
+$var reg 1 K acc_clear_s1 $end
+$var reg 1 L acc_clear_s2 $end
+$var reg 32 M acc_reg [31:0] $end
+$var reg 1 N any_nan $end
+$var reg 1 O any_nan_s1 $end
+$var reg 19 P b_fixed [18:0] $end
+$var reg 10 Q b_scale_exp [9:0] $end
+$var reg 12 R dot_exp_shift [11:0] $end
+$var reg 12 S dot_exp_shift_s1 [11:0] $end
+$var reg 32 T dot_fp32_s2 [31:0] $end
+$var reg 38 U lane_prod [37:0] $end
+$var reg 44 V lane_prod_ext [43:0] $end
+$var reg 1 W valid_o $end
+$var reg 1 X valid_s1 $end
+$var reg 1 Y valid_s2 $end
+$var integer 32 Z elem_idx [31:0] $end
+$var integer 32 [ lane_idx [31:0] $end
+$var integer 32 \ pipe_idx [31:0] $end
+$var integer 32 ] quad_idx [31:0] $end
+$scope function e4m3_is_nan $end
+$var reg 8 ^ enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_subnormal $end
+$var reg 8 _ enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_zero $end
+$var reg 8 ` enc [7:0] $end
+$upscope $end
+$scope function e4m3_significand $end
+$var reg 8 a enc [7:0] $end
+$upscope $end
+$scope function e4m3_to_fixed $end
+$var reg 8 b enc [7:0] $end
+$var reg 4 c exp_field [3:0] $end
+$var reg 19 d magnitude [18:0] $end
+$var reg 3 e mant_field [2:0] $end
+$var reg 1 f sign_bit $end
+$var reg 19 g significand [18:0] $end
+$var integer 32 h shift_amt [31:0] $end
+$upscope $end
+$scope function e4m3_unbiased_exp $end
+$var reg 8 i enc [7:0] $end
+$upscope $end
+$scope function e8m0_is_nan $end
+$var reg 8 j enc [7:0] $end
+$upscope $end
+$scope function e8m0_unbiased_exp $end
+$var reg 8 k enc [7:0] $end
+$upscope $end
+$scope module acc_add_u $end
+$var wire 32 l a_i [31:0] $end
+$var wire 32 m b_i [31:0] $end
+$var reg 1 n a_is_inf $end
+$var reg 1 o a_is_nan $end
+$var reg 1 p a_is_zero $end
+$var reg 1 q b_is_inf $end
+$var reg 1 r b_is_nan $end
+$var reg 1 s b_is_zero $end
+$var reg 8 t exp_field_a [7:0] $end
+$var reg 8 u exp_field_b [7:0] $end
+$var reg 8 v exp_field_out [7:0] $end
+$var reg 1 w guard_bit $end
+$var reg 24 x mant_a [23:0] $end
+$var reg 24 y mant_b [23:0] $end
+$var reg 27 z mant_big_ext [26:0] $end
+$var reg 24 { mant_big_raw [23:0] $end
+$var reg 24 | mant_main [23:0] $end
+$var reg 28 } mant_norm [27:0] $end
+$var reg 25 ~ mant_rounded [24:0] $end
+$var reg 27 !" mant_small_aligned [26:0] $end
+$var reg 27 "" mant_small_ext [26:0] $end
+$var reg 24 #" mant_small_raw [23:0] $end
+$var reg 28 $" mant_sum [27:0] $end
+$var reg 1 %" round_bit $end
+$var reg 1 &" round_up $end
+$var reg 1 '" sign_a $end
+$var reg 1 (" sign_b $end
+$var reg 1 )" sign_big $end
+$var reg 1 *" sign_small $end
+$var reg 1 +" sticky_bit $end
+$var reg 32 ," sum_o [31:0] $end
+$var integer 32 -" diff_exp [31:0] $end
+$var integer 32 ." exp_a [31:0] $end
+$var integer 32 /" exp_b [31:0] $end
+$var integer 32 0" exp_big [31:0] $end
+$var integer 32 1" exp_res [31:0] $end
+$var integer 32 2" exp_small [31:0] $end
+$var integer 32 3" i [31:0] $end
+$var integer 32 4" lead_idx [31:0] $end
+$scope function shr_sticky_27 $end
+$var reg 27 5" shifted [26:0] $end
+$var reg 1 6" sticky $end
+$var reg 27 7" value [26:0] $end
+$var integer 32 8" j [31:0] $end
+$var integer 32 9" shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$scope module dot_cast_u $end
+$var wire 12 :" exp_shift_i [11:0] $end
+$var wire 1 O nan_i $end
+$var wire 44 ;" value_i [43:0] $end
+$var parameter 32 <" EXP_W $end
+$var parameter 32 =" IN_W $end
+$var reg 44 >" abs_value [43:0] $end
+$var reg 8 ?" exp_field_out [7:0] $end
+$var reg 32 @" fp32_o [31:0] $end
+$var reg 1 A" guard_bit $end
+$var reg 1 B" round_up $end
+$var reg 25 C" sig_rounded [24:0] $end
+$var reg 25 D" sig_work [24:0] $end
+$var reg 1 E" sign_bit $end
+$var reg 1 F" sticky_bit $end
+$var integer 32 G" exp_unbiased [31:0] $end
+$var integer 32 H" i [31:0] $end
+$var integer 32 I" msb_idx [31:0] $end
+$var integer 32 J" shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope begin gen_cols[1] $end
+$var wire 256 K" b_elems_col [255:0] $end
+$var wire 8 L" b_scale_col [7:0] $end
+$var parameter 2 M" col $end
+$scope module col_u $end
+$var wire 256 N" a_elems_i [255:0] $end
+$var wire 8 O" a_scale_i [7:0] $end
+$var wire 1 P" acc_clear_i $end
+$var wire 32 Q" acc_o [31:0] $end
+$var wire 256 R" b_elems_i [255:0] $end
+$var wire 8 S" b_scale_i [7:0] $end
+$var wire 1 . clk $end
+$var wire 1 / rst_n $end
+$var wire 1 0 valid_i $end
+$var wire 44 T" dot_sum_s1 [43:0] $end
+$var wire 44 U" dot_half_sum1_s1 [43:0] $end
+$var wire 44 V" dot_half_sum0_s1 [43:0] $end
+$var wire 32 W" dot_fp32_s1 [31:0] $end
+$var wire 32 X" acc_next [31:0] $end
+$var reg 19 Y" a_fixed [18:0] $end
+$var reg 10 Z" a_scale_exp [9:0] $end
+$var reg 1 [" acc_clear_s1 $end
+$var reg 1 \" acc_clear_s2 $end
+$var reg 32 ]" acc_reg [31:0] $end
+$var reg 1 ^" any_nan $end
+$var reg 1 _" any_nan_s1 $end
+$var reg 19 `" b_fixed [18:0] $end
+$var reg 10 a" b_scale_exp [9:0] $end
+$var reg 12 b" dot_exp_shift [11:0] $end
+$var reg 12 c" dot_exp_shift_s1 [11:0] $end
+$var reg 32 d" dot_fp32_s2 [31:0] $end
+$var reg 38 e" lane_prod [37:0] $end
+$var reg 44 f" lane_prod_ext [43:0] $end
+$var reg 1 g" valid_o $end
+$var reg 1 h" valid_s1 $end
+$var reg 1 i" valid_s2 $end
+$var integer 32 j" elem_idx [31:0] $end
+$var integer 32 k" lane_idx [31:0] $end
+$var integer 32 l" pipe_idx [31:0] $end
+$var integer 32 m" quad_idx [31:0] $end
+$scope function e4m3_is_nan $end
+$var reg 8 n" enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_subnormal $end
+$var reg 8 o" enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_zero $end
+$var reg 8 p" enc [7:0] $end
+$upscope $end
+$scope function e4m3_significand $end
+$var reg 8 q" enc [7:0] $end
+$upscope $end
+$scope function e4m3_to_fixed $end
+$var reg 8 r" enc [7:0] $end
+$var reg 4 s" exp_field [3:0] $end
+$var reg 19 t" magnitude [18:0] $end
+$var reg 3 u" mant_field [2:0] $end
+$var reg 1 v" sign_bit $end
+$var reg 19 w" significand [18:0] $end
+$var integer 32 x" shift_amt [31:0] $end
+$upscope $end
+$scope function e4m3_unbiased_exp $end
+$var reg 8 y" enc [7:0] $end
+$upscope $end
+$scope function e8m0_is_nan $end
+$var reg 8 z" enc [7:0] $end
+$upscope $end
+$scope function e8m0_unbiased_exp $end
+$var reg 8 {" enc [7:0] $end
+$upscope $end
+$scope module acc_add_u $end
+$var wire 32 |" a_i [31:0] $end
+$var wire 32 }" b_i [31:0] $end
+$var reg 1 ~" a_is_inf $end
+$var reg 1 !# a_is_nan $end
+$var reg 1 "# a_is_zero $end
+$var reg 1 ## b_is_inf $end
+$var reg 1 $# b_is_nan $end
+$var reg 1 %# b_is_zero $end
+$var reg 8 &# exp_field_a [7:0] $end
+$var reg 8 '# exp_field_b [7:0] $end
+$var reg 8 (# exp_field_out [7:0] $end
+$var reg 1 )# guard_bit $end
+$var reg 24 *# mant_a [23:0] $end
+$var reg 24 +# mant_b [23:0] $end
+$var reg 27 ,# mant_big_ext [26:0] $end
+$var reg 24 -# mant_big_raw [23:0] $end
+$var reg 24 .# mant_main [23:0] $end
+$var reg 28 /# mant_norm [27:0] $end
+$var reg 25 0# mant_rounded [24:0] $end
+$var reg 27 1# mant_small_aligned [26:0] $end
+$var reg 27 2# mant_small_ext [26:0] $end
+$var reg 24 3# mant_small_raw [23:0] $end
+$var reg 28 4# mant_sum [27:0] $end
+$var reg 1 5# round_bit $end
+$var reg 1 6# round_up $end
+$var reg 1 7# sign_a $end
+$var reg 1 8# sign_b $end
+$var reg 1 9# sign_big $end
+$var reg 1 :# sign_small $end
+$var reg 1 ;# sticky_bit $end
+$var reg 32 <# sum_o [31:0] $end
+$var integer 32 =# diff_exp [31:0] $end
+$var integer 32 ># exp_a [31:0] $end
+$var integer 32 ?# exp_b [31:0] $end
+$var integer 32 @# exp_big [31:0] $end
+$var integer 32 A# exp_res [31:0] $end
+$var integer 32 B# exp_small [31:0] $end
+$var integer 32 C# i [31:0] $end
+$var integer 32 D# lead_idx [31:0] $end
+$scope function shr_sticky_27 $end
+$var reg 27 E# shifted [26:0] $end
+$var reg 1 F# sticky $end
+$var reg 27 G# value [26:0] $end
+$var integer 32 H# j [31:0] $end
+$var integer 32 I# shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$scope module dot_cast_u $end
+$var wire 12 J# exp_shift_i [11:0] $end
+$var wire 1 _" nan_i $end
+$var wire 44 K# value_i [43:0] $end
+$var parameter 32 L# EXP_W $end
+$var parameter 32 M# IN_W $end
+$var reg 44 N# abs_value [43:0] $end
+$var reg 8 O# exp_field_out [7:0] $end
+$var reg 32 P# fp32_o [31:0] $end
+$var reg 1 Q# guard_bit $end
+$var reg 1 R# round_up $end
+$var reg 25 S# sig_rounded [24:0] $end
+$var reg 25 T# sig_work [24:0] $end
+$var reg 1 U# sign_bit $end
+$var reg 1 V# sticky_bit $end
+$var integer 32 W# exp_unbiased [31:0] $end
+$var integer 32 X# i [31:0] $end
+$var integer 32 Y# msb_idx [31:0] $end
+$var integer 32 Z# shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope begin gen_cols[2] $end
+$var wire 256 [# b_elems_col [255:0] $end
+$var wire 8 \# b_scale_col [7:0] $end
+$var parameter 3 ]# col $end
+$scope module col_u $end
+$var wire 256 ^# a_elems_i [255:0] $end
+$var wire 8 _# a_scale_i [7:0] $end
+$var wire 1 `# acc_clear_i $end
+$var wire 32 a# acc_o [31:0] $end
+$var wire 256 b# b_elems_i [255:0] $end
+$var wire 8 c# b_scale_i [7:0] $end
+$var wire 1 . clk $end
+$var wire 1 / rst_n $end
+$var wire 1 0 valid_i $end
+$var wire 44 d# dot_sum_s1 [43:0] $end
+$var wire 44 e# dot_half_sum1_s1 [43:0] $end
+$var wire 44 f# dot_half_sum0_s1 [43:0] $end
+$var wire 32 g# dot_fp32_s1 [31:0] $end
+$var wire 32 h# acc_next [31:0] $end
+$var reg 19 i# a_fixed [18:0] $end
+$var reg 10 j# a_scale_exp [9:0] $end
+$var reg 1 k# acc_clear_s1 $end
+$var reg 1 l# acc_clear_s2 $end
+$var reg 32 m# acc_reg [31:0] $end
+$var reg 1 n# any_nan $end
+$var reg 1 o# any_nan_s1 $end
+$var reg 19 p# b_fixed [18:0] $end
+$var reg 10 q# b_scale_exp [9:0] $end
+$var reg 12 r# dot_exp_shift [11:0] $end
+$var reg 12 s# dot_exp_shift_s1 [11:0] $end
+$var reg 32 t# dot_fp32_s2 [31:0] $end
+$var reg 38 u# lane_prod [37:0] $end
+$var reg 44 v# lane_prod_ext [43:0] $end
+$var reg 1 w# valid_o $end
+$var reg 1 x# valid_s1 $end
+$var reg 1 y# valid_s2 $end
+$var integer 32 z# elem_idx [31:0] $end
+$var integer 32 {# lane_idx [31:0] $end
+$var integer 32 |# pipe_idx [31:0] $end
+$var integer 32 }# quad_idx [31:0] $end
+$scope function e4m3_is_nan $end
+$var reg 8 ~# enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_subnormal $end
+$var reg 8 !$ enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_zero $end
+$var reg 8 "$ enc [7:0] $end
+$upscope $end
+$scope function e4m3_significand $end
+$var reg 8 #$ enc [7:0] $end
+$upscope $end
+$scope function e4m3_to_fixed $end
+$var reg 8 $$ enc [7:0] $end
+$var reg 4 %$ exp_field [3:0] $end
+$var reg 19 &$ magnitude [18:0] $end
+$var reg 3 '$ mant_field [2:0] $end
+$var reg 1 ($ sign_bit $end
+$var reg 19 )$ significand [18:0] $end
+$var integer 32 *$ shift_amt [31:0] $end
+$upscope $end
+$scope function e4m3_unbiased_exp $end
+$var reg 8 +$ enc [7:0] $end
+$upscope $end
+$scope function e8m0_is_nan $end
+$var reg 8 ,$ enc [7:0] $end
+$upscope $end
+$scope function e8m0_unbiased_exp $end
+$var reg 8 -$ enc [7:0] $end
+$upscope $end
+$scope module acc_add_u $end
+$var wire 32 .$ a_i [31:0] $end
+$var wire 32 /$ b_i [31:0] $end
+$var reg 1 0$ a_is_inf $end
+$var reg 1 1$ a_is_nan $end
+$var reg 1 2$ a_is_zero $end
+$var reg 1 3$ b_is_inf $end
+$var reg 1 4$ b_is_nan $end
+$var reg 1 5$ b_is_zero $end
+$var reg 8 6$ exp_field_a [7:0] $end
+$var reg 8 7$ exp_field_b [7:0] $end
+$var reg 8 8$ exp_field_out [7:0] $end
+$var reg 1 9$ guard_bit $end
+$var reg 24 :$ mant_a [23:0] $end
+$var reg 24 ;$ mant_b [23:0] $end
+$var reg 27 <$ mant_big_ext [26:0] $end
+$var reg 24 =$ mant_big_raw [23:0] $end
+$var reg 24 >$ mant_main [23:0] $end
+$var reg 28 ?$ mant_norm [27:0] $end
+$var reg 25 @$ mant_rounded [24:0] $end
+$var reg 27 A$ mant_small_aligned [26:0] $end
+$var reg 27 B$ mant_small_ext [26:0] $end
+$var reg 24 C$ mant_small_raw [23:0] $end
+$var reg 28 D$ mant_sum [27:0] $end
+$var reg 1 E$ round_bit $end
+$var reg 1 F$ round_up $end
+$var reg 1 G$ sign_a $end
+$var reg 1 H$ sign_b $end
+$var reg 1 I$ sign_big $end
+$var reg 1 J$ sign_small $end
+$var reg 1 K$ sticky_bit $end
+$var reg 32 L$ sum_o [31:0] $end
+$var integer 32 M$ diff_exp [31:0] $end
+$var integer 32 N$ exp_a [31:0] $end
+$var integer 32 O$ exp_b [31:0] $end
+$var integer 32 P$ exp_big [31:0] $end
+$var integer 32 Q$ exp_res [31:0] $end
+$var integer 32 R$ exp_small [31:0] $end
+$var integer 32 S$ i [31:0] $end
+$var integer 32 T$ lead_idx [31:0] $end
+$scope function shr_sticky_27 $end
+$var reg 27 U$ shifted [26:0] $end
+$var reg 1 V$ sticky $end
+$var reg 27 W$ value [26:0] $end
+$var integer 32 X$ j [31:0] $end
+$var integer 32 Y$ shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$scope module dot_cast_u $end
+$var wire 12 Z$ exp_shift_i [11:0] $end
+$var wire 1 o# nan_i $end
+$var wire 44 [$ value_i [43:0] $end
+$var parameter 32 \$ EXP_W $end
+$var parameter 32 ]$ IN_W $end
+$var reg 44 ^$ abs_value [43:0] $end
+$var reg 8 _$ exp_field_out [7:0] $end
+$var reg 32 `$ fp32_o [31:0] $end
+$var reg 1 a$ guard_bit $end
+$var reg 1 b$ round_up $end
+$var reg 25 c$ sig_rounded [24:0] $end
+$var reg 25 d$ sig_work [24:0] $end
+$var reg 1 e$ sign_bit $end
+$var reg 1 f$ sticky_bit $end
+$var integer 32 g$ exp_unbiased [31:0] $end
+$var integer 32 h$ i [31:0] $end
+$var integer 32 i$ msb_idx [31:0] $end
+$var integer 32 j$ shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope begin gen_cols[3] $end
+$var wire 256 k$ b_elems_col [255:0] $end
+$var wire 8 l$ b_scale_col [7:0] $end
+$var parameter 3 m$ col $end
+$scope module col_u $end
+$var wire 256 n$ a_elems_i [255:0] $end
+$var wire 8 o$ a_scale_i [7:0] $end
+$var wire 1 p$ acc_clear_i $end
+$var wire 32 q$ acc_o [31:0] $end
+$var wire 256 r$ b_elems_i [255:0] $end
+$var wire 8 s$ b_scale_i [7:0] $end
+$var wire 1 . clk $end
+$var wire 1 / rst_n $end
+$var wire 1 0 valid_i $end
+$var wire 44 t$ dot_sum_s1 [43:0] $end
+$var wire 44 u$ dot_half_sum1_s1 [43:0] $end
+$var wire 44 v$ dot_half_sum0_s1 [43:0] $end
+$var wire 32 w$ dot_fp32_s1 [31:0] $end
+$var wire 32 x$ acc_next [31:0] $end
+$var reg 19 y$ a_fixed [18:0] $end
+$var reg 10 z$ a_scale_exp [9:0] $end
+$var reg 1 {$ acc_clear_s1 $end
+$var reg 1 |$ acc_clear_s2 $end
+$var reg 32 }$ acc_reg [31:0] $end
+$var reg 1 ~$ any_nan $end
+$var reg 1 !% any_nan_s1 $end
+$var reg 19 "% b_fixed [18:0] $end
+$var reg 10 #% b_scale_exp [9:0] $end
+$var reg 12 $% dot_exp_shift [11:0] $end
+$var reg 12 %% dot_exp_shift_s1 [11:0] $end
+$var reg 32 &% dot_fp32_s2 [31:0] $end
+$var reg 38 '% lane_prod [37:0] $end
+$var reg 44 (% lane_prod_ext [43:0] $end
+$var reg 1 )% valid_o $end
+$var reg 1 *% valid_s1 $end
+$var reg 1 +% valid_s2 $end
+$var integer 32 ,% elem_idx [31:0] $end
+$var integer 32 -% lane_idx [31:0] $end
+$var integer 32 .% pipe_idx [31:0] $end
+$var integer 32 /% quad_idx [31:0] $end
+$scope function e4m3_is_nan $end
+$var reg 8 0% enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_subnormal $end
+$var reg 8 1% enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_zero $end
+$var reg 8 2% enc [7:0] $end
+$upscope $end
+$scope function e4m3_significand $end
+$var reg 8 3% enc [7:0] $end
+$upscope $end
+$scope function e4m3_to_fixed $end
+$var reg 8 4% enc [7:0] $end
+$var reg 4 5% exp_field [3:0] $end
+$var reg 19 6% magnitude [18:0] $end
+$var reg 3 7% mant_field [2:0] $end
+$var reg 1 8% sign_bit $end
+$var reg 19 9% significand [18:0] $end
+$var integer 32 :% shift_amt [31:0] $end
+$upscope $end
+$scope function e4m3_unbiased_exp $end
+$var reg 8 ;% enc [7:0] $end
+$upscope $end
+$scope function e8m0_is_nan $end
+$var reg 8 <% enc [7:0] $end
+$upscope $end
+$scope function e8m0_unbiased_exp $end
+$var reg 8 =% enc [7:0] $end
+$upscope $end
+$scope module acc_add_u $end
+$var wire 32 >% a_i [31:0] $end
+$var wire 32 ?% b_i [31:0] $end
+$var reg 1 @% a_is_inf $end
+$var reg 1 A% a_is_nan $end
+$var reg 1 B% a_is_zero $end
+$var reg 1 C% b_is_inf $end
+$var reg 1 D% b_is_nan $end
+$var reg 1 E% b_is_zero $end
+$var reg 8 F% exp_field_a [7:0] $end
+$var reg 8 G% exp_field_b [7:0] $end
+$var reg 8 H% exp_field_out [7:0] $end
+$var reg 1 I% guard_bit $end
+$var reg 24 J% mant_a [23:0] $end
+$var reg 24 K% mant_b [23:0] $end
+$var reg 27 L% mant_big_ext [26:0] $end
+$var reg 24 M% mant_big_raw [23:0] $end
+$var reg 24 N% mant_main [23:0] $end
+$var reg 28 O% mant_norm [27:0] $end
+$var reg 25 P% mant_rounded [24:0] $end
+$var reg 27 Q% mant_small_aligned [26:0] $end
+$var reg 27 R% mant_small_ext [26:0] $end
+$var reg 24 S% mant_small_raw [23:0] $end
+$var reg 28 T% mant_sum [27:0] $end
+$var reg 1 U% round_bit $end
+$var reg 1 V% round_up $end
+$var reg 1 W% sign_a $end
+$var reg 1 X% sign_b $end
+$var reg 1 Y% sign_big $end
+$var reg 1 Z% sign_small $end
+$var reg 1 [% sticky_bit $end
+$var reg 32 \% sum_o [31:0] $end
+$var integer 32 ]% diff_exp [31:0] $end
+$var integer 32 ^% exp_a [31:0] $end
+$var integer 32 _% exp_b [31:0] $end
+$var integer 32 `% exp_big [31:0] $end
+$var integer 32 a% exp_res [31:0] $end
+$var integer 32 b% exp_small [31:0] $end
+$var integer 32 c% i [31:0] $end
+$var integer 32 d% lead_idx [31:0] $end
+$scope function shr_sticky_27 $end
+$var reg 27 e% shifted [26:0] $end
+$var reg 1 f% sticky $end
+$var reg 27 g% value [26:0] $end
+$var integer 32 h% j [31:0] $end
+$var integer 32 i% shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$scope module dot_cast_u $end
+$var wire 12 j% exp_shift_i [11:0] $end
+$var wire 1 !% nan_i $end
+$var wire 44 k% value_i [43:0] $end
+$var parameter 32 l% EXP_W $end
+$var parameter 32 m% IN_W $end
+$var reg 44 n% abs_value [43:0] $end
+$var reg 8 o% exp_field_out [7:0] $end
+$var reg 32 p% fp32_o [31:0] $end
+$var reg 1 q% guard_bit $end
+$var reg 1 r% round_up $end
+$var reg 25 s% sig_rounded [24:0] $end
+$var reg 25 t% sig_work [24:0] $end
+$var reg 1 u% sign_bit $end
+$var reg 1 v% sticky_bit $end
+$var integer 32 w% exp_unbiased [31:0] $end
+$var integer 32 x% i [31:0] $end
+$var integer 32 y% msb_idx [31:0] $end
+$var integer 32 z% shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope begin gen_cols[4] $end
+$var wire 256 {% b_elems_col [255:0] $end
+$var wire 8 |% b_scale_col [7:0] $end
+$var parameter 4 }% col $end
+$scope module col_u $end
+$var wire 256 ~% a_elems_i [255:0] $end
+$var wire 8 !& a_scale_i [7:0] $end
+$var wire 1 "& acc_clear_i $end
+$var wire 32 #& acc_o [31:0] $end
+$var wire 256 $& b_elems_i [255:0] $end
+$var wire 8 %& b_scale_i [7:0] $end
+$var wire 1 . clk $end
+$var wire 1 / rst_n $end
+$var wire 1 0 valid_i $end
+$var wire 44 && dot_sum_s1 [43:0] $end
+$var wire 44 '& dot_half_sum1_s1 [43:0] $end
+$var wire 44 (& dot_half_sum0_s1 [43:0] $end
+$var wire 32 )& dot_fp32_s1 [31:0] $end
+$var wire 32 *& acc_next [31:0] $end
+$var reg 19 +& a_fixed [18:0] $end
+$var reg 10 ,& a_scale_exp [9:0] $end
+$var reg 1 -& acc_clear_s1 $end
+$var reg 1 .& acc_clear_s2 $end
+$var reg 32 /& acc_reg [31:0] $end
+$var reg 1 0& any_nan $end
+$var reg 1 1& any_nan_s1 $end
+$var reg 19 2& b_fixed [18:0] $end
+$var reg 10 3& b_scale_exp [9:0] $end
+$var reg 12 4& dot_exp_shift [11:0] $end
+$var reg 12 5& dot_exp_shift_s1 [11:0] $end
+$var reg 32 6& dot_fp32_s2 [31:0] $end
+$var reg 38 7& lane_prod [37:0] $end
+$var reg 44 8& lane_prod_ext [43:0] $end
+$var reg 1 9& valid_o $end
+$var reg 1 :& valid_s1 $end
+$var reg 1 ;& valid_s2 $end
+$var integer 32 <& elem_idx [31:0] $end
+$var integer 32 =& lane_idx [31:0] $end
+$var integer 32 >& pipe_idx [31:0] $end
+$var integer 32 ?& quad_idx [31:0] $end
+$scope function e4m3_is_nan $end
+$var reg 8 @& enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_subnormal $end
+$var reg 8 A& enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_zero $end
+$var reg 8 B& enc [7:0] $end
+$upscope $end
+$scope function e4m3_significand $end
+$var reg 8 C& enc [7:0] $end
+$upscope $end
+$scope function e4m3_to_fixed $end
+$var reg 8 D& enc [7:0] $end
+$var reg 4 E& exp_field [3:0] $end
+$var reg 19 F& magnitude [18:0] $end
+$var reg 3 G& mant_field [2:0] $end
+$var reg 1 H& sign_bit $end
+$var reg 19 I& significand [18:0] $end
+$var integer 32 J& shift_amt [31:0] $end
+$upscope $end
+$scope function e4m3_unbiased_exp $end
+$var reg 8 K& enc [7:0] $end
+$upscope $end
+$scope function e8m0_is_nan $end
+$var reg 8 L& enc [7:0] $end
+$upscope $end
+$scope function e8m0_unbiased_exp $end
+$var reg 8 M& enc [7:0] $end
+$upscope $end
+$scope module acc_add_u $end
+$var wire 32 N& a_i [31:0] $end
+$var wire 32 O& b_i [31:0] $end
+$var reg 1 P& a_is_inf $end
+$var reg 1 Q& a_is_nan $end
+$var reg 1 R& a_is_zero $end
+$var reg 1 S& b_is_inf $end
+$var reg 1 T& b_is_nan $end
+$var reg 1 U& b_is_zero $end
+$var reg 8 V& exp_field_a [7:0] $end
+$var reg 8 W& exp_field_b [7:0] $end
+$var reg 8 X& exp_field_out [7:0] $end
+$var reg 1 Y& guard_bit $end
+$var reg 24 Z& mant_a [23:0] $end
+$var reg 24 [& mant_b [23:0] $end
+$var reg 27 \& mant_big_ext [26:0] $end
+$var reg 24 ]& mant_big_raw [23:0] $end
+$var reg 24 ^& mant_main [23:0] $end
+$var reg 28 _& mant_norm [27:0] $end
+$var reg 25 `& mant_rounded [24:0] $end
+$var reg 27 a& mant_small_aligned [26:0] $end
+$var reg 27 b& mant_small_ext [26:0] $end
+$var reg 24 c& mant_small_raw [23:0] $end
+$var reg 28 d& mant_sum [27:0] $end
+$var reg 1 e& round_bit $end
+$var reg 1 f& round_up $end
+$var reg 1 g& sign_a $end
+$var reg 1 h& sign_b $end
+$var reg 1 i& sign_big $end
+$var reg 1 j& sign_small $end
+$var reg 1 k& sticky_bit $end
+$var reg 32 l& sum_o [31:0] $end
+$var integer 32 m& diff_exp [31:0] $end
+$var integer 32 n& exp_a [31:0] $end
+$var integer 32 o& exp_b [31:0] $end
+$var integer 32 p& exp_big [31:0] $end
+$var integer 32 q& exp_res [31:0] $end
+$var integer 32 r& exp_small [31:0] $end
+$var integer 32 s& i [31:0] $end
+$var integer 32 t& lead_idx [31:0] $end
+$scope function shr_sticky_27 $end
+$var reg 27 u& shifted [26:0] $end
+$var reg 1 v& sticky $end
+$var reg 27 w& value [26:0] $end
+$var integer 32 x& j [31:0] $end
+$var integer 32 y& shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$scope module dot_cast_u $end
+$var wire 12 z& exp_shift_i [11:0] $end
+$var wire 1 1& nan_i $end
+$var wire 44 {& value_i [43:0] $end
+$var parameter 32 |& EXP_W $end
+$var parameter 32 }& IN_W $end
+$var reg 44 ~& abs_value [43:0] $end
+$var reg 8 !' exp_field_out [7:0] $end
+$var reg 32 "' fp32_o [31:0] $end
+$var reg 1 #' guard_bit $end
+$var reg 1 $' round_up $end
+$var reg 25 %' sig_rounded [24:0] $end
+$var reg 25 &' sig_work [24:0] $end
+$var reg 1 '' sign_bit $end
+$var reg 1 (' sticky_bit $end
+$var integer 32 )' exp_unbiased [31:0] $end
+$var integer 32 *' i [31:0] $end
+$var integer 32 +' msb_idx [31:0] $end
+$var integer 32 ,' shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope begin gen_cols[5] $end
+$var wire 256 -' b_elems_col [255:0] $end
+$var wire 8 .' b_scale_col [7:0] $end
+$var parameter 4 /' col $end
+$scope module col_u $end
+$var wire 256 0' a_elems_i [255:0] $end
+$var wire 8 1' a_scale_i [7:0] $end
+$var wire 1 2' acc_clear_i $end
+$var wire 32 3' acc_o [31:0] $end
+$var wire 256 4' b_elems_i [255:0] $end
+$var wire 8 5' b_scale_i [7:0] $end
+$var wire 1 . clk $end
+$var wire 1 / rst_n $end
+$var wire 1 0 valid_i $end
+$var wire 44 6' dot_sum_s1 [43:0] $end
+$var wire 44 7' dot_half_sum1_s1 [43:0] $end
+$var wire 44 8' dot_half_sum0_s1 [43:0] $end
+$var wire 32 9' dot_fp32_s1 [31:0] $end
+$var wire 32 :' acc_next [31:0] $end
+$var reg 19 ;' a_fixed [18:0] $end
+$var reg 10 <' a_scale_exp [9:0] $end
+$var reg 1 =' acc_clear_s1 $end
+$var reg 1 >' acc_clear_s2 $end
+$var reg 32 ?' acc_reg [31:0] $end
+$var reg 1 @' any_nan $end
+$var reg 1 A' any_nan_s1 $end
+$var reg 19 B' b_fixed [18:0] $end
+$var reg 10 C' b_scale_exp [9:0] $end
+$var reg 12 D' dot_exp_shift [11:0] $end
+$var reg 12 E' dot_exp_shift_s1 [11:0] $end
+$var reg 32 F' dot_fp32_s2 [31:0] $end
+$var reg 38 G' lane_prod [37:0] $end
+$var reg 44 H' lane_prod_ext [43:0] $end
+$var reg 1 I' valid_o $end
+$var reg 1 J' valid_s1 $end
+$var reg 1 K' valid_s2 $end
+$var integer 32 L' elem_idx [31:0] $end
+$var integer 32 M' lane_idx [31:0] $end
+$var integer 32 N' pipe_idx [31:0] $end
+$var integer 32 O' quad_idx [31:0] $end
+$scope function e4m3_is_nan $end
+$var reg 8 P' enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_subnormal $end
+$var reg 8 Q' enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_zero $end
+$var reg 8 R' enc [7:0] $end
+$upscope $end
+$scope function e4m3_significand $end
+$var reg 8 S' enc [7:0] $end
+$upscope $end
+$scope function e4m3_to_fixed $end
+$var reg 8 T' enc [7:0] $end
+$var reg 4 U' exp_field [3:0] $end
+$var reg 19 V' magnitude [18:0] $end
+$var reg 3 W' mant_field [2:0] $end
+$var reg 1 X' sign_bit $end
+$var reg 19 Y' significand [18:0] $end
+$var integer 32 Z' shift_amt [31:0] $end
+$upscope $end
+$scope function e4m3_unbiased_exp $end
+$var reg 8 [' enc [7:0] $end
+$upscope $end
+$scope function e8m0_is_nan $end
+$var reg 8 \' enc [7:0] $end
+$upscope $end
+$scope function e8m0_unbiased_exp $end
+$var reg 8 ]' enc [7:0] $end
+$upscope $end
+$scope module acc_add_u $end
+$var wire 32 ^' a_i [31:0] $end
+$var wire 32 _' b_i [31:0] $end
+$var reg 1 `' a_is_inf $end
+$var reg 1 a' a_is_nan $end
+$var reg 1 b' a_is_zero $end
+$var reg 1 c' b_is_inf $end
+$var reg 1 d' b_is_nan $end
+$var reg 1 e' b_is_zero $end
+$var reg 8 f' exp_field_a [7:0] $end
+$var reg 8 g' exp_field_b [7:0] $end
+$var reg 8 h' exp_field_out [7:0] $end
+$var reg 1 i' guard_bit $end
+$var reg 24 j' mant_a [23:0] $end
+$var reg 24 k' mant_b [23:0] $end
+$var reg 27 l' mant_big_ext [26:0] $end
+$var reg 24 m' mant_big_raw [23:0] $end
+$var reg 24 n' mant_main [23:0] $end
+$var reg 28 o' mant_norm [27:0] $end
+$var reg 25 p' mant_rounded [24:0] $end
+$var reg 27 q' mant_small_aligned [26:0] $end
+$var reg 27 r' mant_small_ext [26:0] $end
+$var reg 24 s' mant_small_raw [23:0] $end
+$var reg 28 t' mant_sum [27:0] $end
+$var reg 1 u' round_bit $end
+$var reg 1 v' round_up $end
+$var reg 1 w' sign_a $end
+$var reg 1 x' sign_b $end
+$var reg 1 y' sign_big $end
+$var reg 1 z' sign_small $end
+$var reg 1 {' sticky_bit $end
+$var reg 32 |' sum_o [31:0] $end
+$var integer 32 }' diff_exp [31:0] $end
+$var integer 32 ~' exp_a [31:0] $end
+$var integer 32 !( exp_b [31:0] $end
+$var integer 32 "( exp_big [31:0] $end
+$var integer 32 #( exp_res [31:0] $end
+$var integer 32 $( exp_small [31:0] $end
+$var integer 32 %( i [31:0] $end
+$var integer 32 &( lead_idx [31:0] $end
+$scope function shr_sticky_27 $end
+$var reg 27 '( shifted [26:0] $end
+$var reg 1 (( sticky $end
+$var reg 27 )( value [26:0] $end
+$var integer 32 *( j [31:0] $end
+$var integer 32 +( shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$scope module dot_cast_u $end
+$var wire 12 ,( exp_shift_i [11:0] $end
+$var wire 1 A' nan_i $end
+$var wire 44 -( value_i [43:0] $end
+$var parameter 32 .( EXP_W $end
+$var parameter 32 /( IN_W $end
+$var reg 44 0( abs_value [43:0] $end
+$var reg 8 1( exp_field_out [7:0] $end
+$var reg 32 2( fp32_o [31:0] $end
+$var reg 1 3( guard_bit $end
+$var reg 1 4( round_up $end
+$var reg 25 5( sig_rounded [24:0] $end
+$var reg 25 6( sig_work [24:0] $end
+$var reg 1 7( sign_bit $end
+$var reg 1 8( sticky_bit $end
+$var integer 32 9( exp_unbiased [31:0] $end
+$var integer 32 :( i [31:0] $end
+$var integer 32 ;( msb_idx [31:0] $end
+$var integer 32 <( shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope begin gen_cols[6] $end
+$var wire 256 =( b_elems_col [255:0] $end
+$var wire 8 >( b_scale_col [7:0] $end
+$var parameter 4 ?( col $end
+$scope module col_u $end
+$var wire 256 @( a_elems_i [255:0] $end
+$var wire 8 A( a_scale_i [7:0] $end
+$var wire 1 B( acc_clear_i $end
+$var wire 32 C( acc_o [31:0] $end
+$var wire 256 D( b_elems_i [255:0] $end
+$var wire 8 E( b_scale_i [7:0] $end
+$var wire 1 . clk $end
+$var wire 1 / rst_n $end
+$var wire 1 0 valid_i $end
+$var wire 44 F( dot_sum_s1 [43:0] $end
+$var wire 44 G( dot_half_sum1_s1 [43:0] $end
+$var wire 44 H( dot_half_sum0_s1 [43:0] $end
+$var wire 32 I( dot_fp32_s1 [31:0] $end
+$var wire 32 J( acc_next [31:0] $end
+$var reg 19 K( a_fixed [18:0] $end
+$var reg 10 L( a_scale_exp [9:0] $end
+$var reg 1 M( acc_clear_s1 $end
+$var reg 1 N( acc_clear_s2 $end
+$var reg 32 O( acc_reg [31:0] $end
+$var reg 1 P( any_nan $end
+$var reg 1 Q( any_nan_s1 $end
+$var reg 19 R( b_fixed [18:0] $end
+$var reg 10 S( b_scale_exp [9:0] $end
+$var reg 12 T( dot_exp_shift [11:0] $end
+$var reg 12 U( dot_exp_shift_s1 [11:0] $end
+$var reg 32 V( dot_fp32_s2 [31:0] $end
+$var reg 38 W( lane_prod [37:0] $end
+$var reg 44 X( lane_prod_ext [43:0] $end
+$var reg 1 Y( valid_o $end
+$var reg 1 Z( valid_s1 $end
+$var reg 1 [( valid_s2 $end
+$var integer 32 \( elem_idx [31:0] $end
+$var integer 32 ]( lane_idx [31:0] $end
+$var integer 32 ^( pipe_idx [31:0] $end
+$var integer 32 _( quad_idx [31:0] $end
+$scope function e4m3_is_nan $end
+$var reg 8 `( enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_subnormal $end
+$var reg 8 a( enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_zero $end
+$var reg 8 b( enc [7:0] $end
+$upscope $end
+$scope function e4m3_significand $end
+$var reg 8 c( enc [7:0] $end
+$upscope $end
+$scope function e4m3_to_fixed $end
+$var reg 8 d( enc [7:0] $end
+$var reg 4 e( exp_field [3:0] $end
+$var reg 19 f( magnitude [18:0] $end
+$var reg 3 g( mant_field [2:0] $end
+$var reg 1 h( sign_bit $end
+$var reg 19 i( significand [18:0] $end
+$var integer 32 j( shift_amt [31:0] $end
+$upscope $end
+$scope function e4m3_unbiased_exp $end
+$var reg 8 k( enc [7:0] $end
+$upscope $end
+$scope function e8m0_is_nan $end
+$var reg 8 l( enc [7:0] $end
+$upscope $end
+$scope function e8m0_unbiased_exp $end
+$var reg 8 m( enc [7:0] $end
+$upscope $end
+$scope module acc_add_u $end
+$var wire 32 n( a_i [31:0] $end
+$var wire 32 o( b_i [31:0] $end
+$var reg 1 p( a_is_inf $end
+$var reg 1 q( a_is_nan $end
+$var reg 1 r( a_is_zero $end
+$var reg 1 s( b_is_inf $end
+$var reg 1 t( b_is_nan $end
+$var reg 1 u( b_is_zero $end
+$var reg 8 v( exp_field_a [7:0] $end
+$var reg 8 w( exp_field_b [7:0] $end
+$var reg 8 x( exp_field_out [7:0] $end
+$var reg 1 y( guard_bit $end
+$var reg 24 z( mant_a [23:0] $end
+$var reg 24 {( mant_b [23:0] $end
+$var reg 27 |( mant_big_ext [26:0] $end
+$var reg 24 }( mant_big_raw [23:0] $end
+$var reg 24 ~( mant_main [23:0] $end
+$var reg 28 !) mant_norm [27:0] $end
+$var reg 25 ") mant_rounded [24:0] $end
+$var reg 27 #) mant_small_aligned [26:0] $end
+$var reg 27 $) mant_small_ext [26:0] $end
+$var reg 24 %) mant_small_raw [23:0] $end
+$var reg 28 &) mant_sum [27:0] $end
+$var reg 1 ') round_bit $end
+$var reg 1 () round_up $end
+$var reg 1 )) sign_a $end
+$var reg 1 *) sign_b $end
+$var reg 1 +) sign_big $end
+$var reg 1 ,) sign_small $end
+$var reg 1 -) sticky_bit $end
+$var reg 32 .) sum_o [31:0] $end
+$var integer 32 /) diff_exp [31:0] $end
+$var integer 32 0) exp_a [31:0] $end
+$var integer 32 1) exp_b [31:0] $end
+$var integer 32 2) exp_big [31:0] $end
+$var integer 32 3) exp_res [31:0] $end
+$var integer 32 4) exp_small [31:0] $end
+$var integer 32 5) i [31:0] $end
+$var integer 32 6) lead_idx [31:0] $end
+$scope function shr_sticky_27 $end
+$var reg 27 7) shifted [26:0] $end
+$var reg 1 8) sticky $end
+$var reg 27 9) value [26:0] $end
+$var integer 32 :) j [31:0] $end
+$var integer 32 ;) shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$scope module dot_cast_u $end
+$var wire 12 <) exp_shift_i [11:0] $end
+$var wire 1 Q( nan_i $end
+$var wire 44 =) value_i [43:0] $end
+$var parameter 32 >) EXP_W $end
+$var parameter 32 ?) IN_W $end
+$var reg 44 @) abs_value [43:0] $end
+$var reg 8 A) exp_field_out [7:0] $end
+$var reg 32 B) fp32_o [31:0] $end
+$var reg 1 C) guard_bit $end
+$var reg 1 D) round_up $end
+$var reg 25 E) sig_rounded [24:0] $end
+$var reg 25 F) sig_work [24:0] $end
+$var reg 1 G) sign_bit $end
+$var reg 1 H) sticky_bit $end
+$var integer 32 I) exp_unbiased [31:0] $end
+$var integer 32 J) i [31:0] $end
+$var integer 32 K) msb_idx [31:0] $end
+$var integer 32 L) shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope begin gen_cols[7] $end
+$var wire 256 M) b_elems_col [255:0] $end
+$var wire 8 N) b_scale_col [7:0] $end
+$var parameter 4 O) col $end
+$scope module col_u $end
+$var wire 256 P) a_elems_i [255:0] $end
+$var wire 8 Q) a_scale_i [7:0] $end
+$var wire 1 R) acc_clear_i $end
+$var wire 32 S) acc_o [31:0] $end
+$var wire 256 T) b_elems_i [255:0] $end
+$var wire 8 U) b_scale_i [7:0] $end
+$var wire 1 . clk $end
+$var wire 1 / rst_n $end
+$var wire 1 0 valid_i $end
+$var wire 44 V) dot_sum_s1 [43:0] $end
+$var wire 44 W) dot_half_sum1_s1 [43:0] $end
+$var wire 44 X) dot_half_sum0_s1 [43:0] $end
+$var wire 32 Y) dot_fp32_s1 [31:0] $end
+$var wire 32 Z) acc_next [31:0] $end
+$var reg 19 [) a_fixed [18:0] $end
+$var reg 10 \) a_scale_exp [9:0] $end
+$var reg 1 ]) acc_clear_s1 $end
+$var reg 1 ^) acc_clear_s2 $end
+$var reg 32 _) acc_reg [31:0] $end
+$var reg 1 `) any_nan $end
+$var reg 1 a) any_nan_s1 $end
+$var reg 19 b) b_fixed [18:0] $end
+$var reg 10 c) b_scale_exp [9:0] $end
+$var reg 12 d) dot_exp_shift [11:0] $end
+$var reg 12 e) dot_exp_shift_s1 [11:0] $end
+$var reg 32 f) dot_fp32_s2 [31:0] $end
+$var reg 38 g) lane_prod [37:0] $end
+$var reg 44 h) lane_prod_ext [43:0] $end
+$var reg 1 i) valid_o $end
+$var reg 1 j) valid_s1 $end
+$var reg 1 k) valid_s2 $end
+$var integer 32 l) elem_idx [31:0] $end
+$var integer 32 m) lane_idx [31:0] $end
+$var integer 32 n) pipe_idx [31:0] $end
+$var integer 32 o) quad_idx [31:0] $end
+$scope function e4m3_is_nan $end
+$var reg 8 p) enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_subnormal $end
+$var reg 8 q) enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_zero $end
+$var reg 8 r) enc [7:0] $end
+$upscope $end
+$scope function e4m3_significand $end
+$var reg 8 s) enc [7:0] $end
+$upscope $end
+$scope function e4m3_to_fixed $end
+$var reg 8 t) enc [7:0] $end
+$var reg 4 u) exp_field [3:0] $end
+$var reg 19 v) magnitude [18:0] $end
+$var reg 3 w) mant_field [2:0] $end
+$var reg 1 x) sign_bit $end
+$var reg 19 y) significand [18:0] $end
+$var integer 32 z) shift_amt [31:0] $end
+$upscope $end
+$scope function e4m3_unbiased_exp $end
+$var reg 8 {) enc [7:0] $end
+$upscope $end
+$scope function e8m0_is_nan $end
+$var reg 8 |) enc [7:0] $end
+$upscope $end
+$scope function e8m0_unbiased_exp $end
+$var reg 8 }) enc [7:0] $end
+$upscope $end
+$scope module acc_add_u $end
+$var wire 32 ~) a_i [31:0] $end
+$var wire 32 !* b_i [31:0] $end
+$var reg 1 "* a_is_inf $end
+$var reg 1 #* a_is_nan $end
+$var reg 1 $* a_is_zero $end
+$var reg 1 %* b_is_inf $end
+$var reg 1 &* b_is_nan $end
+$var reg 1 '* b_is_zero $end
+$var reg 8 (* exp_field_a [7:0] $end
+$var reg 8 )* exp_field_b [7:0] $end
+$var reg 8 ** exp_field_out [7:0] $end
+$var reg 1 +* guard_bit $end
+$var reg 24 ,* mant_a [23:0] $end
+$var reg 24 -* mant_b [23:0] $end
+$var reg 27 .* mant_big_ext [26:0] $end
+$var reg 24 /* mant_big_raw [23:0] $end
+$var reg 24 0* mant_main [23:0] $end
+$var reg 28 1* mant_norm [27:0] $end
+$var reg 25 2* mant_rounded [24:0] $end
+$var reg 27 3* mant_small_aligned [26:0] $end
+$var reg 27 4* mant_small_ext [26:0] $end
+$var reg 24 5* mant_small_raw [23:0] $end
+$var reg 28 6* mant_sum [27:0] $end
+$var reg 1 7* round_bit $end
+$var reg 1 8* round_up $end
+$var reg 1 9* sign_a $end
+$var reg 1 :* sign_b $end
+$var reg 1 ;* sign_big $end
+$var reg 1 <* sign_small $end
+$var reg 1 =* sticky_bit $end
+$var reg 32 >* sum_o [31:0] $end
+$var integer 32 ?* diff_exp [31:0] $end
+$var integer 32 @* exp_a [31:0] $end
+$var integer 32 A* exp_b [31:0] $end
+$var integer 32 B* exp_big [31:0] $end
+$var integer 32 C* exp_res [31:0] $end
+$var integer 32 D* exp_small [31:0] $end
+$var integer 32 E* i [31:0] $end
+$var integer 32 F* lead_idx [31:0] $end
+$scope function shr_sticky_27 $end
+$var reg 27 G* shifted [26:0] $end
+$var reg 1 H* sticky $end
+$var reg 27 I* value [26:0] $end
+$var integer 32 J* j [31:0] $end
+$var integer 32 K* shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$scope module dot_cast_u $end
+$var wire 12 L* exp_shift_i [11:0] $end
+$var wire 1 a) nan_i $end
+$var wire 44 M* value_i [43:0] $end
+$var parameter 32 N* EXP_W $end
+$var parameter 32 O* IN_W $end
+$var reg 44 P* abs_value [43:0] $end
+$var reg 8 Q* exp_field_out [7:0] $end
+$var reg 32 R* fp32_o [31:0] $end
+$var reg 1 S* guard_bit $end
+$var reg 1 T* round_up $end
+$var reg 25 U* sig_rounded [24:0] $end
+$var reg 25 V* sig_work [24:0] $end
+$var reg 1 W* sign_bit $end
+$var reg 1 X* sticky_bit $end
+$var integer 32 Y* exp_unbiased [31:0] $end
+$var integer 32 Z* i [31:0] $end
+$var integer 32 [* msb_idx [31:0] $end
+$var integer 32 \* shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope begin gen_cols[8] $end
+$var wire 256 ]* b_elems_col [255:0] $end
+$var wire 8 ^* b_scale_col [7:0] $end
+$var parameter 5 _* col $end
+$scope module col_u $end
+$var wire 256 `* a_elems_i [255:0] $end
+$var wire 8 a* a_scale_i [7:0] $end
+$var wire 1 b* acc_clear_i $end
+$var wire 32 c* acc_o [31:0] $end
+$var wire 256 d* b_elems_i [255:0] $end
+$var wire 8 e* b_scale_i [7:0] $end
+$var wire 1 . clk $end
+$var wire 1 / rst_n $end
+$var wire 1 0 valid_i $end
+$var wire 44 f* dot_sum_s1 [43:0] $end
+$var wire 44 g* dot_half_sum1_s1 [43:0] $end
+$var wire 44 h* dot_half_sum0_s1 [43:0] $end
+$var wire 32 i* dot_fp32_s1 [31:0] $end
+$var wire 32 j* acc_next [31:0] $end
+$var reg 19 k* a_fixed [18:0] $end
+$var reg 10 l* a_scale_exp [9:0] $end
+$var reg 1 m* acc_clear_s1 $end
+$var reg 1 n* acc_clear_s2 $end
+$var reg 32 o* acc_reg [31:0] $end
+$var reg 1 p* any_nan $end
+$var reg 1 q* any_nan_s1 $end
+$var reg 19 r* b_fixed [18:0] $end
+$var reg 10 s* b_scale_exp [9:0] $end
+$var reg 12 t* dot_exp_shift [11:0] $end
+$var reg 12 u* dot_exp_shift_s1 [11:0] $end
+$var reg 32 v* dot_fp32_s2 [31:0] $end
+$var reg 38 w* lane_prod [37:0] $end
+$var reg 44 x* lane_prod_ext [43:0] $end
+$var reg 1 y* valid_o $end
+$var reg 1 z* valid_s1 $end
+$var reg 1 {* valid_s2 $end
+$var integer 32 |* elem_idx [31:0] $end
+$var integer 32 }* lane_idx [31:0] $end
+$var integer 32 ~* pipe_idx [31:0] $end
+$var integer 32 !+ quad_idx [31:0] $end
+$scope function e4m3_is_nan $end
+$var reg 8 "+ enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_subnormal $end
+$var reg 8 #+ enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_zero $end
+$var reg 8 $+ enc [7:0] $end
+$upscope $end
+$scope function e4m3_significand $end
+$var reg 8 %+ enc [7:0] $end
+$upscope $end
+$scope function e4m3_to_fixed $end
+$var reg 8 &+ enc [7:0] $end
+$var reg 4 '+ exp_field [3:0] $end
+$var reg 19 (+ magnitude [18:0] $end
+$var reg 3 )+ mant_field [2:0] $end
+$var reg 1 *+ sign_bit $end
+$var reg 19 ++ significand [18:0] $end
+$var integer 32 ,+ shift_amt [31:0] $end
+$upscope $end
+$scope function e4m3_unbiased_exp $end
+$var reg 8 -+ enc [7:0] $end
+$upscope $end
+$scope function e8m0_is_nan $end
+$var reg 8 .+ enc [7:0] $end
+$upscope $end
+$scope function e8m0_unbiased_exp $end
+$var reg 8 /+ enc [7:0] $end
+$upscope $end
+$scope module acc_add_u $end
+$var wire 32 0+ a_i [31:0] $end
+$var wire 32 1+ b_i [31:0] $end
+$var reg 1 2+ a_is_inf $end
+$var reg 1 3+ a_is_nan $end
+$var reg 1 4+ a_is_zero $end
+$var reg 1 5+ b_is_inf $end
+$var reg 1 6+ b_is_nan $end
+$var reg 1 7+ b_is_zero $end
+$var reg 8 8+ exp_field_a [7:0] $end
+$var reg 8 9+ exp_field_b [7:0] $end
+$var reg 8 :+ exp_field_out [7:0] $end
+$var reg 1 ;+ guard_bit $end
+$var reg 24 <+ mant_a [23:0] $end
+$var reg 24 =+ mant_b [23:0] $end
+$var reg 27 >+ mant_big_ext [26:0] $end
+$var reg 24 ?+ mant_big_raw [23:0] $end
+$var reg 24 @+ mant_main [23:0] $end
+$var reg 28 A+ mant_norm [27:0] $end
+$var reg 25 B+ mant_rounded [24:0] $end
+$var reg 27 C+ mant_small_aligned [26:0] $end
+$var reg 27 D+ mant_small_ext [26:0] $end
+$var reg 24 E+ mant_small_raw [23:0] $end
+$var reg 28 F+ mant_sum [27:0] $end
+$var reg 1 G+ round_bit $end
+$var reg 1 H+ round_up $end
+$var reg 1 I+ sign_a $end
+$var reg 1 J+ sign_b $end
+$var reg 1 K+ sign_big $end
+$var reg 1 L+ sign_small $end
+$var reg 1 M+ sticky_bit $end
+$var reg 32 N+ sum_o [31:0] $end
+$var integer 32 O+ diff_exp [31:0] $end
+$var integer 32 P+ exp_a [31:0] $end
+$var integer 32 Q+ exp_b [31:0] $end
+$var integer 32 R+ exp_big [31:0] $end
+$var integer 32 S+ exp_res [31:0] $end
+$var integer 32 T+ exp_small [31:0] $end
+$var integer 32 U+ i [31:0] $end
+$var integer 32 V+ lead_idx [31:0] $end
+$scope function shr_sticky_27 $end
+$var reg 27 W+ shifted [26:0] $end
+$var reg 1 X+ sticky $end
+$var reg 27 Y+ value [26:0] $end
+$var integer 32 Z+ j [31:0] $end
+$var integer 32 [+ shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$scope module dot_cast_u $end
+$var wire 12 \+ exp_shift_i [11:0] $end
+$var wire 1 q* nan_i $end
+$var wire 44 ]+ value_i [43:0] $end
+$var parameter 32 ^+ EXP_W $end
+$var parameter 32 _+ IN_W $end
+$var reg 44 `+ abs_value [43:0] $end
+$var reg 8 a+ exp_field_out [7:0] $end
+$var reg 32 b+ fp32_o [31:0] $end
+$var reg 1 c+ guard_bit $end
+$var reg 1 d+ round_up $end
+$var reg 25 e+ sig_rounded [24:0] $end
+$var reg 25 f+ sig_work [24:0] $end
+$var reg 1 g+ sign_bit $end
+$var reg 1 h+ sticky_bit $end
+$var integer 32 i+ exp_unbiased [31:0] $end
+$var integer 32 j+ i [31:0] $end
+$var integer 32 k+ msb_idx [31:0] $end
+$var integer 32 l+ shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope begin gen_cols[9] $end
+$var wire 256 m+ b_elems_col [255:0] $end
+$var wire 8 n+ b_scale_col [7:0] $end
+$var parameter 5 o+ col $end
+$scope module col_u $end
+$var wire 256 p+ a_elems_i [255:0] $end
+$var wire 8 q+ a_scale_i [7:0] $end
+$var wire 1 r+ acc_clear_i $end
+$var wire 32 s+ acc_o [31:0] $end
+$var wire 256 t+ b_elems_i [255:0] $end
+$var wire 8 u+ b_scale_i [7:0] $end
+$var wire 1 . clk $end
+$var wire 1 / rst_n $end
+$var wire 1 0 valid_i $end
+$var wire 44 v+ dot_sum_s1 [43:0] $end
+$var wire 44 w+ dot_half_sum1_s1 [43:0] $end
+$var wire 44 x+ dot_half_sum0_s1 [43:0] $end
+$var wire 32 y+ dot_fp32_s1 [31:0] $end
+$var wire 32 z+ acc_next [31:0] $end
+$var reg 19 {+ a_fixed [18:0] $end
+$var reg 10 |+ a_scale_exp [9:0] $end
+$var reg 1 }+ acc_clear_s1 $end
+$var reg 1 ~+ acc_clear_s2 $end
+$var reg 32 !, acc_reg [31:0] $end
+$var reg 1 ", any_nan $end
+$var reg 1 #, any_nan_s1 $end
+$var reg 19 $, b_fixed [18:0] $end
+$var reg 10 %, b_scale_exp [9:0] $end
+$var reg 12 &, dot_exp_shift [11:0] $end
+$var reg 12 ', dot_exp_shift_s1 [11:0] $end
+$var reg 32 (, dot_fp32_s2 [31:0] $end
+$var reg 38 ), lane_prod [37:0] $end
+$var reg 44 *, lane_prod_ext [43:0] $end
+$var reg 1 +, valid_o $end
+$var reg 1 ,, valid_s1 $end
+$var reg 1 -, valid_s2 $end
+$var integer 32 ., elem_idx [31:0] $end
+$var integer 32 /, lane_idx [31:0] $end
+$var integer 32 0, pipe_idx [31:0] $end
+$var integer 32 1, quad_idx [31:0] $end
+$scope function e4m3_is_nan $end
+$var reg 8 2, enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_subnormal $end
+$var reg 8 3, enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_zero $end
+$var reg 8 4, enc [7:0] $end
+$upscope $end
+$scope function e4m3_significand $end
+$var reg 8 5, enc [7:0] $end
+$upscope $end
+$scope function e4m3_to_fixed $end
+$var reg 8 6, enc [7:0] $end
+$var reg 4 7, exp_field [3:0] $end
+$var reg 19 8, magnitude [18:0] $end
+$var reg 3 9, mant_field [2:0] $end
+$var reg 1 :, sign_bit $end
+$var reg 19 ;, significand [18:0] $end
+$var integer 32 <, shift_amt [31:0] $end
+$upscope $end
+$scope function e4m3_unbiased_exp $end
+$var reg 8 =, enc [7:0] $end
+$upscope $end
+$scope function e8m0_is_nan $end
+$var reg 8 >, enc [7:0] $end
+$upscope $end
+$scope function e8m0_unbiased_exp $end
+$var reg 8 ?, enc [7:0] $end
+$upscope $end
+$scope module acc_add_u $end
+$var wire 32 @, a_i [31:0] $end
+$var wire 32 A, b_i [31:0] $end
+$var reg 1 B, a_is_inf $end
+$var reg 1 C, a_is_nan $end
+$var reg 1 D, a_is_zero $end
+$var reg 1 E, b_is_inf $end
+$var reg 1 F, b_is_nan $end
+$var reg 1 G, b_is_zero $end
+$var reg 8 H, exp_field_a [7:0] $end
+$var reg 8 I, exp_field_b [7:0] $end
+$var reg 8 J, exp_field_out [7:0] $end
+$var reg 1 K, guard_bit $end
+$var reg 24 L, mant_a [23:0] $end
+$var reg 24 M, mant_b [23:0] $end
+$var reg 27 N, mant_big_ext [26:0] $end
+$var reg 24 O, mant_big_raw [23:0] $end
+$var reg 24 P, mant_main [23:0] $end
+$var reg 28 Q, mant_norm [27:0] $end
+$var reg 25 R, mant_rounded [24:0] $end
+$var reg 27 S, mant_small_aligned [26:0] $end
+$var reg 27 T, mant_small_ext [26:0] $end
+$var reg 24 U, mant_small_raw [23:0] $end
+$var reg 28 V, mant_sum [27:0] $end
+$var reg 1 W, round_bit $end
+$var reg 1 X, round_up $end
+$var reg 1 Y, sign_a $end
+$var reg 1 Z, sign_b $end
+$var reg 1 [, sign_big $end
+$var reg 1 \, sign_small $end
+$var reg 1 ], sticky_bit $end
+$var reg 32 ^, sum_o [31:0] $end
+$var integer 32 _, diff_exp [31:0] $end
+$var integer 32 `, exp_a [31:0] $end
+$var integer 32 a, exp_b [31:0] $end
+$var integer 32 b, exp_big [31:0] $end
+$var integer 32 c, exp_res [31:0] $end
+$var integer 32 d, exp_small [31:0] $end
+$var integer 32 e, i [31:0] $end
+$var integer 32 f, lead_idx [31:0] $end
+$scope function shr_sticky_27 $end
+$var reg 27 g, shifted [26:0] $end
+$var reg 1 h, sticky $end
+$var reg 27 i, value [26:0] $end
+$var integer 32 j, j [31:0] $end
+$var integer 32 k, shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$scope module dot_cast_u $end
+$var wire 12 l, exp_shift_i [11:0] $end
+$var wire 1 #, nan_i $end
+$var wire 44 m, value_i [43:0] $end
+$var parameter 32 n, EXP_W $end
+$var parameter 32 o, IN_W $end
+$var reg 44 p, abs_value [43:0] $end
+$var reg 8 q, exp_field_out [7:0] $end
+$var reg 32 r, fp32_o [31:0] $end
+$var reg 1 s, guard_bit $end
+$var reg 1 t, round_up $end
+$var reg 25 u, sig_rounded [24:0] $end
+$var reg 25 v, sig_work [24:0] $end
+$var reg 1 w, sign_bit $end
+$var reg 1 x, sticky_bit $end
+$var integer 32 y, exp_unbiased [31:0] $end
+$var integer 32 z, i [31:0] $end
+$var integer 32 {, msb_idx [31:0] $end
+$var integer 32 |, shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope begin gen_cols[10] $end
+$var wire 256 }, b_elems_col [255:0] $end
+$var wire 8 ~, b_scale_col [7:0] $end
+$var parameter 5 !- col $end
+$scope module col_u $end
+$var wire 256 "- a_elems_i [255:0] $end
+$var wire 8 #- a_scale_i [7:0] $end
+$var wire 1 $- acc_clear_i $end
+$var wire 32 %- acc_o [31:0] $end
+$var wire 256 &- b_elems_i [255:0] $end
+$var wire 8 '- b_scale_i [7:0] $end
+$var wire 1 . clk $end
+$var wire 1 / rst_n $end
+$var wire 1 0 valid_i $end
+$var wire 44 (- dot_sum_s1 [43:0] $end
+$var wire 44 )- dot_half_sum1_s1 [43:0] $end
+$var wire 44 *- dot_half_sum0_s1 [43:0] $end
+$var wire 32 +- dot_fp32_s1 [31:0] $end
+$var wire 32 ,- acc_next [31:0] $end
+$var reg 19 -- a_fixed [18:0] $end
+$var reg 10 .- a_scale_exp [9:0] $end
+$var reg 1 /- acc_clear_s1 $end
+$var reg 1 0- acc_clear_s2 $end
+$var reg 32 1- acc_reg [31:0] $end
+$var reg 1 2- any_nan $end
+$var reg 1 3- any_nan_s1 $end
+$var reg 19 4- b_fixed [18:0] $end
+$var reg 10 5- b_scale_exp [9:0] $end
+$var reg 12 6- dot_exp_shift [11:0] $end
+$var reg 12 7- dot_exp_shift_s1 [11:0] $end
+$var reg 32 8- dot_fp32_s2 [31:0] $end
+$var reg 38 9- lane_prod [37:0] $end
+$var reg 44 :- lane_prod_ext [43:0] $end
+$var reg 1 ;- valid_o $end
+$var reg 1 <- valid_s1 $end
+$var reg 1 =- valid_s2 $end
+$var integer 32 >- elem_idx [31:0] $end
+$var integer 32 ?- lane_idx [31:0] $end
+$var integer 32 @- pipe_idx [31:0] $end
+$var integer 32 A- quad_idx [31:0] $end
+$scope function e4m3_is_nan $end
+$var reg 8 B- enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_subnormal $end
+$var reg 8 C- enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_zero $end
+$var reg 8 D- enc [7:0] $end
+$upscope $end
+$scope function e4m3_significand $end
+$var reg 8 E- enc [7:0] $end
+$upscope $end
+$scope function e4m3_to_fixed $end
+$var reg 8 F- enc [7:0] $end
+$var reg 4 G- exp_field [3:0] $end
+$var reg 19 H- magnitude [18:0] $end
+$var reg 3 I- mant_field [2:0] $end
+$var reg 1 J- sign_bit $end
+$var reg 19 K- significand [18:0] $end
+$var integer 32 L- shift_amt [31:0] $end
+$upscope $end
+$scope function e4m3_unbiased_exp $end
+$var reg 8 M- enc [7:0] $end
+$upscope $end
+$scope function e8m0_is_nan $end
+$var reg 8 N- enc [7:0] $end
+$upscope $end
+$scope function e8m0_unbiased_exp $end
+$var reg 8 O- enc [7:0] $end
+$upscope $end
+$scope module acc_add_u $end
+$var wire 32 P- a_i [31:0] $end
+$var wire 32 Q- b_i [31:0] $end
+$var reg 1 R- a_is_inf $end
+$var reg 1 S- a_is_nan $end
+$var reg 1 T- a_is_zero $end
+$var reg 1 U- b_is_inf $end
+$var reg 1 V- b_is_nan $end
+$var reg 1 W- b_is_zero $end
+$var reg 8 X- exp_field_a [7:0] $end
+$var reg 8 Y- exp_field_b [7:0] $end
+$var reg 8 Z- exp_field_out [7:0] $end
+$var reg 1 [- guard_bit $end
+$var reg 24 \- mant_a [23:0] $end
+$var reg 24 ]- mant_b [23:0] $end
+$var reg 27 ^- mant_big_ext [26:0] $end
+$var reg 24 _- mant_big_raw [23:0] $end
+$var reg 24 `- mant_main [23:0] $end
+$var reg 28 a- mant_norm [27:0] $end
+$var reg 25 b- mant_rounded [24:0] $end
+$var reg 27 c- mant_small_aligned [26:0] $end
+$var reg 27 d- mant_small_ext [26:0] $end
+$var reg 24 e- mant_small_raw [23:0] $end
+$var reg 28 f- mant_sum [27:0] $end
+$var reg 1 g- round_bit $end
+$var reg 1 h- round_up $end
+$var reg 1 i- sign_a $end
+$var reg 1 j- sign_b $end
+$var reg 1 k- sign_big $end
+$var reg 1 l- sign_small $end
+$var reg 1 m- sticky_bit $end
+$var reg 32 n- sum_o [31:0] $end
+$var integer 32 o- diff_exp [31:0] $end
+$var integer 32 p- exp_a [31:0] $end
+$var integer 32 q- exp_b [31:0] $end
+$var integer 32 r- exp_big [31:0] $end
+$var integer 32 s- exp_res [31:0] $end
+$var integer 32 t- exp_small [31:0] $end
+$var integer 32 u- i [31:0] $end
+$var integer 32 v- lead_idx [31:0] $end
+$scope function shr_sticky_27 $end
+$var reg 27 w- shifted [26:0] $end
+$var reg 1 x- sticky $end
+$var reg 27 y- value [26:0] $end
+$var integer 32 z- j [31:0] $end
+$var integer 32 {- shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$scope module dot_cast_u $end
+$var wire 12 |- exp_shift_i [11:0] $end
+$var wire 1 3- nan_i $end
+$var wire 44 }- value_i [43:0] $end
+$var parameter 32 ~- EXP_W $end
+$var parameter 32 !. IN_W $end
+$var reg 44 ". abs_value [43:0] $end
+$var reg 8 #. exp_field_out [7:0] $end
+$var reg 32 $. fp32_o [31:0] $end
+$var reg 1 %. guard_bit $end
+$var reg 1 &. round_up $end
+$var reg 25 '. sig_rounded [24:0] $end
+$var reg 25 (. sig_work [24:0] $end
+$var reg 1 ). sign_bit $end
+$var reg 1 *. sticky_bit $end
+$var integer 32 +. exp_unbiased [31:0] $end
+$var integer 32 ,. i [31:0] $end
+$var integer 32 -. msb_idx [31:0] $end
+$var integer 32 .. shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope begin gen_cols[11] $end
+$var wire 256 /. b_elems_col [255:0] $end
+$var wire 8 0. b_scale_col [7:0] $end
+$var parameter 5 1. col $end
+$scope module col_u $end
+$var wire 256 2. a_elems_i [255:0] $end
+$var wire 8 3. a_scale_i [7:0] $end
+$var wire 1 4. acc_clear_i $end
+$var wire 32 5. acc_o [31:0] $end
+$var wire 256 6. b_elems_i [255:0] $end
+$var wire 8 7. b_scale_i [7:0] $end
+$var wire 1 . clk $end
+$var wire 1 / rst_n $end
+$var wire 1 0 valid_i $end
+$var wire 44 8. dot_sum_s1 [43:0] $end
+$var wire 44 9. dot_half_sum1_s1 [43:0] $end
+$var wire 44 :. dot_half_sum0_s1 [43:0] $end
+$var wire 32 ;. dot_fp32_s1 [31:0] $end
+$var wire 32 <. acc_next [31:0] $end
+$var reg 19 =. a_fixed [18:0] $end
+$var reg 10 >. a_scale_exp [9:0] $end
+$var reg 1 ?. acc_clear_s1 $end
+$var reg 1 @. acc_clear_s2 $end
+$var reg 32 A. acc_reg [31:0] $end
+$var reg 1 B. any_nan $end
+$var reg 1 C. any_nan_s1 $end
+$var reg 19 D. b_fixed [18:0] $end
+$var reg 10 E. b_scale_exp [9:0] $end
+$var reg 12 F. dot_exp_shift [11:0] $end
+$var reg 12 G. dot_exp_shift_s1 [11:0] $end
+$var reg 32 H. dot_fp32_s2 [31:0] $end
+$var reg 38 I. lane_prod [37:0] $end
+$var reg 44 J. lane_prod_ext [43:0] $end
+$var reg 1 K. valid_o $end
+$var reg 1 L. valid_s1 $end
+$var reg 1 M. valid_s2 $end
+$var integer 32 N. elem_idx [31:0] $end
+$var integer 32 O. lane_idx [31:0] $end
+$var integer 32 P. pipe_idx [31:0] $end
+$var integer 32 Q. quad_idx [31:0] $end
+$scope function e4m3_is_nan $end
+$var reg 8 R. enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_subnormal $end
+$var reg 8 S. enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_zero $end
+$var reg 8 T. enc [7:0] $end
+$upscope $end
+$scope function e4m3_significand $end
+$var reg 8 U. enc [7:0] $end
+$upscope $end
+$scope function e4m3_to_fixed $end
+$var reg 8 V. enc [7:0] $end
+$var reg 4 W. exp_field [3:0] $end
+$var reg 19 X. magnitude [18:0] $end
+$var reg 3 Y. mant_field [2:0] $end
+$var reg 1 Z. sign_bit $end
+$var reg 19 [. significand [18:0] $end
+$var integer 32 \. shift_amt [31:0] $end
+$upscope $end
+$scope function e4m3_unbiased_exp $end
+$var reg 8 ]. enc [7:0] $end
+$upscope $end
+$scope function e8m0_is_nan $end
+$var reg 8 ^. enc [7:0] $end
+$upscope $end
+$scope function e8m0_unbiased_exp $end
+$var reg 8 _. enc [7:0] $end
+$upscope $end
+$scope module acc_add_u $end
+$var wire 32 `. a_i [31:0] $end
+$var wire 32 a. b_i [31:0] $end
+$var reg 1 b. a_is_inf $end
+$var reg 1 c. a_is_nan $end
+$var reg 1 d. a_is_zero $end
+$var reg 1 e. b_is_inf $end
+$var reg 1 f. b_is_nan $end
+$var reg 1 g. b_is_zero $end
+$var reg 8 h. exp_field_a [7:0] $end
+$var reg 8 i. exp_field_b [7:0] $end
+$var reg 8 j. exp_field_out [7:0] $end
+$var reg 1 k. guard_bit $end
+$var reg 24 l. mant_a [23:0] $end
+$var reg 24 m. mant_b [23:0] $end
+$var reg 27 n. mant_big_ext [26:0] $end
+$var reg 24 o. mant_big_raw [23:0] $end
+$var reg 24 p. mant_main [23:0] $end
+$var reg 28 q. mant_norm [27:0] $end
+$var reg 25 r. mant_rounded [24:0] $end
+$var reg 27 s. mant_small_aligned [26:0] $end
+$var reg 27 t. mant_small_ext [26:0] $end
+$var reg 24 u. mant_small_raw [23:0] $end
+$var reg 28 v. mant_sum [27:0] $end
+$var reg 1 w. round_bit $end
+$var reg 1 x. round_up $end
+$var reg 1 y. sign_a $end
+$var reg 1 z. sign_b $end
+$var reg 1 {. sign_big $end
+$var reg 1 |. sign_small $end
+$var reg 1 }. sticky_bit $end
+$var reg 32 ~. sum_o [31:0] $end
+$var integer 32 !/ diff_exp [31:0] $end
+$var integer 32 "/ exp_a [31:0] $end
+$var integer 32 #/ exp_b [31:0] $end
+$var integer 32 $/ exp_big [31:0] $end
+$var integer 32 %/ exp_res [31:0] $end
+$var integer 32 &/ exp_small [31:0] $end
+$var integer 32 '/ i [31:0] $end
+$var integer 32 (/ lead_idx [31:0] $end
+$scope function shr_sticky_27 $end
+$var reg 27 )/ shifted [26:0] $end
+$var reg 1 */ sticky $end
+$var reg 27 +/ value [26:0] $end
+$var integer 32 ,/ j [31:0] $end
+$var integer 32 -/ shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$scope module dot_cast_u $end
+$var wire 12 ./ exp_shift_i [11:0] $end
+$var wire 1 C. nan_i $end
+$var wire 44 // value_i [43:0] $end
+$var parameter 32 0/ EXP_W $end
+$var parameter 32 1/ IN_W $end
+$var reg 44 2/ abs_value [43:0] $end
+$var reg 8 3/ exp_field_out [7:0] $end
+$var reg 32 4/ fp32_o [31:0] $end
+$var reg 1 5/ guard_bit $end
+$var reg 1 6/ round_up $end
+$var reg 25 7/ sig_rounded [24:0] $end
+$var reg 25 8/ sig_work [24:0] $end
+$var reg 1 9/ sign_bit $end
+$var reg 1 :/ sticky_bit $end
+$var integer 32 ;/ exp_unbiased [31:0] $end
+$var integer 32 </ i [31:0] $end
+$var integer 32 =/ msb_idx [31:0] $end
+$var integer 32 >/ shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope begin gen_cols[12] $end
+$var wire 256 ?/ b_elems_col [255:0] $end
+$var wire 8 @/ b_scale_col [7:0] $end
+$var parameter 5 A/ col $end
+$scope module col_u $end
+$var wire 256 B/ a_elems_i [255:0] $end
+$var wire 8 C/ a_scale_i [7:0] $end
+$var wire 1 D/ acc_clear_i $end
+$var wire 32 E/ acc_o [31:0] $end
+$var wire 256 F/ b_elems_i [255:0] $end
+$var wire 8 G/ b_scale_i [7:0] $end
+$var wire 1 . clk $end
+$var wire 1 / rst_n $end
+$var wire 1 0 valid_i $end
+$var wire 44 H/ dot_sum_s1 [43:0] $end
+$var wire 44 I/ dot_half_sum1_s1 [43:0] $end
+$var wire 44 J/ dot_half_sum0_s1 [43:0] $end
+$var wire 32 K/ dot_fp32_s1 [31:0] $end
+$var wire 32 L/ acc_next [31:0] $end
+$var reg 19 M/ a_fixed [18:0] $end
+$var reg 10 N/ a_scale_exp [9:0] $end
+$var reg 1 O/ acc_clear_s1 $end
+$var reg 1 P/ acc_clear_s2 $end
+$var reg 32 Q/ acc_reg [31:0] $end
+$var reg 1 R/ any_nan $end
+$var reg 1 S/ any_nan_s1 $end
+$var reg 19 T/ b_fixed [18:0] $end
+$var reg 10 U/ b_scale_exp [9:0] $end
+$var reg 12 V/ dot_exp_shift [11:0] $end
+$var reg 12 W/ dot_exp_shift_s1 [11:0] $end
+$var reg 32 X/ dot_fp32_s2 [31:0] $end
+$var reg 38 Y/ lane_prod [37:0] $end
+$var reg 44 Z/ lane_prod_ext [43:0] $end
+$var reg 1 [/ valid_o $end
+$var reg 1 \/ valid_s1 $end
+$var reg 1 ]/ valid_s2 $end
+$var integer 32 ^/ elem_idx [31:0] $end
+$var integer 32 _/ lane_idx [31:0] $end
+$var integer 32 `/ pipe_idx [31:0] $end
+$var integer 32 a/ quad_idx [31:0] $end
+$scope function e4m3_is_nan $end
+$var reg 8 b/ enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_subnormal $end
+$var reg 8 c/ enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_zero $end
+$var reg 8 d/ enc [7:0] $end
+$upscope $end
+$scope function e4m3_significand $end
+$var reg 8 e/ enc [7:0] $end
+$upscope $end
+$scope function e4m3_to_fixed $end
+$var reg 8 f/ enc [7:0] $end
+$var reg 4 g/ exp_field [3:0] $end
+$var reg 19 h/ magnitude [18:0] $end
+$var reg 3 i/ mant_field [2:0] $end
+$var reg 1 j/ sign_bit $end
+$var reg 19 k/ significand [18:0] $end
+$var integer 32 l/ shift_amt [31:0] $end
+$upscope $end
+$scope function e4m3_unbiased_exp $end
+$var reg 8 m/ enc [7:0] $end
+$upscope $end
+$scope function e8m0_is_nan $end
+$var reg 8 n/ enc [7:0] $end
+$upscope $end
+$scope function e8m0_unbiased_exp $end
+$var reg 8 o/ enc [7:0] $end
+$upscope $end
+$scope module acc_add_u $end
+$var wire 32 p/ a_i [31:0] $end
+$var wire 32 q/ b_i [31:0] $end
+$var reg 1 r/ a_is_inf $end
+$var reg 1 s/ a_is_nan $end
+$var reg 1 t/ a_is_zero $end
+$var reg 1 u/ b_is_inf $end
+$var reg 1 v/ b_is_nan $end
+$var reg 1 w/ b_is_zero $end
+$var reg 8 x/ exp_field_a [7:0] $end
+$var reg 8 y/ exp_field_b [7:0] $end
+$var reg 8 z/ exp_field_out [7:0] $end
+$var reg 1 {/ guard_bit $end
+$var reg 24 |/ mant_a [23:0] $end
+$var reg 24 }/ mant_b [23:0] $end
+$var reg 27 ~/ mant_big_ext [26:0] $end
+$var reg 24 !0 mant_big_raw [23:0] $end
+$var reg 24 "0 mant_main [23:0] $end
+$var reg 28 #0 mant_norm [27:0] $end
+$var reg 25 $0 mant_rounded [24:0] $end
+$var reg 27 %0 mant_small_aligned [26:0] $end
+$var reg 27 &0 mant_small_ext [26:0] $end
+$var reg 24 '0 mant_small_raw [23:0] $end
+$var reg 28 (0 mant_sum [27:0] $end
+$var reg 1 )0 round_bit $end
+$var reg 1 *0 round_up $end
+$var reg 1 +0 sign_a $end
+$var reg 1 ,0 sign_b $end
+$var reg 1 -0 sign_big $end
+$var reg 1 .0 sign_small $end
+$var reg 1 /0 sticky_bit $end
+$var reg 32 00 sum_o [31:0] $end
+$var integer 32 10 diff_exp [31:0] $end
+$var integer 32 20 exp_a [31:0] $end
+$var integer 32 30 exp_b [31:0] $end
+$var integer 32 40 exp_big [31:0] $end
+$var integer 32 50 exp_res [31:0] $end
+$var integer 32 60 exp_small [31:0] $end
+$var integer 32 70 i [31:0] $end
+$var integer 32 80 lead_idx [31:0] $end
+$scope function shr_sticky_27 $end
+$var reg 27 90 shifted [26:0] $end
+$var reg 1 :0 sticky $end
+$var reg 27 ;0 value [26:0] $end
+$var integer 32 <0 j [31:0] $end
+$var integer 32 =0 shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$scope module dot_cast_u $end
+$var wire 12 >0 exp_shift_i [11:0] $end
+$var wire 1 S/ nan_i $end
+$var wire 44 ?0 value_i [43:0] $end
+$var parameter 32 @0 EXP_W $end
+$var parameter 32 A0 IN_W $end
+$var reg 44 B0 abs_value [43:0] $end
+$var reg 8 C0 exp_field_out [7:0] $end
+$var reg 32 D0 fp32_o [31:0] $end
+$var reg 1 E0 guard_bit $end
+$var reg 1 F0 round_up $end
+$var reg 25 G0 sig_rounded [24:0] $end
+$var reg 25 H0 sig_work [24:0] $end
+$var reg 1 I0 sign_bit $end
+$var reg 1 J0 sticky_bit $end
+$var integer 32 K0 exp_unbiased [31:0] $end
+$var integer 32 L0 i [31:0] $end
+$var integer 32 M0 msb_idx [31:0] $end
+$var integer 32 N0 shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope begin gen_cols[13] $end
+$var wire 256 O0 b_elems_col [255:0] $end
+$var wire 8 P0 b_scale_col [7:0] $end
+$var parameter 5 Q0 col $end
+$scope module col_u $end
+$var wire 256 R0 a_elems_i [255:0] $end
+$var wire 8 S0 a_scale_i [7:0] $end
+$var wire 1 T0 acc_clear_i $end
+$var wire 32 U0 acc_o [31:0] $end
+$var wire 256 V0 b_elems_i [255:0] $end
+$var wire 8 W0 b_scale_i [7:0] $end
+$var wire 1 . clk $end
+$var wire 1 / rst_n $end
+$var wire 1 0 valid_i $end
+$var wire 44 X0 dot_sum_s1 [43:0] $end
+$var wire 44 Y0 dot_half_sum1_s1 [43:0] $end
+$var wire 44 Z0 dot_half_sum0_s1 [43:0] $end
+$var wire 32 [0 dot_fp32_s1 [31:0] $end
+$var wire 32 \0 acc_next [31:0] $end
+$var reg 19 ]0 a_fixed [18:0] $end
+$var reg 10 ^0 a_scale_exp [9:0] $end
+$var reg 1 _0 acc_clear_s1 $end
+$var reg 1 `0 acc_clear_s2 $end
+$var reg 32 a0 acc_reg [31:0] $end
+$var reg 1 b0 any_nan $end
+$var reg 1 c0 any_nan_s1 $end
+$var reg 19 d0 b_fixed [18:0] $end
+$var reg 10 e0 b_scale_exp [9:0] $end
+$var reg 12 f0 dot_exp_shift [11:0] $end
+$var reg 12 g0 dot_exp_shift_s1 [11:0] $end
+$var reg 32 h0 dot_fp32_s2 [31:0] $end
+$var reg 38 i0 lane_prod [37:0] $end
+$var reg 44 j0 lane_prod_ext [43:0] $end
+$var reg 1 k0 valid_o $end
+$var reg 1 l0 valid_s1 $end
+$var reg 1 m0 valid_s2 $end
+$var integer 32 n0 elem_idx [31:0] $end
+$var integer 32 o0 lane_idx [31:0] $end
+$var integer 32 p0 pipe_idx [31:0] $end
+$var integer 32 q0 quad_idx [31:0] $end
+$scope function e4m3_is_nan $end
+$var reg 8 r0 enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_subnormal $end
+$var reg 8 s0 enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_zero $end
+$var reg 8 t0 enc [7:0] $end
+$upscope $end
+$scope function e4m3_significand $end
+$var reg 8 u0 enc [7:0] $end
+$upscope $end
+$scope function e4m3_to_fixed $end
+$var reg 8 v0 enc [7:0] $end
+$var reg 4 w0 exp_field [3:0] $end
+$var reg 19 x0 magnitude [18:0] $end
+$var reg 3 y0 mant_field [2:0] $end
+$var reg 1 z0 sign_bit $end
+$var reg 19 {0 significand [18:0] $end
+$var integer 32 |0 shift_amt [31:0] $end
+$upscope $end
+$scope function e4m3_unbiased_exp $end
+$var reg 8 }0 enc [7:0] $end
+$upscope $end
+$scope function e8m0_is_nan $end
+$var reg 8 ~0 enc [7:0] $end
+$upscope $end
+$scope function e8m0_unbiased_exp $end
+$var reg 8 !1 enc [7:0] $end
+$upscope $end
+$scope module acc_add_u $end
+$var wire 32 "1 a_i [31:0] $end
+$var wire 32 #1 b_i [31:0] $end
+$var reg 1 $1 a_is_inf $end
+$var reg 1 %1 a_is_nan $end
+$var reg 1 &1 a_is_zero $end
+$var reg 1 '1 b_is_inf $end
+$var reg 1 (1 b_is_nan $end
+$var reg 1 )1 b_is_zero $end
+$var reg 8 *1 exp_field_a [7:0] $end
+$var reg 8 +1 exp_field_b [7:0] $end
+$var reg 8 ,1 exp_field_out [7:0] $end
+$var reg 1 -1 guard_bit $end
+$var reg 24 .1 mant_a [23:0] $end
+$var reg 24 /1 mant_b [23:0] $end
+$var reg 27 01 mant_big_ext [26:0] $end
+$var reg 24 11 mant_big_raw [23:0] $end
+$var reg 24 21 mant_main [23:0] $end
+$var reg 28 31 mant_norm [27:0] $end
+$var reg 25 41 mant_rounded [24:0] $end
+$var reg 27 51 mant_small_aligned [26:0] $end
+$var reg 27 61 mant_small_ext [26:0] $end
+$var reg 24 71 mant_small_raw [23:0] $end
+$var reg 28 81 mant_sum [27:0] $end
+$var reg 1 91 round_bit $end
+$var reg 1 :1 round_up $end
+$var reg 1 ;1 sign_a $end
+$var reg 1 <1 sign_b $end
+$var reg 1 =1 sign_big $end
+$var reg 1 >1 sign_small $end
+$var reg 1 ?1 sticky_bit $end
+$var reg 32 @1 sum_o [31:0] $end
+$var integer 32 A1 diff_exp [31:0] $end
+$var integer 32 B1 exp_a [31:0] $end
+$var integer 32 C1 exp_b [31:0] $end
+$var integer 32 D1 exp_big [31:0] $end
+$var integer 32 E1 exp_res [31:0] $end
+$var integer 32 F1 exp_small [31:0] $end
+$var integer 32 G1 i [31:0] $end
+$var integer 32 H1 lead_idx [31:0] $end
+$scope function shr_sticky_27 $end
+$var reg 27 I1 shifted [26:0] $end
+$var reg 1 J1 sticky $end
+$var reg 27 K1 value [26:0] $end
+$var integer 32 L1 j [31:0] $end
+$var integer 32 M1 shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$scope module dot_cast_u $end
+$var wire 12 N1 exp_shift_i [11:0] $end
+$var wire 1 c0 nan_i $end
+$var wire 44 O1 value_i [43:0] $end
+$var parameter 32 P1 EXP_W $end
+$var parameter 32 Q1 IN_W $end
+$var reg 44 R1 abs_value [43:0] $end
+$var reg 8 S1 exp_field_out [7:0] $end
+$var reg 32 T1 fp32_o [31:0] $end
+$var reg 1 U1 guard_bit $end
+$var reg 1 V1 round_up $end
+$var reg 25 W1 sig_rounded [24:0] $end
+$var reg 25 X1 sig_work [24:0] $end
+$var reg 1 Y1 sign_bit $end
+$var reg 1 Z1 sticky_bit $end
+$var integer 32 [1 exp_unbiased [31:0] $end
+$var integer 32 \1 i [31:0] $end
+$var integer 32 ]1 msb_idx [31:0] $end
+$var integer 32 ^1 shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope begin gen_cols[14] $end
+$var wire 256 _1 b_elems_col [255:0] $end
+$var wire 8 `1 b_scale_col [7:0] $end
+$var parameter 5 a1 col $end
+$scope module col_u $end
+$var wire 256 b1 a_elems_i [255:0] $end
+$var wire 8 c1 a_scale_i [7:0] $end
+$var wire 1 d1 acc_clear_i $end
+$var wire 32 e1 acc_o [31:0] $end
+$var wire 256 f1 b_elems_i [255:0] $end
+$var wire 8 g1 b_scale_i [7:0] $end
+$var wire 1 . clk $end
+$var wire 1 / rst_n $end
+$var wire 1 0 valid_i $end
+$var wire 44 h1 dot_sum_s1 [43:0] $end
+$var wire 44 i1 dot_half_sum1_s1 [43:0] $end
+$var wire 44 j1 dot_half_sum0_s1 [43:0] $end
+$var wire 32 k1 dot_fp32_s1 [31:0] $end
+$var wire 32 l1 acc_next [31:0] $end
+$var reg 19 m1 a_fixed [18:0] $end
+$var reg 10 n1 a_scale_exp [9:0] $end
+$var reg 1 o1 acc_clear_s1 $end
+$var reg 1 p1 acc_clear_s2 $end
+$var reg 32 q1 acc_reg [31:0] $end
+$var reg 1 r1 any_nan $end
+$var reg 1 s1 any_nan_s1 $end
+$var reg 19 t1 b_fixed [18:0] $end
+$var reg 10 u1 b_scale_exp [9:0] $end
+$var reg 12 v1 dot_exp_shift [11:0] $end
+$var reg 12 w1 dot_exp_shift_s1 [11:0] $end
+$var reg 32 x1 dot_fp32_s2 [31:0] $end
+$var reg 38 y1 lane_prod [37:0] $end
+$var reg 44 z1 lane_prod_ext [43:0] $end
+$var reg 1 {1 valid_o $end
+$var reg 1 |1 valid_s1 $end
+$var reg 1 }1 valid_s2 $end
+$var integer 32 ~1 elem_idx [31:0] $end
+$var integer 32 !2 lane_idx [31:0] $end
+$var integer 32 "2 pipe_idx [31:0] $end
+$var integer 32 #2 quad_idx [31:0] $end
+$scope function e4m3_is_nan $end
+$var reg 8 $2 enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_subnormal $end
+$var reg 8 %2 enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_zero $end
+$var reg 8 &2 enc [7:0] $end
+$upscope $end
+$scope function e4m3_significand $end
+$var reg 8 '2 enc [7:0] $end
+$upscope $end
+$scope function e4m3_to_fixed $end
+$var reg 8 (2 enc [7:0] $end
+$var reg 4 )2 exp_field [3:0] $end
+$var reg 19 *2 magnitude [18:0] $end
+$var reg 3 +2 mant_field [2:0] $end
+$var reg 1 ,2 sign_bit $end
+$var reg 19 -2 significand [18:0] $end
+$var integer 32 .2 shift_amt [31:0] $end
+$upscope $end
+$scope function e4m3_unbiased_exp $end
+$var reg 8 /2 enc [7:0] $end
+$upscope $end
+$scope function e8m0_is_nan $end
+$var reg 8 02 enc [7:0] $end
+$upscope $end
+$scope function e8m0_unbiased_exp $end
+$var reg 8 12 enc [7:0] $end
+$upscope $end
+$scope module acc_add_u $end
+$var wire 32 22 a_i [31:0] $end
+$var wire 32 32 b_i [31:0] $end
+$var reg 1 42 a_is_inf $end
+$var reg 1 52 a_is_nan $end
+$var reg 1 62 a_is_zero $end
+$var reg 1 72 b_is_inf $end
+$var reg 1 82 b_is_nan $end
+$var reg 1 92 b_is_zero $end
+$var reg 8 :2 exp_field_a [7:0] $end
+$var reg 8 ;2 exp_field_b [7:0] $end
+$var reg 8 <2 exp_field_out [7:0] $end
+$var reg 1 =2 guard_bit $end
+$var reg 24 >2 mant_a [23:0] $end
+$var reg 24 ?2 mant_b [23:0] $end
+$var reg 27 @2 mant_big_ext [26:0] $end
+$var reg 24 A2 mant_big_raw [23:0] $end
+$var reg 24 B2 mant_main [23:0] $end
+$var reg 28 C2 mant_norm [27:0] $end
+$var reg 25 D2 mant_rounded [24:0] $end
+$var reg 27 E2 mant_small_aligned [26:0] $end
+$var reg 27 F2 mant_small_ext [26:0] $end
+$var reg 24 G2 mant_small_raw [23:0] $end
+$var reg 28 H2 mant_sum [27:0] $end
+$var reg 1 I2 round_bit $end
+$var reg 1 J2 round_up $end
+$var reg 1 K2 sign_a $end
+$var reg 1 L2 sign_b $end
+$var reg 1 M2 sign_big $end
+$var reg 1 N2 sign_small $end
+$var reg 1 O2 sticky_bit $end
+$var reg 32 P2 sum_o [31:0] $end
+$var integer 32 Q2 diff_exp [31:0] $end
+$var integer 32 R2 exp_a [31:0] $end
+$var integer 32 S2 exp_b [31:0] $end
+$var integer 32 T2 exp_big [31:0] $end
+$var integer 32 U2 exp_res [31:0] $end
+$var integer 32 V2 exp_small [31:0] $end
+$var integer 32 W2 i [31:0] $end
+$var integer 32 X2 lead_idx [31:0] $end
+$scope function shr_sticky_27 $end
+$var reg 27 Y2 shifted [26:0] $end
+$var reg 1 Z2 sticky $end
+$var reg 27 [2 value [26:0] $end
+$var integer 32 \2 j [31:0] $end
+$var integer 32 ]2 shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$scope module dot_cast_u $end
+$var wire 12 ^2 exp_shift_i [11:0] $end
+$var wire 1 s1 nan_i $end
+$var wire 44 _2 value_i [43:0] $end
+$var parameter 32 `2 EXP_W $end
+$var parameter 32 a2 IN_W $end
+$var reg 44 b2 abs_value [43:0] $end
+$var reg 8 c2 exp_field_out [7:0] $end
+$var reg 32 d2 fp32_o [31:0] $end
+$var reg 1 e2 guard_bit $end
+$var reg 1 f2 round_up $end
+$var reg 25 g2 sig_rounded [24:0] $end
+$var reg 25 h2 sig_work [24:0] $end
+$var reg 1 i2 sign_bit $end
+$var reg 1 j2 sticky_bit $end
+$var integer 32 k2 exp_unbiased [31:0] $end
+$var integer 32 l2 i [31:0] $end
+$var integer 32 m2 msb_idx [31:0] $end
+$var integer 32 n2 shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope begin gen_cols[15] $end
+$var wire 256 o2 b_elems_col [255:0] $end
+$var wire 8 p2 b_scale_col [7:0] $end
+$var parameter 5 q2 col $end
+$scope module col_u $end
+$var wire 256 r2 a_elems_i [255:0] $end
+$var wire 8 s2 a_scale_i [7:0] $end
+$var wire 1 t2 acc_clear_i $end
+$var wire 32 u2 acc_o [31:0] $end
+$var wire 256 v2 b_elems_i [255:0] $end
+$var wire 8 w2 b_scale_i [7:0] $end
+$var wire 1 . clk $end
+$var wire 1 / rst_n $end
+$var wire 1 0 valid_i $end
+$var wire 44 x2 dot_sum_s1 [43:0] $end
+$var wire 44 y2 dot_half_sum1_s1 [43:0] $end
+$var wire 44 z2 dot_half_sum0_s1 [43:0] $end
+$var wire 32 {2 dot_fp32_s1 [31:0] $end
+$var wire 32 |2 acc_next [31:0] $end
+$var reg 19 }2 a_fixed [18:0] $end
+$var reg 10 ~2 a_scale_exp [9:0] $end
+$var reg 1 !3 acc_clear_s1 $end
+$var reg 1 "3 acc_clear_s2 $end
+$var reg 32 #3 acc_reg [31:0] $end
+$var reg 1 $3 any_nan $end
+$var reg 1 %3 any_nan_s1 $end
+$var reg 19 &3 b_fixed [18:0] $end
+$var reg 10 '3 b_scale_exp [9:0] $end
+$var reg 12 (3 dot_exp_shift [11:0] $end
+$var reg 12 )3 dot_exp_shift_s1 [11:0] $end
+$var reg 32 *3 dot_fp32_s2 [31:0] $end
+$var reg 38 +3 lane_prod [37:0] $end
+$var reg 44 ,3 lane_prod_ext [43:0] $end
+$var reg 1 -3 valid_o $end
+$var reg 1 .3 valid_s1 $end
+$var reg 1 /3 valid_s2 $end
+$var integer 32 03 elem_idx [31:0] $end
+$var integer 32 13 lane_idx [31:0] $end
+$var integer 32 23 pipe_idx [31:0] $end
+$var integer 32 33 quad_idx [31:0] $end
+$scope function e4m3_is_nan $end
+$var reg 8 43 enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_subnormal $end
+$var reg 8 53 enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_zero $end
+$var reg 8 63 enc [7:0] $end
+$upscope $end
+$scope function e4m3_significand $end
+$var reg 8 73 enc [7:0] $end
+$upscope $end
+$scope function e4m3_to_fixed $end
+$var reg 8 83 enc [7:0] $end
+$var reg 4 93 exp_field [3:0] $end
+$var reg 19 :3 magnitude [18:0] $end
+$var reg 3 ;3 mant_field [2:0] $end
+$var reg 1 <3 sign_bit $end
+$var reg 19 =3 significand [18:0] $end
+$var integer 32 >3 shift_amt [31:0] $end
+$upscope $end
+$scope function e4m3_unbiased_exp $end
+$var reg 8 ?3 enc [7:0] $end
+$upscope $end
+$scope function e8m0_is_nan $end
+$var reg 8 @3 enc [7:0] $end
+$upscope $end
+$scope function e8m0_unbiased_exp $end
+$var reg 8 A3 enc [7:0] $end
+$upscope $end
+$scope module acc_add_u $end
+$var wire 32 B3 a_i [31:0] $end
+$var wire 32 C3 b_i [31:0] $end
+$var reg 1 D3 a_is_inf $end
+$var reg 1 E3 a_is_nan $end
+$var reg 1 F3 a_is_zero $end
+$var reg 1 G3 b_is_inf $end
+$var reg 1 H3 b_is_nan $end
+$var reg 1 I3 b_is_zero $end
+$var reg 8 J3 exp_field_a [7:0] $end
+$var reg 8 K3 exp_field_b [7:0] $end
+$var reg 8 L3 exp_field_out [7:0] $end
+$var reg 1 M3 guard_bit $end
+$var reg 24 N3 mant_a [23:0] $end
+$var reg 24 O3 mant_b [23:0] $end
+$var reg 27 P3 mant_big_ext [26:0] $end
+$var reg 24 Q3 mant_big_raw [23:0] $end
+$var reg 24 R3 mant_main [23:0] $end
+$var reg 28 S3 mant_norm [27:0] $end
+$var reg 25 T3 mant_rounded [24:0] $end
+$var reg 27 U3 mant_small_aligned [26:0] $end
+$var reg 27 V3 mant_small_ext [26:0] $end
+$var reg 24 W3 mant_small_raw [23:0] $end
+$var reg 28 X3 mant_sum [27:0] $end
+$var reg 1 Y3 round_bit $end
+$var reg 1 Z3 round_up $end
+$var reg 1 [3 sign_a $end
+$var reg 1 \3 sign_b $end
+$var reg 1 ]3 sign_big $end
+$var reg 1 ^3 sign_small $end
+$var reg 1 _3 sticky_bit $end
+$var reg 32 `3 sum_o [31:0] $end
+$var integer 32 a3 diff_exp [31:0] $end
+$var integer 32 b3 exp_a [31:0] $end
+$var integer 32 c3 exp_b [31:0] $end
+$var integer 32 d3 exp_big [31:0] $end
+$var integer 32 e3 exp_res [31:0] $end
+$var integer 32 f3 exp_small [31:0] $end
+$var integer 32 g3 i [31:0] $end
+$var integer 32 h3 lead_idx [31:0] $end
+$scope function shr_sticky_27 $end
+$var reg 27 i3 shifted [26:0] $end
+$var reg 1 j3 sticky $end
+$var reg 27 k3 value [26:0] $end
+$var integer 32 l3 j [31:0] $end
+$var integer 32 m3 shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$scope module dot_cast_u $end
+$var wire 12 n3 exp_shift_i [11:0] $end
+$var wire 1 %3 nan_i $end
+$var wire 44 o3 value_i [43:0] $end
+$var parameter 32 p3 EXP_W $end
+$var parameter 32 q3 IN_W $end
+$var reg 44 r3 abs_value [43:0] $end
+$var reg 8 s3 exp_field_out [7:0] $end
+$var reg 32 t3 fp32_o [31:0] $end
+$var reg 1 u3 guard_bit $end
+$var reg 1 v3 round_up $end
+$var reg 25 w3 sig_rounded [24:0] $end
+$var reg 25 x3 sig_work [24:0] $end
+$var reg 1 y3 sign_bit $end
+$var reg 1 z3 sticky_bit $end
+$var integer 32 {3 exp_unbiased [31:0] $end
+$var integer 32 |3 i [31:0] $end
+$var integer 32 }3 msb_idx [31:0] $end
+$var integer 32 ~3 shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module ref_col $end
+$var wire 256 !4 a_elems_i [255:0] $end
+$var wire 8 "4 a_scale_i [7:0] $end
+$var wire 1 #4 acc_clear_i $end
+$var wire 32 $4 acc_o [31:0] $end
+$var wire 256 %4 b_elems_i [255:0] $end
+$var wire 8 &4 b_scale_i [7:0] $end
+$var wire 1 . clk $end
+$var wire 1 / rst_n $end
+$var wire 1 0 valid_i $end
+$var wire 44 '4 dot_sum_s1 [43:0] $end
+$var wire 44 (4 dot_half_sum1_s1 [43:0] $end
+$var wire 44 )4 dot_half_sum0_s1 [43:0] $end
+$var wire 32 *4 dot_fp32_s1 [31:0] $end
+$var wire 32 +4 acc_next [31:0] $end
+$var reg 19 ,4 a_fixed [18:0] $end
+$var reg 10 -4 a_scale_exp [9:0] $end
+$var reg 1 .4 acc_clear_s1 $end
+$var reg 1 /4 acc_clear_s2 $end
+$var reg 32 04 acc_reg [31:0] $end
+$var reg 1 14 any_nan $end
+$var reg 1 24 any_nan_s1 $end
+$var reg 19 34 b_fixed [18:0] $end
+$var reg 10 44 b_scale_exp [9:0] $end
+$var reg 12 54 dot_exp_shift [11:0] $end
+$var reg 12 64 dot_exp_shift_s1 [11:0] $end
+$var reg 32 74 dot_fp32_s2 [31:0] $end
+$var reg 38 84 lane_prod [37:0] $end
+$var reg 44 94 lane_prod_ext [43:0] $end
+$var reg 1 " valid_o $end
+$var reg 1 :4 valid_s1 $end
+$var reg 1 ;4 valid_s2 $end
+$var integer 32 <4 elem_idx [31:0] $end
+$var integer 32 =4 lane_idx [31:0] $end
+$var integer 32 >4 pipe_idx [31:0] $end
+$var integer 32 ?4 quad_idx [31:0] $end
+$scope function e4m3_is_nan $end
+$var reg 8 @4 enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_subnormal $end
+$var reg 8 A4 enc [7:0] $end
+$upscope $end
+$scope function e4m3_is_zero $end
+$var reg 8 B4 enc [7:0] $end
+$upscope $end
+$scope function e4m3_significand $end
+$var reg 8 C4 enc [7:0] $end
+$upscope $end
+$scope function e4m3_to_fixed $end
+$var reg 8 D4 enc [7:0] $end
+$var reg 4 E4 exp_field [3:0] $end
+$var reg 19 F4 magnitude [18:0] $end
+$var reg 3 G4 mant_field [2:0] $end
+$var reg 1 H4 sign_bit $end
+$var reg 19 I4 significand [18:0] $end
+$var integer 32 J4 shift_amt [31:0] $end
+$upscope $end
+$scope function e4m3_unbiased_exp $end
+$var reg 8 K4 enc [7:0] $end
+$upscope $end
+$scope function e8m0_is_nan $end
+$var reg 8 L4 enc [7:0] $end
+$upscope $end
+$scope function e8m0_unbiased_exp $end
+$var reg 8 M4 enc [7:0] $end
+$upscope $end
+$scope module acc_add_u $end
+$var wire 32 N4 a_i [31:0] $end
+$var wire 32 O4 b_i [31:0] $end
+$var reg 1 P4 a_is_inf $end
+$var reg 1 Q4 a_is_nan $end
+$var reg 1 R4 a_is_zero $end
+$var reg 1 S4 b_is_inf $end
+$var reg 1 T4 b_is_nan $end
+$var reg 1 U4 b_is_zero $end
+$var reg 8 V4 exp_field_a [7:0] $end
+$var reg 8 W4 exp_field_b [7:0] $end
+$var reg 8 X4 exp_field_out [7:0] $end
+$var reg 1 Y4 guard_bit $end
+$var reg 24 Z4 mant_a [23:0] $end
+$var reg 24 [4 mant_b [23:0] $end
+$var reg 27 \4 mant_big_ext [26:0] $end
+$var reg 24 ]4 mant_big_raw [23:0] $end
+$var reg 24 ^4 mant_main [23:0] $end
+$var reg 28 _4 mant_norm [27:0] $end
+$var reg 25 `4 mant_rounded [24:0] $end
+$var reg 27 a4 mant_small_aligned [26:0] $end
+$var reg 27 b4 mant_small_ext [26:0] $end
+$var reg 24 c4 mant_small_raw [23:0] $end
+$var reg 28 d4 mant_sum [27:0] $end
+$var reg 1 e4 round_bit $end
+$var reg 1 f4 round_up $end
+$var reg 1 g4 sign_a $end
+$var reg 1 h4 sign_b $end
+$var reg 1 i4 sign_big $end
+$var reg 1 j4 sign_small $end
+$var reg 1 k4 sticky_bit $end
+$var reg 32 l4 sum_o [31:0] $end
+$var integer 32 m4 diff_exp [31:0] $end
+$var integer 32 n4 exp_a [31:0] $end
+$var integer 32 o4 exp_b [31:0] $end
+$var integer 32 p4 exp_big [31:0] $end
+$var integer 32 q4 exp_res [31:0] $end
+$var integer 32 r4 exp_small [31:0] $end
+$var integer 32 s4 i [31:0] $end
+$var integer 32 t4 lead_idx [31:0] $end
+$scope function shr_sticky_27 $end
+$var reg 27 u4 shifted [26:0] $end
+$var reg 1 v4 sticky $end
+$var reg 27 w4 value [26:0] $end
+$var integer 32 x4 j [31:0] $end
+$var integer 32 y4 shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$scope module dot_cast_u $end
+$var wire 12 z4 exp_shift_i [11:0] $end
+$var wire 1 24 nan_i $end
+$var wire 44 {4 value_i [43:0] $end
+$var parameter 32 |4 EXP_W $end
+$var parameter 32 }4 IN_W $end
+$var reg 44 ~4 abs_value [43:0] $end
+$var reg 8 !5 exp_field_out [7:0] $end
+$var reg 32 "5 fp32_o [31:0] $end
+$var reg 1 #5 guard_bit $end
+$var reg 1 $5 round_up $end
+$var reg 25 %5 sig_rounded [24:0] $end
+$var reg 25 &5 sig_work [24:0] $end
+$var reg 1 '5 sign_bit $end
+$var reg 1 (5 sticky_bit $end
+$var integer 32 )5 exp_unbiased [31:0] $end
+$var integer 32 *5 i [31:0] $end
+$var integer 32 +5 msb_idx [31:0] $end
+$var integer 32 ,5 shift_amt [31:0] $end
+$upscope $end
+$upscope $end
+$scope task check_all_cols $end
+$var reg 32 -5 expected [31:0] $end
+$var integer 32 .5 col_idx [31:0] $end
+$upscope $end
+$scope task fill_all_ones $end
+$var integer 32 /5 col_idx [31:0] $end
+$var integer 32 05 row_idx [31:0] $end
+$upscope $end
+$scope task wait_for_output $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+b101100 }4
+b1100 |4
+b101100 q3
+b1100 p3
+b1111 q2
+b101100 a2
+b1100 `2
+b1110 a1
+b101100 Q1
+b1100 P1
+b1101 Q0
+b101100 A0
+b1100 @0
+b1100 A/
+b101100 1/
+b1100 0/
+b1011 1.
+b101100 !.
+b1100 ~-
+b1010 !-
+b101100 o,
+b1100 n,
+b1001 o+
+b101100 _+
+b1100 ^+
+b1000 _*
+b101100 O*
+b1100 N*
+b111 O)
+b101100 ?)
+b1100 >)
+b110 ?(
+b101100 /(
+b1100 .(
+b101 /'
+b101100 }&
+b1100 |&
+b100 }%
+b101100 m%
+b1100 l%
+b11 m$
+b101100 ]$
+b1100 \$
+b10 ]#
+b101100 M#
+b1100 L#
+b1 M"
+b101100 ="
+b1100 <"
+b0 =
+b1000010100000000000000000000000 (
+b1000010000000000000000000000000 '
+b1111111 &
+b111000 %
+$end
+#0
+$dumpvars
+b100000 05
+b10000 /5
+bx .5
+bx -5
+bx ,5
+b11111111111111111111111111111111 +5
+bx *5
+bx )5
+0(5
+0'5
+b0 &5
+b0 %5
+0$5
+0#5
+b0 "5
+b0 !5
+b0 ~4
+b0 {4
+b0 z4
+bx y4
+bx x4
+bx w4
+xv4
+bx u4
+b11111111111111111111111111111111 t4
+bx s4
+bx r4
+bx q4
+bx p4
+b11111111111111111111111110000010 o4
+b11111111111111111111111110000010 n4
+bx m4
+b0 l4
+0k4
+xj4
+xi4
+0h4
+0g4
+0f4
+0e4
+b0 d4
+bx c4
+b0 b4
+b0 a4
+b0 `4
+b0 _4
+b0 ^4
+bx ]4
+b0 \4
+b0 [4
+b0 Z4
+0Y4
+b0 X4
+b0 W4
+b0 V4
+1U4
+0T4
+0S4
+1R4
+0Q4
+0P4
+b0 O4
+b0 N4
+b1111111 M4
+b1111111 L4
+bx K4
+b110 J4
+b1000 I4
+0H4
+b0 G4
+b1000000000 F4
+b111 E4
+b111000 D4
+bx C4
+b111000 B4
+bx A4
+b111000 @4
+b100 ?4
+b100 >4
+b1000 =4
+b11111 <4
+0;4
+0:4
+b1000000000000000000 94
+b1000000000000000000 84
+b0 74
+b0 64
+b111111101110 54
+b0 44
+b1000000000 34
+024
+014
+b0 04
+0/4
+0.4
+b0 -4
+b1000000000 ,4
+b0 +4
+b0 *4
+b0 )4
+b0 (4
+b0 '4
+b1111111 &4
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 %4
+b0 $4
+0#4
+b1111111 "4
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 !4
+bx ~3
+b11111111111111111111111111111111 }3
+bx |3
+bx {3
+0z3
+0y3
+b0 x3
+b0 w3
+0v3
+0u3
+b0 t3
+b0 s3
+b0 r3
+b0 o3
+b0 n3
+bx m3
+bx l3
+bx k3
+xj3
+bx i3
+b11111111111111111111111111111111 h3
+bx g3
+bx f3
+bx e3
+bx d3
+b11111111111111111111111110000010 c3
+b11111111111111111111111110000010 b3
+bx a3
+b0 `3
+0_3
+x^3
+x]3
+0\3
+0[3
+0Z3
+0Y3
+b0 X3
+bx W3
+b0 V3
+b0 U3
+b0 T3
+b0 S3
+b0 R3
+bx Q3
+b0 P3
+b0 O3
+b0 N3
+0M3
+b0 L3
+b0 K3
+b0 J3
+1I3
+0H3
+0G3
+1F3
+0E3
+0D3
+b0 C3
+b0 B3
+b1111111 A3
+b1111111 @3
+bx ?3
+b110 >3
+b1000 =3
+0<3
+b0 ;3
+b1000000000 :3
+b111 93
+b111000 83
+bx 73
+b111000 63
+bx 53
+b111000 43
+b100 33
+b100 23
+b1000 13
+b11111 03
+0/3
+0.3
+0-3
+b1000000000000000000 ,3
+b1000000000000000000 +3
+b0 *3
+b0 )3
+b111111101110 (3
+b0 '3
+b1000000000 &3
+0%3
+0$3
+b0 #3
+0"3
+0!3
+b0 ~2
+b1000000000 }2
+b0 |2
+b0 {2
+b0 z2
+b0 y2
+b0 x2
+b1111111 w2
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 v2
+b0 u2
+0t2
+b1111111 s2
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 r2
+b1111111 p2
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 o2
+bx n2
+b11111111111111111111111111111111 m2
+bx l2
+bx k2
+0j2
+0i2
+b0 h2
+b0 g2
+0f2
+0e2
+b0 d2
+b0 c2
+b0 b2
+b0 _2
+b0 ^2
+bx ]2
+bx \2
+bx [2
+xZ2
+bx Y2
+b11111111111111111111111111111111 X2
+bx W2
+bx V2
+bx U2
+bx T2
+b11111111111111111111111110000010 S2
+b11111111111111111111111110000010 R2
+bx Q2
+b0 P2
+0O2
+xN2
+xM2
+0L2
+0K2
+0J2
+0I2
+b0 H2
+bx G2
+b0 F2
+b0 E2
+b0 D2
+b0 C2
+b0 B2
+bx A2
+b0 @2
+b0 ?2
+b0 >2
+0=2
+b0 <2
+b0 ;2
+b0 :2
+192
+082
+072
+162
+052
+042
+b0 32
+b0 22
+b1111111 12
+b1111111 02
+bx /2
+b110 .2
+b1000 -2
+0,2
+b0 +2
+b1000000000 *2
+b111 )2
+b111000 (2
+bx '2
+b111000 &2
+bx %2
+b111000 $2
+b100 #2
+b100 "2
+b1000 !2
+b11111 ~1
+0}1
+0|1
+0{1
+b1000000000000000000 z1
+b1000000000000000000 y1
+b0 x1
+b0 w1
+b111111101110 v1
+b0 u1
+b1000000000 t1
+0s1
+0r1
+b0 q1
+0p1
+0o1
+b0 n1
+b1000000000 m1
+b0 l1
+b0 k1
+b0 j1
+b0 i1
+b0 h1
+b1111111 g1
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 f1
+b0 e1
+0d1
+b1111111 c1
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 b1
+b1111111 `1
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 _1
+bx ^1
+b11111111111111111111111111111111 ]1
+bx \1
+bx [1
+0Z1
+0Y1
+b0 X1
+b0 W1
+0V1
+0U1
+b0 T1
+b0 S1
+b0 R1
+b0 O1
+b0 N1
+bx M1
+bx L1
+bx K1
+xJ1
+bx I1
+b11111111111111111111111111111111 H1
+bx G1
+bx F1
+bx E1
+bx D1
+b11111111111111111111111110000010 C1
+b11111111111111111111111110000010 B1
+bx A1
+b0 @1
+0?1
+x>1
+x=1
+0<1
+0;1
+0:1
+091
+b0 81
+bx 71
+b0 61
+b0 51
+b0 41
+b0 31
+b0 21
+bx 11
+b0 01
+b0 /1
+b0 .1
+0-1
+b0 ,1
+b0 +1
+b0 *1
+1)1
+0(1
+0'1
+1&1
+0%1
+0$1
+b0 #1
+b0 "1
+b1111111 !1
+b1111111 ~0
+bx }0
+b110 |0
+b1000 {0
+0z0
+b0 y0
+b1000000000 x0
+b111 w0
+b111000 v0
+bx u0
+b111000 t0
+bx s0
+b111000 r0
+b100 q0
+b100 p0
+b1000 o0
+b11111 n0
+0m0
+0l0
+0k0
+b1000000000000000000 j0
+b1000000000000000000 i0
+b0 h0
+b0 g0
+b111111101110 f0
+b0 e0
+b1000000000 d0
+0c0
+0b0
+b0 a0
+0`0
+0_0
+b0 ^0
+b1000000000 ]0
+b0 \0
+b0 [0
+b0 Z0
+b0 Y0
+b0 X0
+b1111111 W0
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 V0
+b0 U0
+0T0
+b1111111 S0
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 R0
+b1111111 P0
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 O0
+bx N0
+b11111111111111111111111111111111 M0
+bx L0
+bx K0
+0J0
+0I0
+b0 H0
+b0 G0
+0F0
+0E0
+b0 D0
+b0 C0
+b0 B0
+b0 ?0
+b0 >0
+bx =0
+bx <0
+bx ;0
+x:0
+bx 90
+b11111111111111111111111111111111 80
+bx 70
+bx 60
+bx 50
+bx 40
+b11111111111111111111111110000010 30
+b11111111111111111111111110000010 20
+bx 10
+b0 00
+0/0
+x.0
+x-0
+0,0
+0+0
+0*0
+0)0
+b0 (0
+bx '0
+b0 &0
+b0 %0
+b0 $0
+b0 #0
+b0 "0
+bx !0
+b0 ~/
+b0 }/
+b0 |/
+0{/
+b0 z/
+b0 y/
+b0 x/
+1w/
+0v/
+0u/
+1t/
+0s/
+0r/
+b0 q/
+b0 p/
+b1111111 o/
+b1111111 n/
+bx m/
+b110 l/
+b1000 k/
+0j/
+b0 i/
+b1000000000 h/
+b111 g/
+b111000 f/
+bx e/
+b111000 d/
+bx c/
+b111000 b/
+b100 a/
+b100 `/
+b1000 _/
+b11111 ^/
+0]/
+0\/
+0[/
+b1000000000000000000 Z/
+b1000000000000000000 Y/
+b0 X/
+b0 W/
+b111111101110 V/
+b0 U/
+b1000000000 T/
+0S/
+0R/
+b0 Q/
+0P/
+0O/
+b0 N/
+b1000000000 M/
+b0 L/
+b0 K/
+b0 J/
+b0 I/
+b0 H/
+b1111111 G/
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 F/
+b0 E/
+0D/
+b1111111 C/
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 B/
+b1111111 @/
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 ?/
+bx >/
+b11111111111111111111111111111111 =/
+bx </
+bx ;/
+0:/
+09/
+b0 8/
+b0 7/
+06/
+05/
+b0 4/
+b0 3/
+b0 2/
+b0 //
+b0 ./
+bx -/
+bx ,/
+bx +/
+x*/
+bx )/
+b11111111111111111111111111111111 (/
+bx '/
+bx &/
+bx %/
+bx $/
+b11111111111111111111111110000010 #/
+b11111111111111111111111110000010 "/
+bx !/
+b0 ~.
+0}.
+x|.
+x{.
+0z.
+0y.
+0x.
+0w.
+b0 v.
+bx u.
+b0 t.
+b0 s.
+b0 r.
+b0 q.
+b0 p.
+bx o.
+b0 n.
+b0 m.
+b0 l.
+0k.
+b0 j.
+b0 i.
+b0 h.
+1g.
+0f.
+0e.
+1d.
+0c.
+0b.
+b0 a.
+b0 `.
+b1111111 _.
+b1111111 ^.
+bx ].
+b110 \.
+b1000 [.
+0Z.
+b0 Y.
+b1000000000 X.
+b111 W.
+b111000 V.
+bx U.
+b111000 T.
+bx S.
+b111000 R.
+b100 Q.
+b100 P.
+b1000 O.
+b11111 N.
+0M.
+0L.
+0K.
+b1000000000000000000 J.
+b1000000000000000000 I.
+b0 H.
+b0 G.
+b111111101110 F.
+b0 E.
+b1000000000 D.
+0C.
+0B.
+b0 A.
+0@.
+0?.
+b0 >.
+b1000000000 =.
+b0 <.
+b0 ;.
+b0 :.
+b0 9.
+b0 8.
+b1111111 7.
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 6.
+b0 5.
+04.
+b1111111 3.
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 2.
+b1111111 0.
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 /.
+bx ..
+b11111111111111111111111111111111 -.
+bx ,.
+bx +.
+0*.
+0).
+b0 (.
+b0 '.
+0&.
+0%.
+b0 $.
+b0 #.
+b0 ".
+b0 }-
+b0 |-
+bx {-
+bx z-
+bx y-
+xx-
+bx w-
+b11111111111111111111111111111111 v-
+bx u-
+bx t-
+bx s-
+bx r-
+b11111111111111111111111110000010 q-
+b11111111111111111111111110000010 p-
+bx o-
+b0 n-
+0m-
+xl-
+xk-
+0j-
+0i-
+0h-
+0g-
+b0 f-
+bx e-
+b0 d-
+b0 c-
+b0 b-
+b0 a-
+b0 `-
+bx _-
+b0 ^-
+b0 ]-
+b0 \-
+0[-
+b0 Z-
+b0 Y-
+b0 X-
+1W-
+0V-
+0U-
+1T-
+0S-
+0R-
+b0 Q-
+b0 P-
+b1111111 O-
+b1111111 N-
+bx M-
+b110 L-
+b1000 K-
+0J-
+b0 I-
+b1000000000 H-
+b111 G-
+b111000 F-
+bx E-
+b111000 D-
+bx C-
+b111000 B-
+b100 A-
+b100 @-
+b1000 ?-
+b11111 >-
+0=-
+0<-
+0;-
+b1000000000000000000 :-
+b1000000000000000000 9-
+b0 8-
+b0 7-
+b111111101110 6-
+b0 5-
+b1000000000 4-
+03-
+02-
+b0 1-
+00-
+0/-
+b0 .-
+b1000000000 --
+b0 ,-
+b0 +-
+b0 *-
+b0 )-
+b0 (-
+b1111111 '-
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 &-
+b0 %-
+0$-
+b1111111 #-
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 "-
+b1111111 ~,
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 },
+bx |,
+b11111111111111111111111111111111 {,
+bx z,
+bx y,
+0x,
+0w,
+b0 v,
+b0 u,
+0t,
+0s,
+b0 r,
+b0 q,
+b0 p,
+b0 m,
+b0 l,
+bx k,
+bx j,
+bx i,
+xh,
+bx g,
+b11111111111111111111111111111111 f,
+bx e,
+bx d,
+bx c,
+bx b,
+b11111111111111111111111110000010 a,
+b11111111111111111111111110000010 `,
+bx _,
+b0 ^,
+0],
+x\,
+x[,
+0Z,
+0Y,
+0X,
+0W,
+b0 V,
+bx U,
+b0 T,
+b0 S,
+b0 R,
+b0 Q,
+b0 P,
+bx O,
+b0 N,
+b0 M,
+b0 L,
+0K,
+b0 J,
+b0 I,
+b0 H,
+1G,
+0F,
+0E,
+1D,
+0C,
+0B,
+b0 A,
+b0 @,
+b1111111 ?,
+b1111111 >,
+bx =,
+b110 <,
+b1000 ;,
+0:,
+b0 9,
+b1000000000 8,
+b111 7,
+b111000 6,
+bx 5,
+b111000 4,
+bx 3,
+b111000 2,
+b100 1,
+b100 0,
+b1000 /,
+b11111 .,
+0-,
+0,,
+0+,
+b1000000000000000000 *,
+b1000000000000000000 ),
+b0 (,
+b0 ',
+b111111101110 &,
+b0 %,
+b1000000000 $,
+0#,
+0",
+b0 !,
+0~+
+0}+
+b0 |+
+b1000000000 {+
+b0 z+
+b0 y+
+b0 x+
+b0 w+
+b0 v+
+b1111111 u+
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 t+
+b0 s+
+0r+
+b1111111 q+
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 p+
+b1111111 n+
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 m+
+bx l+
+b11111111111111111111111111111111 k+
+bx j+
+bx i+
+0h+
+0g+
+b0 f+
+b0 e+
+0d+
+0c+
+b0 b+
+b0 a+
+b0 `+
+b0 ]+
+b0 \+
+bx [+
+bx Z+
+bx Y+
+xX+
+bx W+
+b11111111111111111111111111111111 V+
+bx U+
+bx T+
+bx S+
+bx R+
+b11111111111111111111111110000010 Q+
+b11111111111111111111111110000010 P+
+bx O+
+b0 N+
+0M+
+xL+
+xK+
+0J+
+0I+
+0H+
+0G+
+b0 F+
+bx E+
+b0 D+
+b0 C+
+b0 B+
+b0 A+
+b0 @+
+bx ?+
+b0 >+
+b0 =+
+b0 <+
+0;+
+b0 :+
+b0 9+
+b0 8+
+17+
+06+
+05+
+14+
+03+
+02+
+b0 1+
+b0 0+
+b1111111 /+
+b1111111 .+
+bx -+
+b110 ,+
+b1000 ++
+0*+
+b0 )+
+b1000000000 (+
+b111 '+
+b111000 &+
+bx %+
+b111000 $+
+bx #+
+b111000 "+
+b100 !+
+b100 ~*
+b1000 }*
+b11111 |*
+0{*
+0z*
+0y*
+b1000000000000000000 x*
+b1000000000000000000 w*
+b0 v*
+b0 u*
+b111111101110 t*
+b0 s*
+b1000000000 r*
+0q*
+0p*
+b0 o*
+0n*
+0m*
+b0 l*
+b1000000000 k*
+b0 j*
+b0 i*
+b0 h*
+b0 g*
+b0 f*
+b1111111 e*
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 d*
+b0 c*
+0b*
+b1111111 a*
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 `*
+b1111111 ^*
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 ]*
+bx \*
+b11111111111111111111111111111111 [*
+bx Z*
+bx Y*
+0X*
+0W*
+b0 V*
+b0 U*
+0T*
+0S*
+b0 R*
+b0 Q*
+b0 P*
+b0 M*
+b0 L*
+bx K*
+bx J*
+bx I*
+xH*
+bx G*
+b11111111111111111111111111111111 F*
+bx E*
+bx D*
+bx C*
+bx B*
+b11111111111111111111111110000010 A*
+b11111111111111111111111110000010 @*
+bx ?*
+b0 >*
+0=*
+x<*
+x;*
+0:*
+09*
+08*
+07*
+b0 6*
+bx 5*
+b0 4*
+b0 3*
+b0 2*
+b0 1*
+b0 0*
+bx /*
+b0 .*
+b0 -*
+b0 ,*
+0+*
+b0 **
+b0 )*
+b0 (*
+1'*
+0&*
+0%*
+1$*
+0#*
+0"*
+b0 !*
+b0 ~)
+b1111111 })
+b1111111 |)
+bx {)
+b110 z)
+b1000 y)
+0x)
+b0 w)
+b1000000000 v)
+b111 u)
+b111000 t)
+bx s)
+b111000 r)
+bx q)
+b111000 p)
+b100 o)
+b100 n)
+b1000 m)
+b11111 l)
+0k)
+0j)
+0i)
+b1000000000000000000 h)
+b1000000000000000000 g)
+b0 f)
+b0 e)
+b111111101110 d)
+b0 c)
+b1000000000 b)
+0a)
+0`)
+b0 _)
+0^)
+0])
+b0 \)
+b1000000000 [)
+b0 Z)
+b0 Y)
+b0 X)
+b0 W)
+b0 V)
+b1111111 U)
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 T)
+b0 S)
+0R)
+b1111111 Q)
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 P)
+b1111111 N)
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 M)
+bx L)
+b11111111111111111111111111111111 K)
+bx J)
+bx I)
+0H)
+0G)
+b0 F)
+b0 E)
+0D)
+0C)
+b0 B)
+b0 A)
+b0 @)
+b0 =)
+b0 <)
+bx ;)
+bx :)
+bx 9)
+x8)
+bx 7)
+b11111111111111111111111111111111 6)
+bx 5)
+bx 4)
+bx 3)
+bx 2)
+b11111111111111111111111110000010 1)
+b11111111111111111111111110000010 0)
+bx /)
+b0 .)
+0-)
+x,)
+x+)
+0*)
+0))
+0()
+0')
+b0 &)
+bx %)
+b0 $)
+b0 #)
+b0 ")
+b0 !)
+b0 ~(
+bx }(
+b0 |(
+b0 {(
+b0 z(
+0y(
+b0 x(
+b0 w(
+b0 v(
+1u(
+0t(
+0s(
+1r(
+0q(
+0p(
+b0 o(
+b0 n(
+b1111111 m(
+b1111111 l(
+bx k(
+b110 j(
+b1000 i(
+0h(
+b0 g(
+b1000000000 f(
+b111 e(
+b111000 d(
+bx c(
+b111000 b(
+bx a(
+b111000 `(
+b100 _(
+b100 ^(
+b1000 ](
+b11111 \(
+0[(
+0Z(
+0Y(
+b1000000000000000000 X(
+b1000000000000000000 W(
+b0 V(
+b0 U(
+b111111101110 T(
+b0 S(
+b1000000000 R(
+0Q(
+0P(
+b0 O(
+0N(
+0M(
+b0 L(
+b1000000000 K(
+b0 J(
+b0 I(
+b0 H(
+b0 G(
+b0 F(
+b1111111 E(
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 D(
+b0 C(
+0B(
+b1111111 A(
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 @(
+b1111111 >(
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 =(
+bx <(
+b11111111111111111111111111111111 ;(
+bx :(
+bx 9(
+08(
+07(
+b0 6(
+b0 5(
+04(
+03(
+b0 2(
+b0 1(
+b0 0(
+b0 -(
+b0 ,(
+bx +(
+bx *(
+bx )(
+x((
+bx '(
+b11111111111111111111111111111111 &(
+bx %(
+bx $(
+bx #(
+bx "(
+b11111111111111111111111110000010 !(
+b11111111111111111111111110000010 ~'
+bx }'
+b0 |'
+0{'
+xz'
+xy'
+0x'
+0w'
+0v'
+0u'
+b0 t'
+bx s'
+b0 r'
+b0 q'
+b0 p'
+b0 o'
+b0 n'
+bx m'
+b0 l'
+b0 k'
+b0 j'
+0i'
+b0 h'
+b0 g'
+b0 f'
+1e'
+0d'
+0c'
+1b'
+0a'
+0`'
+b0 _'
+b0 ^'
+b1111111 ]'
+b1111111 \'
+bx ['
+b110 Z'
+b1000 Y'
+0X'
+b0 W'
+b1000000000 V'
+b111 U'
+b111000 T'
+bx S'
+b111000 R'
+bx Q'
+b111000 P'
+b100 O'
+b100 N'
+b1000 M'
+b11111 L'
+0K'
+0J'
+0I'
+b1000000000000000000 H'
+b1000000000000000000 G'
+b0 F'
+b0 E'
+b111111101110 D'
+b0 C'
+b1000000000 B'
+0A'
+0@'
+b0 ?'
+0>'
+0='
+b0 <'
+b1000000000 ;'
+b0 :'
+b0 9'
+b0 8'
+b0 7'
+b0 6'
+b1111111 5'
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 4'
+b0 3'
+02'
+b1111111 1'
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 0'
+b1111111 .'
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 -'
+bx ,'
+b11111111111111111111111111111111 +'
+bx *'
+bx )'
+0('
+0''
+b0 &'
+b0 %'
+0$'
+0#'
+b0 "'
+b0 !'
+b0 ~&
+b0 {&
+b0 z&
+bx y&
+bx x&
+bx w&
+xv&
+bx u&
+b11111111111111111111111111111111 t&
+bx s&
+bx r&
+bx q&
+bx p&
+b11111111111111111111111110000010 o&
+b11111111111111111111111110000010 n&
+bx m&
+b0 l&
+0k&
+xj&
+xi&
+0h&
+0g&
+0f&
+0e&
+b0 d&
+bx c&
+b0 b&
+b0 a&
+b0 `&
+b0 _&
+b0 ^&
+bx ]&
+b0 \&
+b0 [&
+b0 Z&
+0Y&
+b0 X&
+b0 W&
+b0 V&
+1U&
+0T&
+0S&
+1R&
+0Q&
+0P&
+b0 O&
+b0 N&
+b1111111 M&
+b1111111 L&
+bx K&
+b110 J&
+b1000 I&
+0H&
+b0 G&
+b1000000000 F&
+b111 E&
+b111000 D&
+bx C&
+b111000 B&
+bx A&
+b111000 @&
+b100 ?&
+b100 >&
+b1000 =&
+b11111 <&
+0;&
+0:&
+09&
+b1000000000000000000 8&
+b1000000000000000000 7&
+b0 6&
+b0 5&
+b111111101110 4&
+b0 3&
+b1000000000 2&
+01&
+00&
+b0 /&
+0.&
+0-&
+b0 ,&
+b1000000000 +&
+b0 *&
+b0 )&
+b0 (&
+b0 '&
+b0 &&
+b1111111 %&
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 $&
+b0 #&
+0"&
+b1111111 !&
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 ~%
+b1111111 |%
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 {%
+bx z%
+b11111111111111111111111111111111 y%
+bx x%
+bx w%
+0v%
+0u%
+b0 t%
+b0 s%
+0r%
+0q%
+b0 p%
+b0 o%
+b0 n%
+b0 k%
+b0 j%
+bx i%
+bx h%
+bx g%
+xf%
+bx e%
+b11111111111111111111111111111111 d%
+bx c%
+bx b%
+bx a%
+bx `%
+b11111111111111111111111110000010 _%
+b11111111111111111111111110000010 ^%
+bx ]%
+b0 \%
+0[%
+xZ%
+xY%
+0X%
+0W%
+0V%
+0U%
+b0 T%
+bx S%
+b0 R%
+b0 Q%
+b0 P%
+b0 O%
+b0 N%
+bx M%
+b0 L%
+b0 K%
+b0 J%
+0I%
+b0 H%
+b0 G%
+b0 F%
+1E%
+0D%
+0C%
+1B%
+0A%
+0@%
+b0 ?%
+b0 >%
+b1111111 =%
+b1111111 <%
+bx ;%
+b110 :%
+b1000 9%
+08%
+b0 7%
+b1000000000 6%
+b111 5%
+b111000 4%
+bx 3%
+b111000 2%
+bx 1%
+b111000 0%
+b100 /%
+b100 .%
+b1000 -%
+b11111 ,%
+0+%
+0*%
+0)%
+b1000000000000000000 (%
+b1000000000000000000 '%
+b0 &%
+b0 %%
+b111111101110 $%
+b0 #%
+b1000000000 "%
+0!%
+0~$
+b0 }$
+0|$
+0{$
+b0 z$
+b1000000000 y$
+b0 x$
+b0 w$
+b0 v$
+b0 u$
+b0 t$
+b1111111 s$
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 r$
+b0 q$
+0p$
+b1111111 o$
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 n$
+b1111111 l$
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 k$
+bx j$
+b11111111111111111111111111111111 i$
+bx h$
+bx g$
+0f$
+0e$
+b0 d$
+b0 c$
+0b$
+0a$
+b0 `$
+b0 _$
+b0 ^$
+b0 [$
+b0 Z$
+bx Y$
+bx X$
+bx W$
+xV$
+bx U$
+b11111111111111111111111111111111 T$
+bx S$
+bx R$
+bx Q$
+bx P$
+b11111111111111111111111110000010 O$
+b11111111111111111111111110000010 N$
+bx M$
+b0 L$
+0K$
+xJ$
+xI$
+0H$
+0G$
+0F$
+0E$
+b0 D$
+bx C$
+b0 B$
+b0 A$
+b0 @$
+b0 ?$
+b0 >$
+bx =$
+b0 <$
+b0 ;$
+b0 :$
+09$
+b0 8$
+b0 7$
+b0 6$
+15$
+04$
+03$
+12$
+01$
+00$
+b0 /$
+b0 .$
+b1111111 -$
+b1111111 ,$
+bx +$
+b110 *$
+b1000 )$
+0($
+b0 '$
+b1000000000 &$
+b111 %$
+b111000 $$
+bx #$
+b111000 "$
+bx !$
+b111000 ~#
+b100 }#
+b100 |#
+b1000 {#
+b11111 z#
+0y#
+0x#
+0w#
+b1000000000000000000 v#
+b1000000000000000000 u#
+b0 t#
+b0 s#
+b111111101110 r#
+b0 q#
+b1000000000 p#
+0o#
+0n#
+b0 m#
+0l#
+0k#
+b0 j#
+b1000000000 i#
+b0 h#
+b0 g#
+b0 f#
+b0 e#
+b0 d#
+b1111111 c#
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 b#
+b0 a#
+0`#
+b1111111 _#
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 ^#
+b1111111 \#
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 [#
+bx Z#
+b11111111111111111111111111111111 Y#
+bx X#
+bx W#
+0V#
+0U#
+b0 T#
+b0 S#
+0R#
+0Q#
+b0 P#
+b0 O#
+b0 N#
+b0 K#
+b0 J#
+bx I#
+bx H#
+bx G#
+xF#
+bx E#
+b11111111111111111111111111111111 D#
+bx C#
+bx B#
+bx A#
+bx @#
+b11111111111111111111111110000010 ?#
+b11111111111111111111111110000010 >#
+bx =#
+b0 <#
+0;#
+x:#
+x9#
+08#
+07#
+06#
+05#
+b0 4#
+bx 3#
+b0 2#
+b0 1#
+b0 0#
+b0 /#
+b0 .#
+bx -#
+b0 ,#
+b0 +#
+b0 *#
+0)#
+b0 (#
+b0 '#
+b0 &#
+1%#
+0$#
+0##
+1"#
+0!#
+0~"
+b0 }"
+b0 |"
+b1111111 {"
+b1111111 z"
+bx y"
+b110 x"
+b1000 w"
+0v"
+b0 u"
+b1000000000 t"
+b111 s"
+b111000 r"
+bx q"
+b111000 p"
+bx o"
+b111000 n"
+b100 m"
+b100 l"
+b1000 k"
+b11111 j"
+0i"
+0h"
+0g"
+b1000000000000000000 f"
+b1000000000000000000 e"
+b0 d"
+b0 c"
+b111111101110 b"
+b0 a"
+b1000000000 `"
+0_"
+0^"
+b0 ]"
+0\"
+0["
+b0 Z"
+b1000000000 Y"
+b0 X"
+b0 W"
+b0 V"
+b0 U"
+b0 T"
+b1111111 S"
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 R"
+b0 Q"
+0P"
+b1111111 O"
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 N"
+b1111111 L"
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 K"
+bx J"
+b11111111111111111111111111111111 I"
+bx H"
+bx G"
+0F"
+0E"
+b0 D"
+b0 C"
+0B"
+0A"
+b0 @"
+b0 ?"
+b0 >"
+b0 ;"
+b0 :"
+bx 9"
+bx 8"
+bx 7"
+x6"
+bx 5"
+b11111111111111111111111111111111 4"
+bx 3"
+bx 2"
+bx 1"
+bx 0"
+b11111111111111111111111110000010 /"
+b11111111111111111111111110000010 ."
+bx -"
+b0 ,"
+0+"
+x*"
+x)"
+0("
+0'"
+0&"
+0%"
+b0 $"
+bx #"
+b0 ""
+b0 !"
+b0 ~
+b0 }
+b0 |
+bx {
+b0 z
+b0 y
+b0 x
+0w
+b0 v
+b0 u
+b0 t
+1s
+0r
+0q
+1p
+0o
+0n
+b0 m
+b0 l
+b1111111 k
+b1111111 j
+bx i
+b110 h
+b1000 g
+0f
+b0 e
+b1000000000 d
+b111 c
+b111000 b
+bx a
+b111000 `
+bx _
+b111000 ^
+b100 ]
+b100 \
+b1000 [
+b11111 Z
+0Y
+0X
+0W
+b1000000000000000000 V
+b1000000000000000000 U
+b0 T
+b0 S
+b111111101110 R
+b0 Q
+b1000000000 P
+0O
+0N
+b0 M
+0L
+0K
+b0 J
+b1000000000 I
+b0 H
+b0 G
+b0 F
+b0 E
+b0 D
+b1111111 C
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 B
+b0 A
+0@
+b1111111 ?
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 >
+b1111111 <
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 ;
+b0 :
+b0 9
+b0 8
+b1111111011111110111111101111111011111110111111101111111011111110111111101111111011111110111111101111111011111110111111101111111 7
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 6
+b0 5
+b0 4
+b1111111 3
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 2
+b100010000111010010111000110011101101001011101000110100001110101011000100101110000101101010111000111001001100101011100000110111101110010011101000111001101011100011001010111011001101001011001000110010101101110011000110110010101011100011101110110000101110110011001010110011001101111011100100110110101110011010111000111010001100010010111110110110101111000010111110110000101110010011100100110000101111001010111110111001101101101011011110110101101100101010111110111011101100001011101100110010100101110011101100110001101100100 1
+00
+0/
+0.
+b1111111011111110111111101111111011111110111111101111111011111110111111101111111011111110111111101111111011111110111111101111111 -
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 ,
+b0 +
+b1111111 *
+b11100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000001110000011100000111000 )
+b0 $
+b0 #
+0"
+b0 !
+$end
+#5000
+b100 >4
+b100 23
+b100 "2
+b100 p0
+b100 `/
+b100 P.
+b100 @-
+b100 0,
+b100 ~*
+b100 n)
+b100 ^(
+b100 N'
+b100 >&
+b100 .%
+b100 |#
+b100 l"
+b100 \
+1.
+#10000
+0.
+#15000
+b100 \
+b100 l"
+b100 |#
+b100 .%
+b100 >&
+b100 N'
+b100 ^(
+b100 n)
+b100 ~*
+b100 0,
+b100 @-
+b100 P.
+b100 `/
+b100 p0
+b100 "2
+b100 23
+b100 >4
+1.
+#20000
+0.
+#25000
+b1000010000000000000000000000000 *4
+b1000010000000000000000000000000 "5
+b10000100 !5
+b100000000000000000000000 %5
+b0 ,5
+b101 )5
+b10111 +5
+b11111111111111111111111111111111 *5
+b100000000000000000000000 ~4
+b1000010000000000000000000000000 {2
+b1000010000000000000000000000000 t3
+b10000100 s3
+b100000000000000000000000 w3
+b0 ~3
+b101 {3
+b10111 }3
+b11111111111111111111111111111111 |3
+b100000000000000000000000 r3
+b1000010000000000000000000000000 k1
+b1000010000000000000000000000000 d2
+b10000100 c2
+b100000000000000000000000 g2
+b0 n2
+b101 k2
+b10111 m2
+b11111111111111111111111111111111 l2
+b100000000000000000000000 b2
+b1000010000000000000000000000000 [0
+b1000010000000000000000000000000 T1
+b10000100 S1
+b100000000000000000000000 W1
+b0 ^1
+b101 [1
+b10111 ]1
+b11111111111111111111111111111111 \1
+b100000000000000000000000 R1
+b1000010000000000000000000000000 K/
+b1000010000000000000000000000000 D0
+b10000100 C0
+b100000000000000000000000 G0
+b0 N0
+b101 K0
+b10111 M0
+b11111111111111111111111111111111 L0
+b100000000000000000000000 B0
+b1000010000000000000000000000000 ;.
+b1000010000000000000000000000000 4/
+b10000100 3/
+b100000000000000000000000 7/
+b0 >/
+b101 ;/
+b10111 =/
+b11111111111111111111111111111111 </
+b100000000000000000000000 2/
+b1000010000000000000000000000000 +-
+b1000010000000000000000000000000 $.
+b10000100 #.
+b100000000000000000000000 '.
+b0 ..
+b101 +.
+b10111 -.
+b11111111111111111111111111111111 ,.
+b100000000000000000000000 ".
+b1000010000000000000000000000000 y+
+b1000010000000000000000000000000 r,
+b10000100 q,
+b100000000000000000000000 u,
+b0 |,
+b101 y,
+b10111 {,
+b11111111111111111111111111111111 z,
+b100000000000000000000000 p,
+b1000010000000000000000000000000 i*
+b1000010000000000000000000000000 b+
+b10000100 a+
+b100000000000000000000000 e+
+b0 l+
+b101 i+
+b10111 k+
+b11111111111111111111111111111111 j+
+b100000000000000000000000 `+
+b1000010000000000000000000000000 Y)
+b1000010000000000000000000000000 R*
+b10000100 Q*
+b100000000000000000000000 U*
+b0 \*
+b101 Y*
+b10111 [*
+b11111111111111111111111111111111 Z*
+b100000000000000000000000 P*
+b1000010000000000000000000000000 I(
+b1000010000000000000000000000000 B)
+b10000100 A)
+b100000000000000000000000 E)
+b0 L)
+b101 I)
+b10111 K)
+b11111111111111111111111111111111 J)
+b100000000000000000000000 @)
+b1000010000000000000000000000000 9'
+b1000010000000000000000000000000 2(
+b10000100 1(
+b100000000000000000000000 5(
+b0 <(
+b101 9(
+b10111 ;(
+b11111111111111111111111111111111 :(
+b100000000000000000000000 0(
+b1000010000000000000000000000000 )&
+b1000010000000000000000000000000 "'
+b10000100 !'
+b100000000000000000000000 %'
+b0 ,'
+b101 )'
+b10111 +'
+b11111111111111111111111111111111 *'
+b100000000000000000000000 ~&
+b1000010000000000000000000000000 w$
+b1000010000000000000000000000000 p%
+b10000100 o%
+b100000000000000000000000 s%
+b0 z%
+b101 w%
+b10111 y%
+b11111111111111111111111111111111 x%
+b100000000000000000000000 n%
+b1000010000000000000000000000000 g#
+b1000010000000000000000000000000 `$
+b10000100 _$
+b100000000000000000000000 c$
+b0 j$
+b101 g$
+b10111 i$
+b11111111111111111111111111111111 h$
+b100000000000000000000000 ^$
+b1000010000000000000000000000000 W"
+b1000010000000000000000000000000 P#
+b10000100 O#
+b100000000000000000000000 S#
+b0 Z#
+b101 W#
+b10111 Y#
+b11111111111111111111111111111111 X#
+b100000000000000000000000 N#
+b1000010000000000000000000000000 G
+b1000010000000000000000000000000 @"
+b10000100 ?"
+b100000000000000000000000 C"
+b0 J"
+b101 G"
+b10111 I"
+b11111111111111111111111111111111 H"
+b100000000000000000000000 >"
+b111111101110 64
+b111111101110 z4
+b10000000000000000000000 (4
+b100000000000000000000000 '4
+b100000000000000000000000 {4
+b10000000000000000000000 )4
+b111111101110 )3
+b111111101110 n3
+b10000000000000000000000 y2
+b100000000000000000000000 x2
+b100000000000000000000000 o3
+b10000000000000000000000 z2
+b111111101110 w1
+b111111101110 ^2
+b10000000000000000000000 i1
+b100000000000000000000000 h1
+b100000000000000000000000 _2
+b10000000000000000000000 j1
+b111111101110 g0
+b111111101110 N1
+b10000000000000000000000 Y0
+b100000000000000000000000 X0
+b100000000000000000000000 O1
+b10000000000000000000000 Z0
+b111111101110 W/
+b111111101110 >0
+b10000000000000000000000 I/
+b100000000000000000000000 H/
+b100000000000000000000000 ?0
+b10000000000000000000000 J/
+b111111101110 G.
+b111111101110 ./
+b10000000000000000000000 9.
+b100000000000000000000000 8.
+b100000000000000000000000 //
+b10000000000000000000000 :.
+b111111101110 7-
+b111111101110 |-
+b10000000000000000000000 )-
+b100000000000000000000000 (-
+b100000000000000000000000 }-
+b10000000000000000000000 *-
+b111111101110 ',
+b111111101110 l,
+b10000000000000000000000 w+
+b100000000000000000000000 v+
+b100000000000000000000000 m,
+b10000000000000000000000 x+
+b111111101110 u*
+b111111101110 \+
+b10000000000000000000000 g*
+b100000000000000000000000 f*
+b100000000000000000000000 ]+
+b10000000000000000000000 h*
+b111111101110 e)
+b111111101110 L*
+b10000000000000000000000 W)
+b100000000000000000000000 V)
+b100000000000000000000000 M*
+b10000000000000000000000 X)
+b111111101110 U(
+b111111101110 <)
+b10000000000000000000000 G(
+b100000000000000000000000 F(
+b100000000000000000000000 =)
+b10000000000000000000000 H(
+b111111101110 E'
+b111111101110 ,(
+b10000000000000000000000 7'
+b100000000000000000000000 6'
+b100000000000000000000000 -(
+b10000000000000000000000 8'
+b111111101110 5&
+b111111101110 z&
+b10000000000000000000000 '&
+b100000000000000000000000 &&
+b100000000000000000000000 {&
+b10000000000000000000000 (&
+b111111101110 %%
+b111111101110 j%
+b10000000000000000000000 u$
+b100000000000000000000000 t$
+b100000000000000000000000 k%
+b10000000000000000000000 v$
+b111111101110 s#
+b111111101110 Z$
+b10000000000000000000000 e#
+b100000000000000000000000 d#
+b100000000000000000000000 [$
+b10000000000000000000000 f#
+b111111101110 c"
+b111111101110 J#
+b10000000000000000000000 U"
+b100000000000000000000000 T"
+b100000000000000000000000 K#
+b10000000000000000000000 V"
+b111111101110 S
+b111111101110 :"
+b10000000000000000000000 E
+b100000000000000000000000 D
+b100000000000000000000000 ;"
+b10000000000000000000000 F
+b100 >4
+b100 23
+b100 "2
+b100 p0
+b100 `/
+b100 P.
+b100 @-
+b100 0,
+b100 ~*
+b100 n)
+b100 ^(
+b100 N'
+b100 >&
+b100 .%
+b100 |#
+b100 l"
+b100 \
+1/
+1.
+#30000
+1#4
+1@
+1P"
+1`#
+1p$
+1"&
+12'
+1B(
+1R)
+1b*
+1r+
+1$-
+14.
+1D/
+1T0
+1d1
+1t2
+b1111111111111111 +
+b1111111111111111 4
+10
+0.
+#35000
+b1000010000000000000000000000000 H
+b1000010000000000000000000000000 ,"
+0s
+b101 /"
+b100000000000000000000000 y
+b10000100 u
+b1000010000000000000000000000000 X"
+b1000010000000000000000000000000 <#
+0%#
+b101 ?#
+b100000000000000000000000 +#
+b10000100 '#
+b1000010000000000000000000000000 h#
+b1000010000000000000000000000000 L$
+05$
+b101 O$
+b100000000000000000000000 ;$
+b10000100 7$
+b1000010000000000000000000000000 x$
+b1000010000000000000000000000000 \%
+0E%
+b101 _%
+b100000000000000000000000 K%
+b10000100 G%
+b1000010000000000000000000000000 *&
+b1000010000000000000000000000000 l&
+0U&
+b101 o&
+b100000000000000000000000 [&
+b10000100 W&
+b1000010000000000000000000000000 :'
+b1000010000000000000000000000000 |'
+0e'
+b101 !(
+b100000000000000000000000 k'
+b10000100 g'
+b1000010000000000000000000000000 J(
+b1000010000000000000000000000000 .)
+0u(
+b101 1)
+b100000000000000000000000 {(
+b10000100 w(
+b1000010000000000000000000000000 Z)
+b1000010000000000000000000000000 >*
+0'*
+b101 A*
+b100000000000000000000000 -*
+b10000100 )*
+b1000010000000000000000000000000 j*
+b1000010000000000000000000000000 N+
+07+
+b101 Q+
+b100000000000000000000000 =+
+b10000100 9+
+b1000010000000000000000000000000 z+
+b1000010000000000000000000000000 ^,
+0G,
+b101 a,
+b100000000000000000000000 M,
+b10000100 I,
+b1000010000000000000000000000000 ,-
+b1000010000000000000000000000000 n-
+0W-
+b101 q-
+b100000000000000000000000 ]-
+b10000100 Y-
+b1000010000000000000000000000000 <.
+b1000010000000000000000000000000 ~.
+0g.
+b101 #/
+b100000000000000000000000 m.
+b10000100 i.
+b1000010000000000000000000000000 L/
+b1000010000000000000000000000000 00
+0w/
+b101 30
+b100000000000000000000000 }/
+b10000100 y/
+b1000010000000000000000000000000 \0
+b1000010000000000000000000000000 @1
+0)1
+b101 C1
+b100000000000000000000000 /1
+b10000100 +1
+b1000010000000000000000000000000 l1
+b1000010000000000000000000000000 P2
+092
+b101 S2
+b100000000000000000000000 ?2
+b10000100 ;2
+b1000010000000000000000000000000 |2
+b1000010000000000000000000000000 `3
+0I3
+b101 c3
+b100000000000000000000000 O3
+b10000100 K3
+b1000010000000000000000000000000 +4
+b1000010000000000000000000000000 l4
+0U4
+b101 o4
+b100000000000000000000000 [4
+b10000100 W4
+b1000010000000000000000000000000 T
+b1000010000000000000000000000000 m
+1K
+1X
+b1000010000000000000000000000000 d"
+b1000010000000000000000000000000 }"
+1["
+1h"
+b1000010000000000000000000000000 t#
+b1000010000000000000000000000000 /$
+1k#
+1x#
+b1000010000000000000000000000000 &%
+b1000010000000000000000000000000 ?%
+1{$
+1*%
+b1000010000000000000000000000000 6&
+b1000010000000000000000000000000 O&
+1-&
+1:&
+b1000010000000000000000000000000 F'
+b1000010000000000000000000000000 _'
+1='
+1J'
+b1000010000000000000000000000000 V(
+b1000010000000000000000000000000 o(
+1M(
+1Z(
+b1000010000000000000000000000000 f)
+b1000010000000000000000000000000 !*
+1])
+1j)
+b1000010000000000000000000000000 v*
+b1000010000000000000000000000000 1+
+1m*
+1z*
+b1000010000000000000000000000000 (,
+b1000010000000000000000000000000 A,
+1}+
+1,,
+b1000010000000000000000000000000 8-
+b1000010000000000000000000000000 Q-
+1/-
+1<-
+b1000010000000000000000000000000 H.
+b1000010000000000000000000000000 a.
+1?.
+1L.
+b1000010000000000000000000000000 X/
+b1000010000000000000000000000000 q/
+1O/
+1\/
+b1000010000000000000000000000000 h0
+b1000010000000000000000000000000 #1
+1_0
+1l0
+b1000010000000000000000000000000 x1
+b1000010000000000000000000000000 32
+1o1
+1|1
+b1000010000000000000000000000000 *3
+b1000010000000000000000000000000 C3
+1!3
+1.3
+b1000010000000000000000000000000 74
+b1000010000000000000000000000000 O4
+1.4
+1:4
+b100 \
+b100 l"
+b100 |#
+b100 .%
+b100 >&
+b100 N'
+b100 ^(
+b100 n)
+b100 ~*
+b100 0,
+b100 @-
+b100 P.
+b100 `/
+b100 p0
+b100 "2
+b100 23
+b100 >4
+1.
+#40000
+0#4
+0@
+0P"
+0`#
+0p$
+0"&
+02'
+0B(
+0R)
+0b*
+0r+
+0$-
+04.
+0D/
+0T0
+0d1
+0t2
+b0 +
+b0 4
+00
+0.
+#45000
+1/4
+1;4
+0.4
+0:4
+1"3
+1/3
+0!3
+0.3
+1p1
+1}1
+0o1
+0|1
+1`0
+1m0
+0_0
+0l0
+1P/
+1]/
+0O/
+0\/
+1@.
+1M.
+0?.
+0L.
+10-
+1=-
+0/-
+0<-
+1~+
+1-,
+0}+
+0,,
+1n*
+1{*
+0m*
+0z*
+1^)
+1k)
+0])
+0j)
+1N(
+1[(
+0M(
+0Z(
+1>'
+1K'
+0='
+0J'
+1.&
+1;&
+0-&
+0:&
+1|$
+1+%
+0{$
+0*%
+1l#
+1y#
+0k#
+0x#
+1\"
+1i"
+0["
+0h"
+1L
+1Y
+0K
+0X
+b100 >4
+b100 23
+b100 "2
+b100 p0
+b100 `/
+b100 P.
+b100 @-
+b100 0,
+b100 ~*
+b100 n)
+b100 ^(
+b100 N'
+b100 >&
+b100 .%
+b100 |#
+b100 l"
+b100 \
+1.
+#50000
+0.
+#55000
+b10000101 v
+b100000000000000000000000 ~
+b100000000000000000000000 |
+b100000000000000000000000000 }
+b1000000000000000000000000000 $"
+b110 1"
+b100000000000000000000000000 !"
+b100000000000000000000000000 5"
+b100000000000000000000000000 7"
+b0 9"
+b100000000000000000000000000 ""
+b100000000000000000000000000 z
+b0 -"
+b100000000000000000000000 #"
+b100000000000000000000000 {
+b101 2"
+b101 0"
+0*"
+0)"
+b1000010100000000000000000000000 H
+b1000010100000000000000000000000 ,"
+0p
+b101 ."
+b100000000000000000000000 x
+b10000100 t
+b10000101 (#
+b100000000000000000000000 0#
+b100000000000000000000000 .#
+b100000000000000000000000000 /#
+b1000000000000000000000000000 4#
+b110 A#
+b100000000000000000000000000 1#
+b100000000000000000000000000 E#
+b100000000000000000000000000 G#
+b0 I#
+b100000000000000000000000000 2#
+b100000000000000000000000000 ,#
+b0 =#
+b100000000000000000000000 3#
+b100000000000000000000000 -#
+b101 B#
+b101 @#
+0:#
+09#
+b1000010100000000000000000000000 X"
+b1000010100000000000000000000000 <#
+0"#
+b101 >#
+b100000000000000000000000 *#
+b10000100 &#
+b10000101 8$
+b100000000000000000000000 @$
+b100000000000000000000000 >$
+b100000000000000000000000000 ?$
+b1000000000000000000000000000 D$
+b110 Q$
+b100000000000000000000000000 A$
+b100000000000000000000000000 U$
+b100000000000000000000000000 W$
+b0 Y$
+b100000000000000000000000000 B$
+b100000000000000000000000000 <$
+b0 M$
+b100000000000000000000000 C$
+b100000000000000000000000 =$
+b101 R$
+b101 P$
+0J$
+0I$
+b1000010100000000000000000000000 h#
+b1000010100000000000000000000000 L$
+02$
+b101 N$
+b100000000000000000000000 :$
+b10000100 6$
+b10000101 H%
+b100000000000000000000000 P%
+b100000000000000000000000 N%
+b100000000000000000000000000 O%
+b1000000000000000000000000000 T%
+b110 a%
+b100000000000000000000000000 Q%
+b100000000000000000000000000 e%
+b100000000000000000000000000 g%
+b0 i%
+b100000000000000000000000000 R%
+b100000000000000000000000000 L%
+b0 ]%
+b100000000000000000000000 S%
+b100000000000000000000000 M%
+b101 b%
+b101 `%
+0Z%
+0Y%
+b1000010100000000000000000000000 x$
+b1000010100000000000000000000000 \%
+0B%
+b101 ^%
+b100000000000000000000000 J%
+b10000100 F%
+b10000101 X&
+b100000000000000000000000 `&
+b100000000000000000000000 ^&
+b100000000000000000000000000 _&
+b1000000000000000000000000000 d&
+b110 q&
+b100000000000000000000000000 a&
+b100000000000000000000000000 u&
+b100000000000000000000000000 w&
+b0 y&
+b100000000000000000000000000 b&
+b100000000000000000000000000 \&
+b0 m&
+b100000000000000000000000 c&
+b100000000000000000000000 ]&
+b101 r&
+b101 p&
+0j&
+0i&
+b1000010100000000000000000000000 *&
+b1000010100000000000000000000000 l&
+0R&
+b101 n&
+b100000000000000000000000 Z&
+b10000100 V&
+b10000101 h'
+b100000000000000000000000 p'
+b100000000000000000000000 n'
+b100000000000000000000000000 o'
+b1000000000000000000000000000 t'
+b110 #(
+b100000000000000000000000000 q'
+b100000000000000000000000000 '(
+b100000000000000000000000000 )(
+b0 +(
+b100000000000000000000000000 r'
+b100000000000000000000000000 l'
+b0 }'
+b100000000000000000000000 s'
+b100000000000000000000000 m'
+b101 $(
+b101 "(
+0z'
+0y'
+b1000010100000000000000000000000 :'
+b1000010100000000000000000000000 |'
+0b'
+b101 ~'
+b100000000000000000000000 j'
+b10000100 f'
+b10000101 x(
+b100000000000000000000000 ")
+b100000000000000000000000 ~(
+b100000000000000000000000000 !)
+b1000000000000000000000000000 &)
+b110 3)
+b100000000000000000000000000 #)
+b100000000000000000000000000 7)
+b100000000000000000000000000 9)
+b0 ;)
+b100000000000000000000000000 $)
+b100000000000000000000000000 |(
+b0 /)
+b100000000000000000000000 %)
+b100000000000000000000000 }(
+b101 4)
+b101 2)
+0,)
+0+)
+b1000010100000000000000000000000 J(
+b1000010100000000000000000000000 .)
+0r(
+b101 0)
+b100000000000000000000000 z(
+b10000100 v(
+b10000101 **
+b100000000000000000000000 2*
+b100000000000000000000000 0*
+b100000000000000000000000000 1*
+b1000000000000000000000000000 6*
+b110 C*
+b100000000000000000000000000 3*
+b100000000000000000000000000 G*
+b100000000000000000000000000 I*
+b0 K*
+b100000000000000000000000000 4*
+b100000000000000000000000000 .*
+b0 ?*
+b100000000000000000000000 5*
+b100000000000000000000000 /*
+b101 D*
+b101 B*
+0<*
+0;*
+b1000010100000000000000000000000 Z)
+b1000010100000000000000000000000 >*
+0$*
+b101 @*
+b100000000000000000000000 ,*
+b10000100 (*
+b10000101 :+
+b100000000000000000000000 B+
+b100000000000000000000000 @+
+b100000000000000000000000000 A+
+b1000000000000000000000000000 F+
+b110 S+
+b100000000000000000000000000 C+
+b100000000000000000000000000 W+
+b100000000000000000000000000 Y+
+b0 [+
+b100000000000000000000000000 D+
+b100000000000000000000000000 >+
+b0 O+
+b100000000000000000000000 E+
+b100000000000000000000000 ?+
+b101 T+
+b101 R+
+0L+
+0K+
+b1000010100000000000000000000000 j*
+b1000010100000000000000000000000 N+
+04+
+b101 P+
+b100000000000000000000000 <+
+b10000100 8+
+b10000101 J,
+b100000000000000000000000 R,
+b100000000000000000000000 P,
+b100000000000000000000000000 Q,
+b1000000000000000000000000000 V,
+b110 c,
+b100000000000000000000000000 S,
+b100000000000000000000000000 g,
+b100000000000000000000000000 i,
+b0 k,
+b100000000000000000000000000 T,
+b100000000000000000000000000 N,
+b0 _,
+b100000000000000000000000 U,
+b100000000000000000000000 O,
+b101 d,
+b101 b,
+0\,
+0[,
+b1000010100000000000000000000000 z+
+b1000010100000000000000000000000 ^,
+0D,
+b101 `,
+b100000000000000000000000 L,
+b10000100 H,
+b10000101 Z-
+b100000000000000000000000 b-
+b100000000000000000000000 `-
+b100000000000000000000000000 a-
+b1000000000000000000000000000 f-
+b110 s-
+b100000000000000000000000000 c-
+b100000000000000000000000000 w-
+b100000000000000000000000000 y-
+b0 {-
+b100000000000000000000000000 d-
+b100000000000000000000000000 ^-
+b0 o-
+b100000000000000000000000 e-
+b100000000000000000000000 _-
+b101 t-
+b101 r-
+0l-
+0k-
+b1000010100000000000000000000000 ,-
+b1000010100000000000000000000000 n-
+0T-
+b101 p-
+b100000000000000000000000 \-
+b10000100 X-
+b10000101 j.
+b100000000000000000000000 r.
+b100000000000000000000000 p.
+b100000000000000000000000000 q.
+b1000000000000000000000000000 v.
+b110 %/
+b100000000000000000000000000 s.
+b100000000000000000000000000 )/
+b100000000000000000000000000 +/
+b0 -/
+b100000000000000000000000000 t.
+b100000000000000000000000000 n.
+b0 !/
+b100000000000000000000000 u.
+b100000000000000000000000 o.
+b101 &/
+b101 $/
+0|.
+0{.
+b1000010100000000000000000000000 <.
+b1000010100000000000000000000000 ~.
+0d.
+b101 "/
+b100000000000000000000000 l.
+b10000100 h.
+b10000101 z/
+b100000000000000000000000 $0
+b100000000000000000000000 "0
+b100000000000000000000000000 #0
+b1000000000000000000000000000 (0
+b110 50
+b100000000000000000000000000 %0
+b100000000000000000000000000 90
+b100000000000000000000000000 ;0
+b0 =0
+b100000000000000000000000000 &0
+b100000000000000000000000000 ~/
+b0 10
+b100000000000000000000000 '0
+b100000000000000000000000 !0
+b101 60
+b101 40
+0.0
+0-0
+b1000010100000000000000000000000 L/
+b1000010100000000000000000000000 00
+0t/
+b101 20
+b100000000000000000000000 |/
+b10000100 x/
+b10000101 ,1
+b100000000000000000000000 41
+b100000000000000000000000 21
+b100000000000000000000000000 31
+b1000000000000000000000000000 81
+b110 E1
+b100000000000000000000000000 51
+b100000000000000000000000000 I1
+b100000000000000000000000000 K1
+b0 M1
+b100000000000000000000000000 61
+b100000000000000000000000000 01
+b0 A1
+b100000000000000000000000 71
+b100000000000000000000000 11
+b101 F1
+b101 D1
+0>1
+0=1
+b1000010100000000000000000000000 \0
+b1000010100000000000000000000000 @1
+0&1
+b101 B1
+b100000000000000000000000 .1
+b10000100 *1
+b10000101 <2
+b100000000000000000000000 D2
+b100000000000000000000000 B2
+b100000000000000000000000000 C2
+b1000000000000000000000000000 H2
+b110 U2
+b100000000000000000000000000 E2
+b100000000000000000000000000 Y2
+b100000000000000000000000000 [2
+b0 ]2
+b100000000000000000000000000 F2
+b100000000000000000000000000 @2
+b0 Q2
+b100000000000000000000000 G2
+b100000000000000000000000 A2
+b101 V2
+b101 T2
+0N2
+0M2
+b1000010100000000000000000000000 l1
+b1000010100000000000000000000000 P2
+062
+b101 R2
+b100000000000000000000000 >2
+b10000100 :2
+b10000101 L3
+b100000000000000000000000 T3
+b100000000000000000000000 R3
+b100000000000000000000000000 S3
+b1000000000000000000000000000 X3
+b110 e3
+b100000000000000000000000000 U3
+b100000000000000000000000000 i3
+b100000000000000000000000000 k3
+b0 m3
+b100000000000000000000000000 V3
+b100000000000000000000000000 P3
+b0 a3
+b100000000000000000000000 W3
+b100000000000000000000000 Q3
+b101 f3
+b101 d3
+0^3
+0]3
+b1000010100000000000000000000000 |2
+b1000010100000000000000000000000 `3
+0F3
+b101 b3
+b100000000000000000000000 N3
+b10000100 J3
+b10000101 X4
+b100000000000000000000000 `4
+b100000000000000000000000 ^4
+b100000000000000000000000000 _4
+b1000000000000000000000000000 d4
+b110 q4
+b100000000000000000000000000 a4
+b100000000000000000000000000 u4
+b100000000000000000000000000 w4
+b0 y4
+b100000000000000000000000000 b4
+b100000000000000000000000000 \4
+b0 m4
+b100000000000000000000000 c4
+b100000000000000000000000 ]4
+b101 r4
+b101 p4
+0j4
+0i4
+b1000010100000000000000000000000 +4
+b1000010100000000000000000000000 l4
+0R4
+b101 n4
+b100000000000000000000000 Z4
+b10000100 V4
+b1000010000000000000000000000000 A
+b1000010000000000000000000000000 M
+b1000010000000000000000000000000 l
+1W
+0L
+0Y
+b1000010000000000000000000000000 Q"
+b1000010000000000000000000000000 ]"
+b1000010000000000000000000000000 |"
+1g"
+0\"
+0i"
+b1000010000000000000000000000000 a#
+b1000010000000000000000000000000 m#
+b1000010000000000000000000000000 .$
+1w#
+0l#
+0y#
+b1000010000000000000000000000000 q$
+b1000010000000000000000000000000 }$
+b1000010000000000000000000000000 >%
+1)%
+0|$
+0+%
+b1000010000000000000000000000000 #&
+b1000010000000000000000000000000 /&
+b1000010000000000000000000000000 N&
+19&
+0.&
+0;&
+b1000010000000000000000000000000 3'
+b1000010000000000000000000000000 ?'
+b1000010000000000000000000000000 ^'
+1I'
+0>'
+0K'
+b1000010000000000000000000000000 C(
+b1000010000000000000000000000000 O(
+b1000010000000000000000000000000 n(
+1Y(
+0N(
+0[(
+b1000010000000000000000000000000 S)
+b1000010000000000000000000000000 _)
+b1000010000000000000000000000000 ~)
+1i)
+0^)
+0k)
+b1000010000000000000000000000000 c*
+b1000010000000000000000000000000 o*
+b1000010000000000000000000000000 0+
+1y*
+0n*
+0{*
+b1000010000000000000000000000000 s+
+b1000010000000000000000000000000 !,
+b1000010000000000000000000000000 @,
+1+,
+0~+
+0-,
+b1000010000000000000000000000000 %-
+b1000010000000000000000000000000 1-
+b1000010000000000000000000000000 P-
+1;-
+00-
+0=-
+b1000010000000000000000000000000 5.
+b1000010000000000000000000000000 A.
+b1000010000000000000000000000000 `.
+1K.
+0@.
+0M.
+b1000010000000000000000000000000 E/
+b1000010000000000000000000000000 Q/
+b1000010000000000000000000000000 p/
+1[/
+0P/
+0]/
+b1000010000000000000000000000000 U0
+b1000010000000000000000000000000 a0
+b1000010000000000000000000000000 "1
+1k0
+0`0
+0m0
+b1000010000000000000000000000000 e1
+b1000010000000000000000000000000 q1
+b1000010000000000000000000000000 22
+1{1
+0p1
+0}1
+b1000010000000000000000000000000010000100000000000000000000000000100001000000000000000000000000001000010000000000000000000000000010000100000000000000000000000000100001000000000000000000000000001000010000000000000000000000000010000100000000000000000000000000100001000000000000000000000000001000010000000000000000000000000010000100000000000000000000000000100001000000000000000000000000001000010000000000000000000000000010000100000000000000000000000000100001000000000000000000000000001000010000000000000000000000000 $
+b1000010000000000000000000000000010000100000000000000000000000000100001000000000000000000000000001000010000000000000000000000000010000100000000000000000000000000100001000000000000000000000000001000010000000000000000000000000010000100000000000000000000000000100001000000000000000000000000001000010000000000000000000000000010000100000000000000000000000000100001000000000000000000000000001000010000000000000000000000000010000100000000000000000000000000100001000000000000000000000000001000010000000000000000000000000 5
+b1000010000000000000000000000000010000100000000000000000000000000100001000000000000000000000000001000010000000000000000000000000010000100000000000000000000000000100001000000000000000000000000001000010000000000000000000000000010000100000000000000000000000000100001000000000000000000000000001000010000000000000000000000000010000100000000000000000000000000100001000000000000000000000000001000010000000000000000000000000010000100000000000000000000000000100001000000000000000000000000001000010000000000000000000000000 :
+b1000010000000000000000000000000 u2
+b1000010000000000000000000000000 #3
+b1000010000000000000000000000000 B3
+b1111111111111111 !
+b1111111111111111 8
+b1111111111111111 9
+1-3
+0"3
+0/3
+b1000010000000000000000000000000 #
+b1000010000000000000000000000000 $4
+b1000010000000000000000000000000 04
+b1000010000000000000000000000000 N4
+1"
+0/4
+0;4
+b100 \
+b100 l"
+b100 |#
+b100 .%
+b100 >&
+b100 N'
+b100 ^(
+b100 n)
+b100 ~*
+b100 0,
+b100 @-
+b100 P.
+b100 `/
+b100 p0
+b100 "2
+b100 23
+b100 >4
+1.
+#60000
+0.
+#61000
+b10000 .5
+b1000010000000000000000000000000 -5
+#65000
+0"
+0-3
+0{1
+0k0
+0[/
+0K.
+0;-
+0+,
+0y*
+0i)
+0Y(
+0I'
+09&
+0)%
+0w#
+0g"
+b0 !
+b0 8
+b0 9
+0W
+b100 >4
+b100 23
+b100 "2
+b100 p0
+b100 `/
+b100 P.
+b100 @-
+b100 0,
+b100 ~*
+b100 n)
+b100 ^(
+b100 N'
+b100 >&
+b100 .%
+b100 |#
+b100 l"
+b100 \
+1.
+#70000
+10
+0.
+#75000
+1X
+1h"
+1x#
+1*%
+1:&
+1J'
+1Z(
+1j)
+1z*
+1,,
+1<-
+1L.
+1\/
+1l0
+1|1
+1.3
+1:4
+b100 \
+b100 l"
+b100 |#
+b100 .%
+b100 >&
+b100 N'
+b100 ^(
+b100 n)
+b100 ~*
+b100 0,
+b100 @-
+b100 P.
+b100 `/
+b100 p0
+b100 "2
+b100 23
+b100 >4
+1.
+#80000
+00
+0.
+#85000
+1;4
+0:4
+1/3
+0.3
+1}1
+0|1
+1m0
+0l0
+1]/
+0\/
+1M.
+0L.
+1=-
+0<-
+1-,
+0,,
+1{*
+0z*
+1k)
+0j)
+1[(
+0Z(
+1K'
+0J'
+1;&
+0:&
+1+%
+0*%
+1y#
+0x#
+1i"
+0h"
+1Y
+0X
+b100 >4
+b100 23
+b100 "2
+b100 p0
+b100 `/
+b100 P.
+b100 @-
+b100 0,
+b100 ~*
+b100 n)
+b100 ^(
+b100 N'
+b100 >&
+b100 .%
+b100 |#
+b100 l"
+b100 \
+1.
+#90000
+0.
+#95000
+b1 8"
+06"
+b10000000000000000000000000 5"
+b1 9"
+b1 -"
+b110 0"
+b10000101 v
+b110000000000000000000000 ~
+b110000000000000000000000 |
+b110000000000000000000000000 }
+b110000000000000000000000000 $"
+b10000000000000000000000000 !"
+b100000000000000000000000000 ""
+b100000000000000000000000000 z
+b1000010110000000000000000000000 H
+b1000010110000000000000000000000 ,"
+b110 ."
+b10000101 t
+b1 H#
+0F#
+b10000000000000000000000000 E#
+b1 I#
+b1 =#
+b110 @#
+b10000101 (#
+b110000000000000000000000 0#
+b110000000000000000000000 .#
+b110000000000000000000000000 /#
+b110000000000000000000000000 4#
+b10000000000000000000000000 1#
+b100000000000000000000000000 2#
+b100000000000000000000000000 ,#
+b1000010110000000000000000000000 X"
+b1000010110000000000000000000000 <#
+b110 >#
+b10000101 &#
+b1 X$
+0V$
+b10000000000000000000000000 U$
+b1 Y$
+b1 M$
+b110 P$
+b10000101 8$
+b110000000000000000000000 @$
+b110000000000000000000000 >$
+b110000000000000000000000000 ?$
+b110000000000000000000000000 D$
+b10000000000000000000000000 A$
+b100000000000000000000000000 B$
+b100000000000000000000000000 <$
+b1000010110000000000000000000000 h#
+b1000010110000000000000000000000 L$
+b110 N$
+b10000101 6$
+b1 h%
+0f%
+b10000000000000000000000000 e%
+b1 i%
+b1 ]%
+b110 `%
+b10000101 H%
+b110000000000000000000000 P%
+b110000000000000000000000 N%
+b110000000000000000000000000 O%
+b110000000000000000000000000 T%
+b10000000000000000000000000 Q%
+b100000000000000000000000000 R%
+b100000000000000000000000000 L%
+b1000010110000000000000000000000 x$
+b1000010110000000000000000000000 \%
+b110 ^%
+b10000101 F%
+b1 x&
+0v&
+b10000000000000000000000000 u&
+b1 y&
+b1 m&
+b110 p&
+b10000101 X&
+b110000000000000000000000 `&
+b110000000000000000000000 ^&
+b110000000000000000000000000 _&
+b110000000000000000000000000 d&
+b10000000000000000000000000 a&
+b100000000000000000000000000 b&
+b100000000000000000000000000 \&
+b1000010110000000000000000000000 *&
+b1000010110000000000000000000000 l&
+b110 n&
+b10000101 V&
+b1 *(
+0((
+b10000000000000000000000000 '(
+b1 +(
+b1 }'
+b110 "(
+b10000101 h'
+b110000000000000000000000 p'
+b110000000000000000000000 n'
+b110000000000000000000000000 o'
+b110000000000000000000000000 t'
+b10000000000000000000000000 q'
+b100000000000000000000000000 r'
+b100000000000000000000000000 l'
+b1000010110000000000000000000000 :'
+b1000010110000000000000000000000 |'
+b110 ~'
+b10000101 f'
+b1 :)
+08)
+b10000000000000000000000000 7)
+b1 ;)
+b1 /)
+b110 2)
+b10000101 x(
+b110000000000000000000000 ")
+b110000000000000000000000 ~(
+b110000000000000000000000000 !)
+b110000000000000000000000000 &)
+b10000000000000000000000000 #)
+b100000000000000000000000000 $)
+b100000000000000000000000000 |(
+b1000010110000000000000000000000 J(
+b1000010110000000000000000000000 .)
+b110 0)
+b10000101 v(
+b1 J*
+0H*
+b10000000000000000000000000 G*
+b1 K*
+b1 ?*
+b110 B*
+b10000101 **
+b110000000000000000000000 2*
+b110000000000000000000000 0*
+b110000000000000000000000000 1*
+b110000000000000000000000000 6*
+b10000000000000000000000000 3*
+b100000000000000000000000000 4*
+b100000000000000000000000000 .*
+b1000010110000000000000000000000 Z)
+b1000010110000000000000000000000 >*
+b110 @*
+b10000101 (*
+b1 Z+
+0X+
+b10000000000000000000000000 W+
+b1 [+
+b1 O+
+b110 R+
+b10000101 :+
+b110000000000000000000000 B+
+b110000000000000000000000 @+
+b110000000000000000000000000 A+
+b110000000000000000000000000 F+
+b10000000000000000000000000 C+
+b100000000000000000000000000 D+
+b100000000000000000000000000 >+
+b1000010110000000000000000000000 j*
+b1000010110000000000000000000000 N+
+b110 P+
+b10000101 8+
+b1 j,
+0h,
+b10000000000000000000000000 g,
+b1 k,
+b1 _,
+b110 b,
+b10000101 J,
+b110000000000000000000000 R,
+b110000000000000000000000 P,
+b110000000000000000000000000 Q,
+b110000000000000000000000000 V,
+b10000000000000000000000000 S,
+b100000000000000000000000000 T,
+b100000000000000000000000000 N,
+b1000010110000000000000000000000 z+
+b1000010110000000000000000000000 ^,
+b110 `,
+b10000101 H,
+b1 z-
+0x-
+b10000000000000000000000000 w-
+b1 {-
+b1 o-
+b110 r-
+b10000101 Z-
+b110000000000000000000000 b-
+b110000000000000000000000 `-
+b110000000000000000000000000 a-
+b110000000000000000000000000 f-
+b10000000000000000000000000 c-
+b100000000000000000000000000 d-
+b100000000000000000000000000 ^-
+b1000010110000000000000000000000 ,-
+b1000010110000000000000000000000 n-
+b110 p-
+b10000101 X-
+b1 ,/
+0*/
+b10000000000000000000000000 )/
+b1 -/
+b1 !/
+b110 $/
+b10000101 j.
+b110000000000000000000000 r.
+b110000000000000000000000 p.
+b110000000000000000000000000 q.
+b110000000000000000000000000 v.
+b10000000000000000000000000 s.
+b100000000000000000000000000 t.
+b100000000000000000000000000 n.
+b1000010110000000000000000000000 <.
+b1000010110000000000000000000000 ~.
+b110 "/
+b10000101 h.
+b1 <0
+0:0
+b10000000000000000000000000 90
+b1 =0
+b1 10
+b110 40
+b10000101 z/
+b110000000000000000000000 $0
+b110000000000000000000000 "0
+b110000000000000000000000000 #0
+b110000000000000000000000000 (0
+b10000000000000000000000000 %0
+b100000000000000000000000000 &0
+b100000000000000000000000000 ~/
+b1000010110000000000000000000000 L/
+b1000010110000000000000000000000 00
+b110 20
+b10000101 x/
+b1 L1
+0J1
+b10000000000000000000000000 I1
+b1 M1
+b1 A1
+b110 D1
+b10000101 ,1
+b110000000000000000000000 41
+b110000000000000000000000 21
+b110000000000000000000000000 31
+b110000000000000000000000000 81
+b10000000000000000000000000 51
+b100000000000000000000000000 61
+b100000000000000000000000000 01
+b1000010110000000000000000000000 \0
+b1000010110000000000000000000000 @1
+b110 B1
+b10000101 *1
+b1 \2
+0Z2
+b10000000000000000000000000 Y2
+b1 ]2
+b1 Q2
+b110 T2
+b10000101 <2
+b110000000000000000000000 D2
+b110000000000000000000000 B2
+b110000000000000000000000000 C2
+b110000000000000000000000000 H2
+b10000000000000000000000000 E2
+b100000000000000000000000000 F2
+b100000000000000000000000000 @2
+b1000010110000000000000000000000 l1
+b1000010110000000000000000000000 P2
+b110 R2
+b10000101 :2
+b1 l3
+0j3
+b10000000000000000000000000 i3
+b1 m3
+b1 a3
+b110 d3
+b10000101 L3
+b110000000000000000000000 T3
+b110000000000000000000000 R3
+b110000000000000000000000000 S3
+b110000000000000000000000000 X3
+b10000000000000000000000000 U3
+b100000000000000000000000000 V3
+b100000000000000000000000000 P3
+b1000010110000000000000000000000 |2
+b1000010110000000000000000000000 `3
+b110 b3
+b10000101 J3
+b1 x4
+0v4
+b10000000000000000000000000 u4
+b1 y4
+b1 m4
+b110 p4
+b10000101 X4
+b110000000000000000000000 `4
+b110000000000000000000000 ^4
+b110000000000000000000000000 _4
+b110000000000000000000000000 d4
+b10000000000000000000000000 a4
+b100000000000000000000000000 b4
+b100000000000000000000000000 \4
+b1000010110000000000000000000000 +4
+b1000010110000000000000000000000 l4
+b110 n4
+b10000101 V4
+b1000010100000000000000000000000 A
+b1000010100000000000000000000000 M
+b1000010100000000000000000000000 l
+1W
+0Y
+b1000010100000000000000000000000 Q"
+b1000010100000000000000000000000 ]"
+b1000010100000000000000000000000 |"
+1g"
+0i"
+b1000010100000000000000000000000 a#
+b1000010100000000000000000000000 m#
+b1000010100000000000000000000000 .$
+1w#
+0y#
+b1000010100000000000000000000000 q$
+b1000010100000000000000000000000 }$
+b1000010100000000000000000000000 >%
+1)%
+0+%
+b1000010100000000000000000000000 #&
+b1000010100000000000000000000000 /&
+b1000010100000000000000000000000 N&
+19&
+0;&
+b1000010100000000000000000000000 3'
+b1000010100000000000000000000000 ?'
+b1000010100000000000000000000000 ^'
+1I'
+0K'
+b1000010100000000000000000000000 C(
+b1000010100000000000000000000000 O(
+b1000010100000000000000000000000 n(
+1Y(
+0[(
+b1000010100000000000000000000000 S)
+b1000010100000000000000000000000 _)
+b1000010100000000000000000000000 ~)
+1i)
+0k)
+b1000010100000000000000000000000 c*
+b1000010100000000000000000000000 o*
+b1000010100000000000000000000000 0+
+1y*
+0{*
+b1000010100000000000000000000000 s+
+b1000010100000000000000000000000 !,
+b1000010100000000000000000000000 @,
+1+,
+0-,
+b1000010100000000000000000000000 %-
+b1000010100000000000000000000000 1-
+b1000010100000000000000000000000 P-
+1;-
+0=-
+b1000010100000000000000000000000 5.
+b1000010100000000000000000000000 A.
+b1000010100000000000000000000000 `.
+1K.
+0M.
+b1000010100000000000000000000000 E/
+b1000010100000000000000000000000 Q/
+b1000010100000000000000000000000 p/
+1[/
+0]/
+b1000010100000000000000000000000 U0
+b1000010100000000000000000000000 a0
+b1000010100000000000000000000000 "1
+1k0
+0m0
+b1000010100000000000000000000000 e1
+b1000010100000000000000000000000 q1
+b1000010100000000000000000000000 22
+1{1
+0}1
+b1000010100000000000000000000000010000101000000000000000000000000100001010000000000000000000000001000010100000000000000000000000010000101000000000000000000000000100001010000000000000000000000001000010100000000000000000000000010000101000000000000000000000000100001010000000000000000000000001000010100000000000000000000000010000101000000000000000000000000100001010000000000000000000000001000010100000000000000000000000010000101000000000000000000000000100001010000000000000000000000001000010100000000000000000000000 $
+b1000010100000000000000000000000010000101000000000000000000000000100001010000000000000000000000001000010100000000000000000000000010000101000000000000000000000000100001010000000000000000000000001000010100000000000000000000000010000101000000000000000000000000100001010000000000000000000000001000010100000000000000000000000010000101000000000000000000000000100001010000000000000000000000001000010100000000000000000000000010000101000000000000000000000000100001010000000000000000000000001000010100000000000000000000000 5
+b1000010100000000000000000000000010000101000000000000000000000000100001010000000000000000000000001000010100000000000000000000000010000101000000000000000000000000100001010000000000000000000000001000010100000000000000000000000010000101000000000000000000000000100001010000000000000000000000001000010100000000000000000000000010000101000000000000000000000000100001010000000000000000000000001000010100000000000000000000000010000101000000000000000000000000100001010000000000000000000000001000010100000000000000000000000 :
+b1000010100000000000000000000000 u2
+b1000010100000000000000000000000 #3
+b1000010100000000000000000000000 B3
+b1111111111111111 !
+b1111111111111111 8
+b1111111111111111 9
+1-3
+0/3
+b1000010100000000000000000000000 #
+b1000010100000000000000000000000 $4
+b1000010100000000000000000000000 04
+b1000010100000000000000000000000 N4
+1"
+0;4
+b100 \
+b100 l"
+b100 |#
+b100 .%
+b100 >&
+b100 N'
+b100 ^(
+b100 n)
+b100 ~*
+b100 0,
+b100 @-
+b100 P.
+b100 `/
+b100 p0
+b100 "2
+b100 23
+b100 >4
+1.
+#100000
+0.
+#101000
+b10000 .5
+b1000010100000000000000000000000 -5
