@@ -17,12 +17,14 @@
 | 矩阵 dataset | `tb/tb_mx_array_dataset*.v`、`vectors/` | row/tile/K block 调度、tail tile、mixed nonfinite |
 | Python golden | `tools/mx_ref.py`、`sim/run_python_ref.ps1` | 自检、dot32 向量生成、矩阵统计 |
 | 大矩阵统计 | `sim/run_matmul_stats*.ps1` | 4096x4096x4096 抽样误差和 profile sweep |
+| 波形 smoke | `sim/run_waveform_smoke.ps1`、`reports/evidence/waveforms/*.vcd` | 单列、连续输入和阵列 smoke 的 valid/accumulator 时序展示 |
 
-## 3. 2026-04-28 回归结果
+## 3. 回归结果
 
 | 命令 | 日志 | 结果 |
 | --- | --- | --- |
-| `sim/run_iverilog.ps1` | `reports/verification/iverilog_default.log` | PASS |
+| `sim/run_iverilog.ps1` | `reports/verification/iverilog_default.log` | PASS，2026-04-30 刷新 |
+| `sim/run_waveform_smoke.ps1` | `reports/verification/waveform_smoke.log` | PASS，2026-04-30 新增 |
 | `sim/run_python_ref.ps1` | `reports/verification/python_ref_default.log` | PASS |
 | `sim/run_matmul_stats.ps1` | `reports/verification/matmul_stats_default.log` | PASS |
 | `sim/run_matmul_stats_sweep.ps1` | `reports/verification/matmul_stats_sweep.log` | PASS |
@@ -46,15 +48,15 @@
 
 ## 5. 波形与证据包
 
-当前日志已经能证明 PASS/FAIL，但比赛材料通常还需要波形截图或 VCD 生成说明。本仓库把这部分归档在 `reports/evidence/`：
+当前日志已经能证明 PASS/FAIL；2026-04-30 又补入可复验的 VCD 生成路径，用于答辩展示和时序解释。本仓库把这部分归档在 `reports/evidence/`：
 
 - 回归日志索引
 - 关键 case 清单
-- 波形捕获方法
+- 波形捕获方法和 VCD 文件
 - 4096 抽样方法
 - finite/nonfinite/boundary 覆盖说明
 
-若后续生成 VCD 或截图，应只作为证据补充，不替代可复验日志和固定向量。
+已生成的小 VCD 位于 `reports/evidence/waveforms/`，覆盖 `tb_llmt_col_smoke`、`tb_llmt_col_back_to_back` 和 `tb_mx_array_smoke`。VCD/截图只作为证据补充，不替代可复验日志和固定向量。
 
 ## 6. 当前限制
 

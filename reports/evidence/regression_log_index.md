@@ -1,10 +1,16 @@
 # 回归日志索引
 
-## 2026-04-28 本轮日志
+## 2026-04-30 增量日志
 
 | 日志 | 生成命令 | 结论 | 可支撑报告位置 |
 | --- | --- | --- | --- |
 | `../verification/iverilog_default.log` | `sim/run_iverilog.ps1` | PASS | `docs/report/03`、`04`、`05` |
+| `../verification/waveform_smoke.log` | `sim/run_waveform_smoke.ps1` | PASS | `docs/report/05`、`reports/evidence/waveform_capture_status.md` |
+
+## 2026-04-28 基线日志
+
+| 日志 | 生成命令 | 结论 | 可支撑报告位置 |
+| --- | --- | --- | --- |
 | `../verification/python_ref_default.log` | `sim/run_python_ref.ps1` | PASS | `docs/report/05`、`06` |
 | `../verification/matmul_stats_default.log` | `sim/run_matmul_stats.ps1` | PASS | `docs/report/06` |
 | `../verification/matmul_stats_sweep.log` | `sim/run_matmul_stats_sweep.ps1` | PASS | `docs/report/06` |
@@ -12,7 +18,7 @@
 
 ## Verilog 回归覆盖摘要
 
-`iverilog_default.log` 包含以下 PASS 项：
+最新 `iverilog_default.log` 包含以下 PASS 项：
 
 - `tb_llmt_col_smoke`
 - `tb_llmt_col_back_to_back`

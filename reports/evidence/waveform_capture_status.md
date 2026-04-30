@@ -2,40 +2,65 @@
 
 ## 当前状态
 
-当前已有可复验日志、固定向量和精度 JSON，但还没有可直接插入报告的波形截图。缺少截图不影响 PASS 日志本身，但会影响报告展示效果。
+2026-04-30 已加入轻量 opt-in VCD 捕获路径。默认回归不生成波形；需要展示时运行：
 
-## 建议捕获场景
+```powershell
+.\sim\run_waveform_smoke.ps1
+```
 
-| 场景 | 目的 | 关注信号 |
+该脚本使用 `-DDUMP_VCD` 重新编译代表性 smoke case，并把 VCD 放在：
+
+```text
+reports/evidence/waveforms/
+```
+
+已生成的 VCD：
+
+| VCD | 来源 testbench | 目的 |
 | --- | --- | --- |
-| `tb_llmt_col_smoke` | 单列基本流水 | `valid_i`、`valid_s1`、`valid_s2`、`valid_o`、`acc_o` |
-| `tb_llmt_col_back_to_back` | 连续输入吞吐 | 连续 `valid_i`、输出顺序、accumulator 更新 |
-| `tb_mx_array_dataset_5x20x96` | tail tile | `acc_clear_i`、`valid_o`、padding lane 输出 |
-| `tb_mx_array_dataset_7x49x224_sparse_nonfinite` | sparse nonfinite | NaN 相关输出、tile 边界、`valid_o` uniform |
+| `tb_llmt_col_smoke_wave.vcd` | `tb/tb_llmt_col_smoke.v` | 单列 dot32、acc_clear、valid 延迟、32/64 累加 |
+| `tb_llmt_col_back_to_back_wave.vcd` | `tb/tb_llmt_col_back_to_back.v` | 连续 `valid_i` 输入和 32/64/96 顺序输出 |
+| `tb_mx_array_smoke_wave.vcd` | `tb/tb_mx_array_smoke.v` | 16 列 A 广播、B 分列、所有列输出一致 |
 
-## 捕获方法建议
+运行日志：
 
-当前 testbench 尚未统一加入 `$dumpfile/$dumpvars`。推荐后续新增一个轻量开关，例如：
+```text
+reports/verification/waveform_smoke.log
+```
+
+## 捕获实现
+
+代表性 testbench 中加入了 Verilog-2001 兼容的预处理保护：
 
 ```verilog
 `ifdef DUMP_VCD
-initial begin
-  $dumpfile("reports/evidence/<case>.vcd");
-  $dumpvars(0, <tb_module_name>);
-end
+  initial begin
+    $dumpfile(...);
+    $dumpvars(0, <tb_module_name>);
+  end
 `endif
 ```
 
-然后使用类似命令重新编译目标 case：
+因此：
 
-```powershell
-iverilog -g2001 -DDUMP_VCD -I rtl -I tb -o sim/tb_llmt_col_smoke.vvp rtl/*.v tb/tb_llmt_col_smoke.v
-vvp sim/tb_llmt_col_smoke.vvp
-```
+- 默认 `sim/run_iverilog.ps1` 不生成 VCD，回归速度和行为保持不变。
+- `sim/run_waveform_smoke.ps1` 才打开 VCD。
+- VCD 文件路径由 `+VCD_FILE=...` plusarg 传入，便于稳定归档。
 
-## 截图规则
+## 建议截图场景
 
-- 截图应标出输入有效、输出有效和 accumulator 更新之间的延迟。
-- tail tile 截图应标出真实列和 padding lane。
-- nonfinite 截图应结合向量 manifest 和 expected output 一起解释。
-- 截图只能作为展示材料；最终正确性仍以回归日志和固定向量为准。
+| 场景 | 关注信号 | 截图要说明 |
+| --- | --- | --- |
+| 单列 smoke | `valid_i`、`acc_clear_i`、`valid_o`、`acc_o` | 首块输出 32，第二块累计到 64 |
+| 连续输入 | 连续 `valid_i`、`valid_o`、`acc_o` | 输出顺序为 32、64、96，不丢拍 |
+| 阵列 smoke | `valid_i`、`acc_clear_i[15:0]`、`valid_o[15:0]`、`acc_o` | 16 列同步输出，A 广播和 B 分列连接正确 |
+
+## 仍未包含的波形
+
+当前没有默认生成大型 dataset VCD，因为矩阵级 VCD 体积更大。tail tile 和 sparse nonfinite 的最终正确性仍以固定向量、dataset testbench 和回归日志为准；如最终答辩需要，可再单独扩展一个小尺寸 dataset waveform case。
+
+## 使用规则
+
+- VCD 是展示和调试证据，不替代 `reports/verification/iverilog_default.log`。
+- 报告截图应同时标注输入有效、输出有效和 accumulator 更新。
+- 如果截图涉及 tail tile 或 nonfinite，必须同时引用 manifest、expected output 或对应回归日志。

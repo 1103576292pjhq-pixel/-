@@ -11,13 +11,14 @@
 | `sampling_4096_method.md` | 4096x4096x4096 抽样统计方法 |
 | `boundary_nonfinite_coverage.md` | finite、tail、Inf/NaN、sparse nonfinite、dynamic range 边界覆盖说明 |
 | `rtl_refinement_review_2026-04-28.md` | 本轮 RTL 收口审查结论和保持 RTL 不动的依据 |
-| `waveform_capture_status.md` | 波形证据现状和后续捕获方法 |
+| `waveform_capture_status.md` | 波形证据现状、VCD 文件、脚本和截图建议 |
 
 提交就绪复核见 `../../docs/admin/submission_readiness_review_2026-04-29.md`。该文件不替代原始日志和 JSON，而是把本目录证据映射到初赛要求、后端 handoff 边界和禁止写法。
 
 ## 当前证据状态
 
-- 2026-04-28 Verilog 默认回归：PASS，见 `../verification/iverilog_default.log`
+- 2026-04-30 Verilog 默认回归：PASS，见 `../verification/iverilog_default.log`
+- 2026-04-30 波形 smoke：PASS，见 `../verification/waveform_smoke.log` 和 `waveforms/*.vcd`
 - 2026-04-28 Python 参考模型自检：PASS，见 `../verification/python_ref_default.log`
 - 2026-04-28 4096 抽样 profile：PASS，见 `../precision/matmul_stats_4096x4096x4096_profiles.json`
 - 2026-04-28 RTL 收口审查：保持 `llmt_col` 与 `mx_array_32x16` 不动，见 `rtl_refinement_review_2026-04-28.md`

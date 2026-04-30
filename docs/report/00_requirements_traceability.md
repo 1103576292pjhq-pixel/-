@@ -7,7 +7,7 @@
 | 赛题要求 | 仓库产物 | 当前状态 | 证据或阻塞项 |
 | --- | --- | --- | --- |
 | 书面报告：电路实现方案、验证方案、精度测试结果、综合结果 | `docs/report/01_problem_and_goals.md` 到 `docs/report/10_technical_solution_and_execution_plan.md` | 可作为初赛报告正文 | `03` 到 `07` 已按 RTL handoff 边界重写；`10` 汇总技术方案、执行计划和后端边界；提交就绪复核见 `docs/admin/submission_readiness_review_2026-04-29.md`；`07_synthesis_and_ppa.md` 只给综合模板和 PPA 方法，真实 28nm 结果阻塞于库和工具 |
-| 仿真验证报告：含仿真波形图等 | `docs/report/05_verification_methodology.md`、`reports/verification/`、`reports/evidence/` | 日志证据具备，波形方法具备 | 2026-04-28 回归日志已归档；波形截图尚未实采，捕获方法见 `reports/evidence/waveform_capture_status.md` |
+| 仿真验证报告：含仿真波形图等 | `docs/report/05_verification_methodology.md`、`reports/verification/`、`reports/evidence/` | 日志证据具备，小 VCD 已生成 | 2026-04-30 默认回归日志已刷新；波形 smoke 日志和 VCD 见 `reports/evidence/waveform_capture_status.md` |
 | 可综合 RTL code | `rtl/llmt_col.v`、`rtl/mx_array_32x16.v`、`rtl/*.v`、`rtl/*.vh` | 基线具备 | RTL 保持纯 Verilog-2001；后续改动必须保持顶层接口稳定并重跑回归 |
 | 仿真工程 | `tb/`、`sim/`、`tools/mx_ref.py`、`vectors/` | 基线具备 | 覆盖列级、阵列级、多尺寸矩阵、tail tile、mixed nonfinite、sparse nonfinite |
 | 初步面积和功耗报告 | `constraints/mx_array_32x16.sdc`、`synth/`、`reports/synthesis/`、`docs/report/07_synthesis_and_ppa.md` | 模板具备，真实结果未具备 | 本机未确认商用综合工具和真实 28nm 标准单元库；不得写成真实 PPA 实测 |

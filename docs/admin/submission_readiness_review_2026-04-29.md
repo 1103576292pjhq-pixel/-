@@ -15,7 +15,7 @@
 | 电路实现方案 | 可提交 | `docs/report/03_architecture_and_dataflow.md`、`docs/report/04_llmt_microarchitecture.md`、`docs/report/10_technical_solution_and_execution_plan.md` | 主办方模板到位后按版式裁剪 |
 | 可综合 RTL code | 可提交 | `rtl/mx_array_32x16.v`、`rtl/llmt_col.v`、`rtl/*.v`、`rtl/*.vh` | 真实综合返回 timing/area 后再考虑 retiming 或资源调整 |
 | 仿真工程 | 可提交 | `tb/`、`sim/run_iverilog.ps1`、`sim/run_python_ref.ps1`、`vectors/` | 若主办方提供 benchmark，需要补向量和 testbench |
-| 仿真验证报告 | 可提交，展示材料可增强 | `docs/report/05_verification_methodology.md`、`reports/verification/README.md`、`reports/evidence/regression_log_index.md` | 波形截图尚未实采；方法见 `reports/evidence/waveform_capture_status.md` |
+| 仿真验证报告 | 可提交，展示材料已增强 | `docs/report/05_verification_methodology.md`、`reports/verification/README.md`、`reports/evidence/regression_log_index.md`、`reports/evidence/waveforms/` | 已有小 VCD；若最终报告需要图片，可从 VCD 截图 |
 | 精度测试结果 | 可提交 | `docs/report/06_precision_results.md`、`reports/precision/matmul_stats_4096x4096x4096_profiles.json` | 若有指定 benchmark，以主办方 benchmark 补充或替换当前随机抽样 |
 | 综合结果 | 部分完成，真实结果外部阻塞 | `docs/report/07_synthesis_and_ppa.md`、`constraints/mx_array_32x16.sdc`、`synth/run_dc_template.tcl`、`synth/run_yosys_generic.ys` | 需要真实 28nm `.db`、工具、corner、约束和原始综合日志 |
 | 面积/功耗报告 | 外部阻塞 | `reports/synthesis/README.md`、`docs/report/07_synthesis_and_ppa.md` | 当前只能写分析口径，不能给数值 |
@@ -32,6 +32,7 @@
 | sparse nonfinite 语义可解释 | `reports/precision/matmul_stats_4096x4096x4096_sparse_nonfinite_sweep.json` | 6037 finite、107 matched NaN、0 mismatched nonfinite |
 | 极端动态范围边界已说明 | `reports/precision/matmul_stats_4096x4096x4096_profiles.json`、`docs/report/06_precision_results.md` | `finite_exp64` 的类别差异被解释为 projected FP32 path 与 ideal double accumulator 的动态范围边界，不是 directed RTL 回归失败 |
 | PPA 没有伪造 | `docs/report/07_synthesis_and_ppa.md`、`docs/report/09_submission_checklist.md` | 文档明确没有真实 28nm 面积、功耗、频率或时序结果 |
+| 波形证据已补齐 | `sim/run_waveform_smoke.ps1`、`reports/verification/waveform_smoke.log`、`reports/evidence/waveforms/*.vcd` | VCD 覆盖单列 smoke、连续输入和阵列 smoke；默认回归不受影响 |
 
 ## 4. 后端 handoff 边界
 

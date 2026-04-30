@@ -73,7 +73,7 @@ Architect lane 当前结论：现有架构稳定；除非真实综合或 benchma
 | 输入 | `tb/`、`sim/`、`vectors/`、`tools/mx_ref.py`、`reports/verification/`、`reports/precision/`、`reports/evidence/` |
 | 输出 | 回归日志、固定向量、4096 抽样统计、波形捕获记录、coverage gap 清单 |
 | 验收标准 | Verilog/Python/统计日志归档；dataset manifest 齐全；finite/nonfinite/boundary 覆盖说明可追溯 |
-| 阻塞项 | 没有主办方 benchmark；没有门级网表和 SDF；波形截图尚未实采 |
+| 阻塞项 | 没有主办方 benchmark；没有门级网表和 SDF；若最终报告需要图片，还需从现有 VCD 截取标注截图 |
 | 依赖 | 支撑 Writer/teacher lane 和 Critic/reviewer lane；RTL 改动后必须立即执行 |
 
 DV lane 下一步：
