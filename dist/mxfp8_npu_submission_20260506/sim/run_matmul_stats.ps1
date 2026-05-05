@@ -1,0 +1,62 @@
+param(
+  [int]$M = 4096,
+  [int]$N = 4096,
+  [int]$K = 4096,
+  [int]$Samples = 2048,
+  [int]$Seed = 20260423,
+  [int]$ScaleExpMin = -8,
+  [int]$ScaleExpMax = 8,
+  [int]$ElemNanStride = 0,
+  [int]$ScaleNanStride = 0,
+  [switch]$AllowNonFinite,
+  [string]$Tag = "",
+  [string]$OutFile = ""
+)
+
+$ErrorActionPreference = "Stop"
+
+$workdir = Split-Path -Parent $PSScriptRoot
+if (-not $OutFile) {
+  $reportDir = Join-Path $workdir "reports\\precision"
+  $suffix = ""
+  if ($Tag) {
+    $suffix = "_$Tag"
+  } elseif (($ElemNanStride -gt 0) -or ($ScaleNanStride -gt 0)) {
+    $suffix = "_sparse_nonfinite"
+  } elseif ($AllowNonFinite) {
+    $suffix = "_mixed_nonfinite"
+  }
+  $OutFile = Join-Path $reportDir ("matmul_stats_{0}x{1}x{2}{3}.json" -f $M, $N, $K, $suffix)
+}
+
+$pythonArgs = @(
+  (Join-Path $workdir "tools\\mx_ref.py"),
+  "--report-matmul-stats",
+  "--m", "$M",
+  "--n", "$N",
+  "--k", "$K",
+  "--samples", "$Samples",
+  "--seed", "$Seed",
+  "--summary-out", "$OutFile"
+)
+
+if (($ElemNanStride -gt 0) -or ($ScaleNanStride -gt 0)) {
+  $pythonArgs += @(
+    "--scale-exp-min", "$ScaleExpMin",
+    "--scale-exp-max", "$ScaleExpMax"
+  )
+  if ($ElemNanStride -gt 0) {
+    $pythonArgs += @("--elem-nan-stride", "$ElemNanStride")
+  }
+  if ($ScaleNanStride -gt 0) {
+    $pythonArgs += @("--scale-nan-stride", "$ScaleNanStride")
+  }
+} elseif (-not $AllowNonFinite) {
+  $pythonArgs += @(
+    "--finite-only",
+    "--scale-exp-min", "$ScaleExpMin",
+    "--scale-exp-max", "$ScaleExpMax"
+  )
+}
+
+& python @pythonArgs

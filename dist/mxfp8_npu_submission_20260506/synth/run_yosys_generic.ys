@@ -1,0 +1,14 @@
+read_verilog rtl/e4m3_decode.v
+read_verilog rtl/e8m0_scale_decode.v
+read_verilog rtl/fixed_to_fp32.v
+read_verilog rtl/fp32_add_rne.v
+read_verilog rtl/llmt_col.v
+read_verilog rtl/mx_array_32x16.v
+
+hierarchy -top mx_array_32x16
+proc
+opt
+flatten
+opt
+stat
+write_json reports/mx_array_32x16_yosys.json
