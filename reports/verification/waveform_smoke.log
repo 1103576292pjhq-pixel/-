@@ -1,13 +1,12 @@
 ﻿**********************
 Windows PowerShell transcript start
-Start time: 20260506012352
+Start time: 20260506014253
 Username: 啦啦啦\11035
 RunAs User: 啦啦啦\11035
 Configuration Name: 
 Machine: 啦啦啦 (Microsoft Windows NT 10.0.26200.0)
-Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -Command [Console]::OutputEncoding=[System.Text.Encoding]::UTF8;
-.\sim\run_submission_regression.ps1
-Process ID: 42412
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\sim\run_submission_regression.ps1
+Process ID: 43276
 PSVersion: 5.1.26100.8115
 PSEdition: Desktop
 PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.8115
@@ -26,5 +25,5 @@ SerializationVersion: 1.1.0.1
 PASS: waveform smoke VCD files generated under D:\github\-\reports\evidence\waveforms
 **********************
 Windows PowerShell transcript end
-End time: 20260506012353
+End time: 20260506014254
 **********************
