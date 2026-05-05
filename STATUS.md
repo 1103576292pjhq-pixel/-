@@ -1,19 +1,33 @@
 # STATUS
 
-- 当前阶段：2026-04-30 GPT5.5 教学 V2、波形证据与前端 handoff 最终验收完成，本批在既有 RTL handoff 交付包上增强展示证据、零基础教程、代码讲解覆盖和后端移交说明。
-- 本批已完成：已新增 `sim/run_waveform_smoke.ps1` 和三份小 VCD；已刷新 `reports/verification/iverilog_default.log`；已扩展 `docs/primer` 到零基础一周路径；已补强 `docs/teaching` 覆盖矩阵和答辩复述地图；已新增 `docs/report/11_frontend_handoff_and_packaging.md` 并链接主入口。
-- 下一步：等待主办方模板、答辩规则、真实 28nm 后端环境或指定 benchmark；若没有这些外部输入，当前材料可作为初赛 RTL handoff 提交包继续打包，不需要继续重复本轮收口。
-- 阻塞项：缺少主办方补充通知、提交模板、答辩规则、真实 28nm 标准单元库和综合工具；因此不声明真实 28nm 面积、功耗、频率或时序结果。
+- 当前阶段：2026-05-06 第一次比赛提交与后端 RTL handoff 包收口已形成。
+- 本批已完成：已新增一键验收脚本、最终证据索引、边界 case 矩阵、综合环境检查、综合检查使用说明、最终提交 manifest、单入口提交报告、后端接收清单、官方打包脚本和 `dist/mxfp8_npu_submission_20260506/` 草案。
+- 当前验收：`sim/run_submission_regression.ps1 -Fast` 已跑通，最终 verdict 为 `PASS_WITH_EXTERNAL_SYNTH_BLOCKER`。
+- 下一步：若要 release 口径复验，运行 `sim/run_submission_regression.ps1` 不带 `-Fast/-SkipLongStats`，重新跑 4096 长统计；若拿到真实后端工具和 28nm 库，再补真实综合/PPA。
+- 阻塞项：`BLOCKED_NO_SYNTH_TOOL`、`BLOCKED_NO_28NM_LIB`；主办方补充通知、提交模板和答辩规则仍未提供。因此不声明真实 28nm 面积、功耗、频率、时序、WNS/TNS、mapped netlist 或 signoff。
 
 ## 当前交付判断
 
-- RTL 基线：存在纯 Verilog RTL，顶层接口暂保持稳定。
-- 验证基线：2026-04-30 已执行 `sim/run_iverilog.ps1`，日志在 `reports/verification/iverilog_default.log`，结果 PASS；2026-04-28 Python 自检仍为 PASS 基线。
-- 精度基线：2026-04-28 已执行 `sim/run_matmul_stats.ps1`、`sim/run_matmul_stats_sweep.ps1`、`sim/run_matmul_stats_profiles.ps1`，JSON 在 `reports/precision`。
-- PPA 基线：只具备 `constraints/`、`synth/` 模板和方法说明；真实 PPA 等待后端工具链与库文件。
-- 文档基线：`docs/report/03` 到 `docs/report/07` 已按比赛提交口径重写；`docs/report/11_frontend_handoff_and_packaging.md` 已明确移交包；`docs/primer` 已形成 8 个入口的一周学习路径；`docs/teaching` 已覆盖主要 RTL、testbench、Python 和脚本。
-- 决策入口：`docs/report/10_technical_solution_and_execution_plan.md` 汇总赛题要求、用户要求、架构、验证、后端移交、风险和后续触发条件；`docs/admin/multi_agent_execution_plan_2026-04-29.md` 给出 Planner/Architect/RTL/DV/PPA/Writer/Critic 角色化计划；`docs/admin/submission_readiness_review_2026-04-29.md` 给出提交就绪、缺口和禁止写法复核。
-- Handoff 入口：`docs/report/11_frontend_handoff_and_packaging.md` 给出后端接收文件、顶层接口、脚本模板、验证证据、后端待补项、禁止 PPA 声称和正式包排除项。
-- 证据基线：`reports/evidence` 已包含日志索引、关键 case、4096 抽样方法、边界/非有限值覆盖和波形捕获状态；`reports/evidence/waveforms/` 已保存三份小 VCD。
-- RTL 收口：2026-04-28 审查决定保持 RTL 不动；后续优化等待真实综合/PPA 或新增赛题约束驱动。
-- 最新复查：2026-04-30 最终验收已核对报告 00-11、提交就绪复核、验证日志、精度 JSON、波形证据、Primer V2、教学覆盖矩阵和入口文档；`MAIN.md` 指向当前 2026-04-30 收口批次；提交清单、需求追踪表、证据索引和教学入口保持当前可提交/外部阻塞状态。
+- 交付物名称：`RTL handoff package`。
+- RTL 基线：纯 Verilog RTL 存在，顶层为 `mx_array_32x16`，本批未改变顶层接口。
+- 验证基线：`sim/run_iverilog.ps1`、`sim/run_python_ref.ps1`、`sim/run_waveform_smoke.ps1`、`sim/render_waveform_screenshots.ps1` 均已由提交验收脚本串联检查。
+- 精度基线：4096 sampled profile JSON 已作为 baseline evidence；fast 模式不把它伪装成新跑 release 统计。
+- 证据基线：最终证据索引在 `reports/evidence/final_evidence_index_2026-05-06.md`，边界矩阵在 `reports/evidence/boundary_case_matrix.md`。
+- PPA 基线：只具备 SDC、DC/Yosys 模板和环境检查；真实 PPA 等待后端工具链与 28nm 标准单元库。
+- 正式包：`tools/package_submission.py` 生成 `dist/mxfp8_npu_submission_20260506/`，排除 `.git/`、`.omx/`、`.codexpotter/`、`work/`、`sim/*.vvp` 和临时 runner 文件。
+
+## 关键入口
+
+- 单入口提交报告：`docs/report/submission_report.md`
+- 后端接收清单：`docs/report/12_backend_handoff_checklist.md`
+- 最终提交 manifest：`docs/admin/final_submission_manifest.md`
+- 综合环境检查：`reports/synthesis/environment_check_2026-05-06.md`
+- 综合检查说明：`docs/usage/02_synthesis_environment_check.md`
+- 一键验收脚本：`sim/run_submission_regression.ps1`
+- 官方打包脚本：`tools/package_submission.py`
+
+## 后续触发条件
+
+1. 如果收到主办方模板或答辩规则，先更新 `docs/report/09_submission_checklist.md` 和 `docs/report/submission_report.md`。
+2. 如果获得真实 28nm `.db/.lib`、约束要求和综合工具，先归档真实 logs/reports，再更新 `docs/report/07_synthesis_and_ppa.md`、`reports/synthesis/` 和最终 manifest。
+3. 如果新增 benchmark 或评分样例，先扩展 `vectors/` 与 `sim/` 回归，再同步 `reports/evidence/` 和 `reports/precision/`。

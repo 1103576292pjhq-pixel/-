@@ -8,9 +8,9 @@
 
 ## 当前主线
 
-- 当前批次：2026-04-30 教学 V2、波形证据与前端 handoff 最终验收完成
-- 执行模型：GPT5.5 / CodexPotter 长跑主线
-- 状态来源：根目录 `STATUS.md`、`potter-run.log`、当前 `.codexpotter/projects/2026/04/30/2/MAIN.md`
+- 当前批次：2026-05-06 第一次比赛提交与后端 RTL handoff 包收口
+- 执行模型：普通 Codex 收口，未使用 GitHub/PR/team/tmux lane
+- 状态来源：根目录 `STATUS.md`、`sim/run_submission_regression.ps1`、`dist/mxfp8_npu_submission_20260506/`、`reports/verification/`、`reports/evidence/`
 - 禁止项：不删除历史 `.codexpotter` 项目；不使用 GitHub/PR/team/tmux lane；不把模板或方法描述写成真实 28nm PPA 实测结论
 
 ## 技术基线
@@ -28,8 +28,8 @@
 - RTL：`llmt_col` 三段流水、`mx_array_32x16` 阵列顶层、MX decode 和 FP32 辅助模块
 - Testbench：列级 smoke/corner/back-to-back，阵列级多尺寸 dataset 回归
 - 向量：finite-only、tail tile、mixed nonfinite、sparse nonfinite、最多 5 个列 tile 的矩阵数据集
-- 脚本：`sim/run_iverilog.ps1`、`sim/run_python_ref.ps1`、`sim/run_matmul_stats*.ps1`
-- 报告骨架：`docs/report`、`reports/verification`、`reports/precision`、`reports/evidence`、`reports/synthesis`
+- 脚本：`sim/run_iverilog.ps1`、`sim/run_python_ref.ps1`、`sim/run_waveform_smoke.ps1`、`sim/render_waveform_screenshots.ps1`、`sim/run_submission_regression.ps1`、`sim/run_matmul_stats*.ps1`
+- 报告与证据：`docs/report/submission_report.md`、`docs/report/12_backend_handoff_checklist.md`、`reports/evidence/final_evidence_index_2026-05-06.md`、`reports/evidence/boundary_case_matrix.md`、`reports/synthesis/environment_check_2026-05-06.md`
 - 教学骨架：`docs/primer`、`docs/teaching`
 
 ## 2026-04-29 新增决策入口
@@ -39,8 +39,17 @@
 - 提交就绪复核：`docs/admin/submission_readiness_review_2026-04-29.md`
 - 前端到后端移交与打包：`docs/report/11_frontend_handoff_and_packaging.md`
 - 波形证据状态：`reports/evidence/waveform_capture_status.md`
+- 波形截图：`reports/evidence/waveform_screenshots/`
 - Primer V2：`docs/primer/README.md`
 - 教学覆盖矩阵：`docs/teaching/coverage_plan.md`
+- 逐行代码讲解：`docs/line_by_line/README.md`
+- 参赛提交与教学升级计划：`docs/admin/competition_submission_and_teaching_upgrade_plan_2026-05-04.md`
+- 两次 Potter 交付计划：`docs/admin/two_potter_delivery_plan_2026-05-05.md`
+- 第一次提交报告：`docs/report/submission_report.md`
+- 后端接收清单：`docs/report/12_backend_handoff_checklist.md`
+- 最终提交 manifest：`docs/admin/final_submission_manifest.md`
+- 最终证据索引：`reports/evidence/final_evidence_index_2026-05-06.md`
+- 官方提交包草案：`dist/mxfp8_npu_submission_20260506/`
 
 这些文件用于把比赛要求、用户要求、当前完成状态、后端移交边界、风险、阻塞项、后续执行优先级和提交前复核集中到可决策入口。它们不改变 RTL，也不把模板性 PPA 写成真实 28nm 结果。
 
@@ -56,12 +65,17 @@
 - 方案深化：`docs/report/10_technical_solution_and_execution_plan.md` 已补齐决策级总方案；`docs/admin/multi_agent_execution_plan_2026-04-29.md` 已补齐角色化执行计划。
 - 提交复核：`docs/admin/submission_readiness_review_2026-04-29.md` 已逐项收口初赛要求、证据链、后端 handoff 边界、禁止写法和打包建议。
 - 2026-04-30 增强与验收：已加入 opt-in VCD 波形脚本与三份小 VCD；`docs/primer` 扩成零基础一周路径；`docs/teaching` 增加主要文件覆盖矩阵和答辩复述地图；`docs/report/11_frontend_handoff_and_packaging.md` 明确后端移交和正式包排除项；最终验收确认默认回归和波形 smoke 日志均为 PASS。
+- 2026-04-30 人工审查补强：已把教学覆盖口径从“逐行完成”收紧为“答辩覆盖”，并新增 `docs/line_by_line/` 独立逐行 Markdown 线；已把矩阵 dataset testbench 改为 valid 窗口内锁存最后输出；已生成三张报告级波形 PNG；已重跑默认 Verilog 回归和 waveform smoke，均为 PASS。
+- 2026-05-01 第二轮补强：已把 `fixed_to_fp32` 和 `fp32_add_rne` 扩展为支持 FP32 subnormal 输出，并在 `tb_llmt_col_corner` 加入 directed case；已补 `fixed_to_fp32` 逐行讲解；默认 Verilog 回归、Python golden、waveform smoke 和 PNG 截图刷新均已完成。
+- 2026-05-04 复核与规划：已重跑默认 Verilog 回归、Python golden、waveform smoke 和 PNG 截图生成；已新增 `docs/admin/competition_submission_and_teaching_upgrade_plan_2026-05-04.md`，把后续工作拆成提交包卫生、RTL/验证签核、综合接入、提交报告、教学总书、逐行讲解和最终打包。
+- 2026-05-05 两次 Potter 边界：第一次 Potter 只做比赛提交与后端 RTL handoff 包，不做教学大扩写；第二次 Potter 在 handoff 包冻结后专门做零基础导学与逐行代码讲解。`netlist` 只在真实综合工具和库可用时生成，否则第一交付物是 RTL handoff package。
+- 2026-05-06 第一次 handoff 收口：已新增 `sim/run_submission_regression.ps1`、`tools/package_submission.py`、`docs/report/submission_report.md`、`docs/report/12_backend_handoff_checklist.md`、`docs/admin/final_submission_manifest.md`、`docs/usage/02_synthesis_environment_check.md`、`reports/evidence/final_evidence_index_2026-05-06.md`、`reports/evidence/boundary_case_matrix.md`、`reports/synthesis/environment_check_2026-05-06.md`，并生成 `dist/mxfp8_npu_submission_20260506/`。fast 验收 verdict 为 `PASS_WITH_EXTERNAL_SYNTH_BLOCKER`。
 
 ## 仍然缺失的外部输入
 
 - 主办方补充通知、提交模板、答辩规则和真实 28nm 库约束仍缺失。
 - IEEE 全文细节不可用，只能记录公开可核查信息和不确定项。
-- 本机未确认可用商用综合工具与 28nm 标准单元库，PPA 只能给方法、模板和待后端补齐项。
+- 本机已确认缺少 `yosys/openroad/verilator/dc_shell/genus/innovus` 和真实 28nm `.db/.lib`，PPA 只能给方法、模板和待后端补齐项。
 
 ## 后续触发条件
 

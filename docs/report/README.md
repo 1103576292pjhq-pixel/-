@@ -15,10 +15,13 @@
 10. [09_submission_checklist.md](/D:/github/-/docs/report/09_submission_checklist.md)
 11. [10_technical_solution_and_execution_plan.md](/D:/github/-/docs/report/10_technical_solution_and_execution_plan.md)
 12. [11_frontend_handoff_and_packaging.md](11_frontend_handoff_and_packaging.md)
+13. [submission_report.md](submission_report.md)
+14. [12_backend_handoff_checklist.md](12_backend_handoff_checklist.md)
 
 ## 使用方式
 - 对外提交时，优先按本目录导出/合并成正式技术报告。
 - 若需要快速判断当前交付状态、后端边界和下一步计划，先读 `10_technical_solution_and_execution_plan.md`。
-- 若需要打包或移交给后端，读 `11_frontend_handoff_and_packaging.md`。
+- 若需要打包或移交给后端，读 `11_frontend_handoff_and_packaging.md` 和 `12_backend_handoff_checklist.md`。
+- 若需要单页评审报告，先读 `submission_report.md`。
 - 若需要提交前逐项复核，读 `../admin/submission_readiness_review_2026-04-29.md`。
 - 开发日志、阶段性结论和旧入口文档仅作为补充材料。

@@ -1,6 +1,6 @@
 # Verification Reports
 
-本目录存放本轮实际运行日志。2026-04-28 复验结果如下：
+本目录存放本轮实际运行日志。2026-05-04 复验结果如下：
 
 | 日志 | 命令 | 结果 |
 | --- | --- | --- |
@@ -11,3 +11,17 @@
 | `matmul_stats_profiles.log` | `sim/run_matmul_stats_profiles.ps1` | PASS：finite_exp8、finite_exp32、finite_exp64、sparse_nonfinite 四档 profile |
 
 若后续修改 RTL 或参考模型，必须重新生成这些日志并同步 `reports/precision`。
+
+## 提交验收
+
+`sim/run_submission_regression.ps1` 会继续校验并写入这些日志：
+
+- `iverilog_default.log`
+- `python_ref_default.log`
+- `waveform_smoke.log`
+- `matmul_stats_default.log`
+- `matmul_stats_sweep.log`
+- `matmul_stats_profiles.log`
+- `waveform_screenshots.log`
+
+它的最终 verdict 应为 `PASS` 或 `PASS_WITH_EXTERNAL_SYNTH_BLOCKER`。若出现功能、证据或纯 Verilog 门禁失败，则必须先修复再提交。

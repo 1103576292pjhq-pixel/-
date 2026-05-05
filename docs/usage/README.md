@@ -169,3 +169,12 @@ python ./tools/mx_ref.py --emit-matmul-dataset --m 7 --n 49 --k 224 --seed 20260
 - `reports/synthesis/`：综合/PPA报告
 - `reports/evidence/`：波形/截图/证据索引
 - `docs/`：技术与教学文档
+
+## 11. 综合环境检查
+
+若要确认是否可以从 RTL handoff 进一步进入综合/PPA，先读：
+
+- `docs/usage/02_synthesis_environment_check.md`
+- `reports/synthesis/environment_check_2026-05-06.md`
+
+前者解释如何判断 generic netlist、28nm mapped netlist 和 RTL handoff package 的区别；后者记录本机真实工具与库状态。

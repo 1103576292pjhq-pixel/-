@@ -15,3 +15,12 @@
 - SDC 约束版本
 - RTL commit
 - activity / VCD / SAIF 来源（如果报告功耗）
+
+## 本次环境检查
+
+当前环境检查记录在 `environment_check_2026-05-06.md`。本机有 RTL 仿真与 Python 工具，但没有 `yosys/openroad/verilator/dc_shell/genus/innovus`，也没有真实 28nm `.db/.lib`。
+
+因此本目录当前只能记录：
+
+- `BLOCKED_NO_SYNTH_TOOL`
+- `BLOCKED_NO_28NM_LIB`
