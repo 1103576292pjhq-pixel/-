@@ -57,7 +57,7 @@ Primary commands:
 .\sim\run_python_ref.ps1
 .\sim\run_waveform_smoke.ps1
 .\sim\render_waveform_screenshots.ps1
-.\sim\run_submission_regression.ps1 -Fast
+.\sim\run_submission_regression.ps1
 ```
 
 Current logs:
@@ -80,7 +80,7 @@ The profile summary `reports/precision/matmul_stats_4096x4096x4096_profiles.json
 - finite_exp64: dynamic range stress evidence for projected FP32 behavior,
 - sparse_nonfinite: 6037 finite samples, 107 matched NaN, 0 mismatched nonfinite.
 
-Fast acceptance mode treats these as baseline evidence. Release acceptance mode should rerun long statistics without `-SkipLongStats`.
+The 2026-05-06 release acceptance run reran these long statistics without `-SkipLongStats`. Fast acceptance mode is still available for quick hygiene checks, but it must be described only as a baseline-presence shortcut.
 
 ## 7. Waveform Evidence
 

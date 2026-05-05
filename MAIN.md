@@ -69,7 +69,7 @@
 - 2026-05-01 第二轮补强：已把 `fixed_to_fp32` 和 `fp32_add_rne` 扩展为支持 FP32 subnormal 输出，并在 `tb_llmt_col_corner` 加入 directed case；已补 `fixed_to_fp32` 逐行讲解；默认 Verilog 回归、Python golden、waveform smoke 和 PNG 截图刷新均已完成。
 - 2026-05-04 复核与规划：已重跑默认 Verilog 回归、Python golden、waveform smoke 和 PNG 截图生成；已新增 `docs/admin/competition_submission_and_teaching_upgrade_plan_2026-05-04.md`，把后续工作拆成提交包卫生、RTL/验证签核、综合接入、提交报告、教学总书、逐行讲解和最终打包。
 - 2026-05-05 两次 Potter 边界：第一次 Potter 只做比赛提交与后端 RTL handoff 包，不做教学大扩写；第二次 Potter 在 handoff 包冻结后专门做零基础导学与逐行代码讲解。`netlist` 只在真实综合工具和库可用时生成，否则第一交付物是 RTL handoff package。
-- 2026-05-06 第一次 handoff 收口：已新增 `sim/run_submission_regression.ps1`、`tools/package_submission.py`、`docs/report/submission_report.md`、`docs/report/12_backend_handoff_checklist.md`、`docs/admin/final_submission_manifest.md`、`docs/usage/02_synthesis_environment_check.md`、`reports/evidence/final_evidence_index_2026-05-06.md`、`reports/evidence/boundary_case_matrix.md`、`reports/synthesis/environment_check_2026-05-06.md`，并生成 `dist/mxfp8_npu_submission_20260506/`。fast 验收 verdict 为 `PASS_WITH_EXTERNAL_SYNTH_BLOCKER`。
+- 2026-05-06 第一次 handoff 收口：已新增 `sim/run_submission_regression.ps1`、`tools/package_submission.py`、`docs/report/submission_report.md`、`docs/report/12_backend_handoff_checklist.md`、`docs/admin/final_submission_manifest.md`、`docs/usage/02_synthesis_environment_check.md`、`reports/evidence/final_evidence_index_2026-05-06.md`、`reports/evidence/boundary_case_matrix.md`、`reports/synthesis/environment_check_2026-05-06.md`，并生成 `dist/mxfp8_npu_submission_20260506/`。release 验收与 fast 验收 verdict 均为 `PASS_WITH_EXTERNAL_SYNTH_BLOCKER`，其中 release 验收已重跑 4096 sampled stats。
 
 ## 仍然缺失的外部输入
 

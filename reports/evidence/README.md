@@ -24,7 +24,7 @@
 - 2026-05-01 波形 smoke：PASS，见 `../verification/waveform_smoke.log` 和 `waveforms/*.vcd`
 - 2026-05-01 报告级波形截图：已刷新，见 `waveform_screenshots/*.png`
 - 2026-05-01 Python 参考模型自检：PASS，见 `../verification/python_ref_default.log`
-- 2026-04-28 4096 抽样 profile：PASS，见 `../precision/matmul_stats_4096x4096x4096_profiles.json`
+- 2026-05-06 4096 抽样 profile release 口径复验：PASS，见 `../precision/matmul_stats_4096x4096x4096_profiles.json` 和 `../verification/matmul_stats_profiles.log`
 - 2026-05-06 最终证据索引：`final_evidence_index_2026-05-06.md`
 - 2026-05-06 边界 case 矩阵：`boundary_case_matrix.md`
 - 2026-04-28 RTL 收口审查：保持 `llmt_col` 与 `mx_array_32x16` 不动，见 `rtl_refinement_review_2026-04-28.md`
