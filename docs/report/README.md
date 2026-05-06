@@ -23,5 +23,5 @@
 - 若需要快速判断当前交付状态、后端边界和下一步计划，先读 `10_technical_solution_and_execution_plan.md`。
 - 若需要打包或移交给后端，读 `11_frontend_handoff_and_packaging.md` 和 `12_backend_handoff_checklist.md`。
 - 若需要单页评审报告，先读 `submission_report.md`。
-- 若需要提交前逐项复核，读 `../admin/submission_readiness_review_2026-04-29.md`。
-- 开发日志、阶段性结论和旧入口文档仅作为补充材料。
+- 若需要提交前逐项复核，读 `submission_report.md`、`09_submission_checklist.md` 和 `../admin/final_submission_manifest.md`。
+- 开发日志、阶段性结论、教学资料和旧 admin 规划文件仅作为仓库源树中的补充材料，不进入第一轮正式 handoff 包。

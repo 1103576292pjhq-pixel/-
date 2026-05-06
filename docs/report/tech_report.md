@@ -13,7 +13,10 @@
 9. [08_optimization_and_finals_outlook.md](/D:/github/-/docs/report/08_optimization_and_finals_outlook.md)
 10. [09_submission_checklist.md](/D:/github/-/docs/report/09_submission_checklist.md)
 11. [10_technical_solution_and_execution_plan.md](/D:/github/-/docs/report/10_technical_solution_and_execution_plan.md)
+12. [11_frontend_handoff_and_packaging.md](/D:/github/-/docs/report/11_frontend_handoff_and_packaging.md)
+13. [12_backend_handoff_checklist.md](/D:/github/-/docs/report/12_backend_handoff_checklist.md)
+14. [submission_report.md](/D:/github/-/docs/report/submission_report.md)
 
-如果后续要对外导出初赛提交版，优先以以上章节为主，而不是继续扩写本文件。
+如果后续要对外导出初赛提交版，优先以 `submission_report.md` 和以上章节为主，而不是继续扩写本文件。
 
-提交前逐项复核入口：`../admin/submission_readiness_review_2026-04-29.md`。
+提交前逐项复核入口：`submission_report.md`、`09_submission_checklist.md` 和 `../admin/final_submission_manifest.md`。

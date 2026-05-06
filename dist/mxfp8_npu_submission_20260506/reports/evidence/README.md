@@ -16,14 +16,14 @@
 | `waveform_capture_status.md` | 波形证据现状、VCD 文件、截图脚本和 PNG 说明 |
 | `waveform_screenshots/` | 从 VCD 导出的报告级 PNG 截图 |
 
-提交就绪复核见 `../../docs/admin/submission_readiness_review_2026-04-29.md`。该文件不替代原始日志和 JSON，而是把本目录证据映射到初赛要求、后端 handoff 边界和禁止写法。
+提交就绪复核见 `final_evidence_index_2026-05-06.md`、`../../docs/report/submission_report.md` 和 `../../docs/admin/final_submission_manifest.md`。这些文件不替代原始日志和 JSON，而是把本目录证据映射到初赛要求、后端 handoff 边界、正式包边界和禁止写法。
 
 ## 当前证据状态
 
-- 2026-05-01 Verilog 默认回归：PASS，见 `../verification/iverilog_default.log`
-- 2026-05-01 波形 smoke：PASS，见 `../verification/waveform_smoke.log` 和 `waveforms/*.vcd`
-- 2026-05-01 报告级波形截图：已刷新，见 `waveform_screenshots/*.png`
-- 2026-05-01 Python 参考模型自检：PASS，见 `../verification/python_ref_default.log`
+- 2026-05-06 Verilog 默认回归：PASS，见 `../verification/iverilog_default.log`
+- 2026-05-06 波形 smoke：PASS，见 `../verification/waveform_smoke.log` 和 `waveforms/*.vcd`
+- 2026-05-06 报告级波形截图：已刷新，见 `waveform_screenshots/*.png`
+- 2026-05-06 Python 参考模型自检：PASS，见 `../verification/python_ref_default.log`
 - 2026-05-06 4096 抽样 profile release 口径复验：PASS，见 `../precision/matmul_stats_4096x4096x4096_profiles.json` 和 `../verification/matmul_stats_profiles.log`
 - 2026-05-06 最终证据索引：`final_evidence_index_2026-05-06.md`
 - 2026-05-06 边界 case 矩阵：`boundary_case_matrix.md`

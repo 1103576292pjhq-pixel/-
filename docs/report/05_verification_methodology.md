@@ -24,9 +24,9 @@
 
 | 命令 | 日志 | 结果 |
 | --- | --- | --- |
-| `sim/run_iverilog.ps1` | `reports/verification/iverilog_default.log` | PASS，2026-05-04 刷新 |
-| `sim/run_waveform_smoke.ps1` | `reports/verification/waveform_smoke.log` | PASS，2026-05-04 刷新 |
-| `sim/run_python_ref.ps1` | `reports/verification/python_ref_default.log` | PASS，2026-05-04 刷新 |
+| `sim/run_iverilog.ps1` | `reports/verification/iverilog_default.log` | PASS，2026-05-06 fast 验收刷新 |
+| `sim/run_waveform_smoke.ps1` | `reports/verification/waveform_smoke.log` | PASS，2026-05-06 fast 验收刷新 |
+| `sim/run_python_ref.ps1` | `reports/verification/python_ref_default.log` | PASS，2026-05-06 fast 验收刷新 |
 | `sim/run_matmul_stats.ps1` | `reports/verification/matmul_stats_default.log` | PASS |
 | `sim/run_matmul_stats_sweep.ps1` | `reports/verification/matmul_stats_sweep.log` | PASS |
 | `sim/run_matmul_stats_profiles.ps1` | `reports/verification/matmul_stats_profiles.log` | PASS |
@@ -57,7 +57,7 @@
 - 4096 抽样方法
 - finite/nonfinite/boundary 覆盖说明
 
-已生成的小 VCD 位于 `reports/evidence/waveforms/`，覆盖 `tb_llmt_col_smoke`、`tb_llmt_col_back_to_back` 和 `tb_mx_array_smoke`。2026-05-04 已用 `sim/render_waveform_screenshots.ps1` 从这些 VCD 刷新报告级 PNG，位于 `reports/evidence/waveform_screenshots/`。VCD/截图只作为证据补充，不替代可复验日志和固定向量。
+已生成的小 VCD 位于 `reports/evidence/waveforms/`，覆盖 `tb_llmt_col_smoke`、`tb_llmt_col_back_to_back` 和 `tb_mx_array_smoke`。2026-05-06 已用 `sim/run_submission_regression.ps1 -Fast` 串联刷新 VCD，并用 `sim/render_waveform_screenshots.ps1` 从这些 VCD 刷新报告级 PNG，位于 `reports/evidence/waveform_screenshots/`。VCD/截图只作为证据补充，不替代可复验日志和固定向量。
 
 ## 6. 当前限制
 

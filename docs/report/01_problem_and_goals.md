@@ -18,7 +18,7 @@
 | 精度统计 | `sim/run_matmul_stats*.ps1`、`reports/precision/` |
 | 综合/PPA 接入 | `constraints/`、`synth/`、`reports/synthesis/` |
 | 比赛报告和证据包 | `docs/report/`、`reports/evidence/` |
-| 零基础教学资料 | `docs/primer/`、`docs/teaching/` |
+| 零基础教学资料 | 仓库源树保留，第一轮正式 handoff 包不包含教学目录 |
 
 ## 3. 当前实现范围
 
@@ -56,4 +56,4 @@
 2. 报告能按比赛要求组织。
 3. 证据包能把结论链接到日志、统计或向量。
 4. PPA 章节明确区分模板、方法和真实缺口。
-5. 零基础队友能按学习路径理解项目。
+5. 第一轮正式包只包含评审和后端接收所需材料；零基础教学资料留到第二轮教学 Potter。

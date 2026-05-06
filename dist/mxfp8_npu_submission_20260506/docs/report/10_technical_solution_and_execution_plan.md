@@ -59,16 +59,15 @@
 
 证据包入口在 `reports/evidence/README.md`，覆盖回归日志索引、关键 case、4096 抽样方法、finite/nonfinite/boundary 覆盖、波形捕获状态和 RTL 收口审查。
 
-提交就绪复核入口在 `docs/admin/submission_readiness_review_2026-04-29.md`，用于逐项回答当前代码、验证、精度、报告、教学和后端 handoff 分别达到什么程度。
+当前提交就绪复核入口收敛到 `docs/report/submission_report.md`、`docs/admin/final_submission_manifest.md` 和 `reports/evidence/final_evidence_index_2026-05-06.md`，用于逐项回答当前代码、验证、精度、报告和后端 handoff 分别达到什么程度。
 
 ### 4.3 报告和教学基线
 
 - 比赛报告：`docs/report/00_requirements_traceability.md` 到 `docs/report/09_submission_checklist.md`
 - 使用说明：`docs/usage/README.md`
-- 零基础 primer：`docs/primer/`
-- 代码讲解：`docs/teaching/`
+- 零基础 primer 与代码讲解：继续保留在仓库源树中，作为第二轮教学 Potter 输入，不进入第一轮正式 handoff 包。
 
-当前缺口不是“没有报告”，而是需要一个更高层的总方案入口、执行分工入口和提交就绪复核入口。本文、`docs/admin/multi_agent_execution_plan_2026-04-29.md` 和 `docs/admin/submission_readiness_review_2026-04-29.md` 即补齐这三类入口。
+当前缺口不是“没有报告”，而是必须把报告、证据、后端移交和正式包边界保持一致。本文与 `docs/report/submission_report.md`、`docs/report/11_frontend_handoff_and_packaging.md`、`docs/report/12_backend_handoff_checklist.md`、`docs/admin/final_submission_manifest.md` 共同构成第一轮正式包入口。
 
 ## 5. 具体架构方案
 
@@ -193,6 +192,7 @@ Python 参考模型 `tools/mx_ref.py` 是 RTL 比对和统计的 golden source�
 
 后端接入至少需要：
 
+- `synth/rtl_filelist.f` 给出的确定性读入顺序
 - `rtl/mx_defs.vh`
 - `rtl/mx_funcs.vh`
 - `rtl/e4m3_decode.v`
@@ -208,6 +208,7 @@ Python 参考模型 `tools/mx_ref.py` 是 RTL 比对和统计的 golden source�
 
 当前已准备：
 
+- `synth/rtl_filelist.f`
 - `constraints/mx_array_32x16.sdc`
 - `synth/run_dc_template.tcl`
 - `synth/run_yosys_generic.ys`
@@ -254,11 +255,11 @@ Python 参考模型 `tools/mx_ref.py` 是 RTL 比对和统计的 golden source�
 
 当前优先级：
 
-1. 用本文作为总技术入口，补齐 `docs/report/README.md` 和 `tech_report.md` 索引。
-2. 用 `docs/admin/multi_agent_execution_plan_2026-04-29.md` 作为后续多角色协作计划。
-3. 用 `docs/admin/submission_readiness_review_2026-04-29.md` 作为提交前复核和后端 handoff 边界判断。
-4. 刷新根 `MAIN.md`、`STATUS.md` 和 `potter-run.log`，让状态指向 2026-04-29 复核收口批次。
-5. 做轻量一致性检查：确认新文档存在、索引可达、没有引入真实 28nm PPA 虚假声明。
+1. 以 `docs/report/submission_report.md` 作为第一轮评审入口。
+2. 以后端接收清单 `docs/report/12_backend_handoff_checklist.md` 和 `synth/rtl_filelist.f` 作为后端 intake 起点。
+3. 以 `docs/admin/final_submission_manifest.md` 和 `dist/mxfp8_npu_submission_20260506/PACKAGE_CONTENTS.txt` 作为正式包边界依据。
+4. 继续保持 `PASS_WITH_EXTERNAL_SYNTH_BLOCKER` 口径；缺少真实综合工具和 28nm `.db/.lib` 时，不生成 mapped netlist 或 PPA 数字。
+5. 第二轮教学 Potter 只在当前正式提交候选包稳定后启动。
 
 未来触发条件：
 
@@ -269,4 +270,4 @@ Python 参考模型 `tools/mx_ref.py` 是 RTL 比对和统计的 golden source�
 
 ## 10. 当前结论
 
-当前仓库已经具备初赛 RTL handoff 交付基础。本文补齐的是“决策完整性”：评审、后端工程师或后续执行者可以明确知道比赛要求如何映射到仓库，哪些内容已经有证据，哪些内容被外部输入阻塞，哪些 RTL 改动现在不应做，以及下一步应该按什么触发条件推进。
+当前仓库已经具备初赛 RTL handoff 交付基础，第一轮正式包是 `dist/mxfp8_npu_submission_20260506/`。本文补齐的是“决策完整性”：评审、后端工程师或后续执行者可以明确知道比赛要求如何映射到仓库，哪些内容已经有证据，哪些内容被外部输入阻塞，哪些 RTL 改动现在不应做，以及下一步应该按什么触发条件推进。

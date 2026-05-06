@@ -32,4 +32,4 @@
 - `tb_llmt_col_back_to_back.png`
 - `tb_mx_array_smoke.png`
 
-当前状态：2026-05-04 已从归档 VCD 刷新三张 PNG，可直接放入报告或答辩材料。
+当前状态：2026-05-06 已从归档 VCD 刷新三张 PNG，可直接放入报告或答辩材料。

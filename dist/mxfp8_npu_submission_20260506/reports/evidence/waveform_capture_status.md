@@ -2,7 +2,7 @@
 
 ## 当前状态
 
-2026-04-30 已加入轻量 opt-in VCD 捕获路径，2026-05-01 已重跑刷新 VCD 与 PNG。默认回归不生成波形；需要展示时运行：
+2026-04-30 已加入轻量 opt-in VCD 捕获路径，2026-05-06 已通过 `sim/run_submission_regression.ps1 -Fast` 重跑刷新 VCD 与 PNG。默认回归不生成波形；需要展示时运行：
 
 ```powershell
 .\sim\run_waveform_smoke.ps1
@@ -36,7 +36,7 @@ reports/evidence/waveform_screenshots/
 
 当前仓库以 VCD 作为可复验证据；PNG 截图是提交/答辩材料的展示层。优先从下面三类 VCD 导出 PNG，不要手画不可复验波形。
 
-2026-05-01 已刷新三张 PNG：
+2026-05-06 已刷新三张 PNG：
 
 - `reports/evidence/waveform_screenshots/tb_llmt_col_smoke.png`
 - `reports/evidence/waveform_screenshots/tb_llmt_col_back_to_back.png`
