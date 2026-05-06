@@ -7,7 +7,7 @@
 - 有纯 Verilog RTL。
 - 有 testbench、固定向量、Python golden model 和回归日志。
 - 有综合约束和脚本模板。
-- 有报告、证据索引、教学文档和使用说明。
+- 有报告、证据索引和使用说明；教学文档保留在仓库内，但不进入第一轮正式 handoff 包。
 
 它不是完整 28nm 后端 signoff 包。真实面积、功耗、频率、WNS/TNS、门级仿真、功耗活动率和版图结果必须由后端在真实库、真实工具和真实约束下生成。
 
@@ -15,14 +15,14 @@
 
 | 类别 | 路径 | 用途 |
 | --- | --- | --- |
-| RTL | `rtl/*.v`、`rtl/*.vh` | 可综合前端设计 |
+| RTL | `rtl/*.v`、`rtl/*.vh`、`synth/rtl_filelist.f` | 可综合前端设计；`rtl_filelist.f` 是后端读入顺序入口 |
 | Testbench | `tb/*.v` | RTL 功能复验，不进入综合 |
 | 仿真脚本 | `sim/run_iverilog.ps1`、`sim/run_waveform_smoke.ps1` | 默认回归和波形证据生成 |
 | 截图脚本 | `sim/render_waveform_screenshots.ps1`、`tools/render_waveform_png.py` | 从归档 VCD 生成报告级 PNG |
 | Python golden | `tools/mx_ref.py` | 向量生成、参考模型、4096 抽样统计 |
 | 固定向量 | `vectors/` | dataset testbench 输入和 expected output |
 | 约束模板 | `constraints/mx_array_32x16.sdc` | 后端约束起点，需按真实工艺/频率改写 |
-| 综合模板 | `synth/run_dc_template.tcl`、`synth/run_yosys_generic.ys` | 综合流程起点，不是 signoff 结果 |
+| 综合模板 | `synth/rtl_filelist.f`、`synth/run_dc_template.tcl`、`synth/run_yosys_generic.ys` | 综合流程起点，不是 signoff 结果 |
 | 报告 | `docs/report/` | 技术方案、验证、PPA 边界和提交清单 |
 | 证据 | `reports/verification/`、`reports/precision/`、`reports/evidence/` | PASS 日志、统计 JSON、波形和证据索引 |
 
@@ -69,6 +69,7 @@ rtl/mx_array_32x16.v
 | `sim/run_python_ref.ps1` | Python 自检和基础向量 | 参考模型入口 |
 | `sim/run_matmul_stats*.ps1` | 4096 抽样统计 | 数值趋势证据 |
 | `constraints/mx_array_32x16.sdc` | SDC 起点 | 真实频率、IO、uncertainty 需后端确认 |
+| `synth/rtl_filelist.f` | RTL 读入顺序 | 后端可据此生成 `read_verilog`/`analyze` 命令 |
 | `synth/run_dc_template.tcl` | Design Compiler 模板 | 需填真实 28nm `.db`、corner 和报告路径 |
 | `synth/run_yosys_generic.ys` | generic synthesis 参考 | 不可当作 28nm PPA |
 
@@ -95,7 +96,8 @@ rtl/mx_array_32x16.v
 - 真实 28nm 标准单元库 `.lib/.db`。
 - 真实 corner、RC、wireload 或提取规则。
 - 目标频率、时钟不确定度、IO delay、load、drive。
-- 综合日志、面积报告、timing report、power report。
+- 综合工具和版本、原始综合日志、面积报告、timing report、power report。
+- power activity 来源、工作负载窗口和报告生成命令。
 - 门级网表、SDF、门级仿真结果。
 - 版图相关 DRC/LVS/IR/EM/signoff 结果。
 
