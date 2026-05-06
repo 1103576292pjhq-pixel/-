@@ -1,56 +1,74 @@
-# MXFP8 NPU Submission Report
+# MXFP8 NPU 参赛提交报告
 
-## 1. Problem And Deliverable
+## 1. 项目目标与交付边界
 
-This project implements a pure Verilog MXFP8 NPU compute array for block floating-point matrix multiplication. The competition-facing deliverable is an RTL handoff package: RTL, testbench, Python reference model, fixed vectors, verification logs, waveform evidence, precision statistics, synthesis templates, constraints, and backend receiving instructions.
+本项目面向“AI 赛道命题七：大语言模型块浮点计算阵列的设计与实现”，完成了一套可综合的纯 Verilog MXFP8 计算阵列前端实现，并整理为可直接交给评审和后端团队继续处理的 `RTL handoff package`。
 
-true 28nm PPA is not completed unless real tool/library logs exist. In this workspace, no real synthesis backend and no real 28nm `.db/.lib` library are available, so the package does not claim real area, power, frequency, WNS, TNS, mapped netlist, or signoff.
+本次交付边界是前端 RTL 包，而不是真实 28nm 后端结果。仓库当前提供：
 
-## 2. MXFP8 Format
+- 纯 Verilog RTL 与 testbench
+- Python 黄金模型与固定向量
+- 功能回归日志
+- 精度统计结果
+- 波形 VCD 与 PNG 截图
+- 约束模板与综合脚本模板
+- 后端接收清单与提交包说明
 
-The input path uses MXFP8-style block floating point:
+当前环境没有真实 28nm 标准单元库，也没有可用的真实综合/后端工具链，因此本报告不声称已经完成真实 28nm 面积、功耗、频率、WNS、TNS、mapped netlist 或 signoff。
 
-- elements are E4M3 8-bit values,
-- each block has 32 elements,
-- each block has an E8M0 scale byte,
-- products are accumulated through a fixed-point dot32 path and projected into FP32 accumulator output.
+## 2. 数值格式与计算语义
 
-The numeric rules are implemented in `tools/mx_ref.py` and RTL helpers including `rtl/e4m3_decode.v`, `rtl/e8m0_scale_decode.v`, `rtl/fixed_to_fp32.v`, and `rtl/fp32_add_rne.v`. NaN inputs and scale-NaN paths are intentionally covered by directed testbench cases and sparse nonfinite matrix vectors.
+本设计采用 MXFP8 风格块浮点表示：
 
-## 3. Architecture
+- 每个 block 含 32 个 `E4M3` 元素
+- 每个 block 共享 1 个 `E8M0` scale
+- 输入矩阵 `A`、`B` 为 MXFP8
+- 输出矩阵 `Y` 为 FP32
 
-The top module is `mx_array_32x16` in `rtl/mx_array_32x16.v`.
+RTL 与参考模型共同遵循“块共享 scale + 块内低精度元素”的计算思路。实现中，先完成 block 内 32 路元素乘法与归约，再把结果投影到 FP32 累加器路径。相关实现入口包括：
 
-Key structure:
+- `rtl/e4m3_decode.v`
+- `rtl/e8m0_scale_decode.v`
+- `rtl/fixed_to_fp32.v`
+- `rtl/fp32_add_rne.v`
+- `tools/mx_ref.py`
 
-- array shape: 32-lane dot block by 16 output columns,
-- dataflow: output-stationary accumulator,
-- A block broadcast: one 32-element A block feeds all 16 columns,
-- B blocks: 16 independently packed B blocks feed 16 `llmt_col` instances,
-- output: 16 FP32 accumulators packed into `acc_o[16*32-1:0]`.
+定向测试和矩阵级数据集已经覆盖 `NaN`、`scale-NaN`、subnormal、最大值、tail tile 和 sparse nonfinite 等关键边界。
 
-The top-level interface is intentionally stable for backend handoff. The first Potter batch does not rewrite the RTL architecture for optimization.
+## 3. 阵列架构与模块组织
 
-## 4. LLMT Column Microarchitecture
+顶层模块为 [mx_array_32x16.v](/D:/github/-/rtl/mx_array_32x16.v)，阵列规模为 `32x16`。
 
-`rtl/llmt_col.v` is the column compute unit. It performs:
+架构要点如下：
 
-1. E4M3 element decode and E8M0 scale decode.
-2. 32-lane product and reduction into fixed-point partial sums.
-3. FP32 projection and accumulator update.
-4. valid propagation so output timing is testable.
+- 数据流采用 output-stationary
+- 每个时钟周期广播一个 32 元素的 `A block`
+- 16 列同时接收不同的 `B block`
+- 每列由一个 [llmt_col.v](/D:/github/-/rtl/llmt_col.v) 完成 block dot32 与 FP32 累加
+- 输出打包为 `acc_o[16*32-1:0]`
 
-The current implementation is a front-end RTL baseline. More aggressive timing/power optimization should be driven by real synthesis results, not by speculative rewriting.
+本次交付保持顶层接口稳定，不在第一轮提交中做激进重构，避免在没有真实 PPA 反馈前过早改动微架构边界。
 
-## 5. Verification Methodology
+## 4. LLMT 列级微架构
 
-Verification has three layers:
+`llmt_col` 是列级计算核心，主要完成四件事：
 
-- directed column tests: smoke, corner, back-to-back valid,
-- array and matrix dataset tests: finite, tail tile, mixed nonfinite, sparse nonfinite,
-- Python reference and sampled precision statistics.
+1. 对 32 路 `E4M3` 元素和 `E8M0` scale 进行解码
+2. 完成 32 路乘法与分级归约
+3. 将 dot32 结果投影到 FP32 并更新累加器
+4. 输出 `valid_o`，使列级和阵列级时序可验证
 
-Primary commands:
+当前实现是可验证、可综合的前端基线版本。后续若要冲击更高频率或更低面积/功耗，应以真实综合结果为依据，围绕 dot32 归约树、FP32 累加路径和控制路径做定量优化。
+
+## 5. 验证方法与结果
+
+验证分三层进行：
+
+- 列级定向测试：smoke、corner、back-to-back valid
+- 阵列/矩阵级数据集测试：finite、tail tile、mixed nonfinite、sparse nonfinite
+- Python 黄金模型与 `4096x4096x4096` 抽样精度统计
+
+主要脚本如下：
 
 ```powershell
 .\sim\run_iverilog.ps1
@@ -60,86 +78,92 @@ Primary commands:
 .\sim\run_submission_regression.ps1
 ```
 
-Current logs:
+当前可核查日志包括：
 
 - `reports/verification/iverilog_default.log`
 - `reports/verification/python_ref_default.log`
 - `reports/verification/waveform_smoke.log`
 - `reports/verification/matmul_stats_profiles.log`
 
-The one-command acceptance script returns `PASS_WITH_EXTERNAL_SYNTH_BLOCKER` when functional/evidence/package gates pass and only synthesis/PPA infrastructure is missing.
+一键验收脚本 `sim/run_submission_regression.ps1` 已经把纯 Verilog 门禁、功能回归、波形证据、精度统计、提交包洁净度和综合环境检查串成单入口流程。
 
-## 6. Precision Evidence
+## 6. 精度与波形证据
 
-The 4096 sampled precision evidence is archived under `reports/precision/`.
+`4096x4096x4096` 抽样统计结果存放在 `reports/precision/`。其中 `matmul_stats_4096x4096x4096_profiles.json` 覆盖：
 
-The profile summary `reports/precision/matmul_stats_4096x4096x4096_profiles.json` covers:
+- `finite_exp8`
+- `finite_exp32`
+- `finite_exp64`
+- `sparse_nonfinite`
 
-- finite_exp8: 6144 finite samples, no nonfinite mismatch,
-- finite_exp32: 6144 finite samples, no nonfinite mismatch,
-- finite_exp64: dynamic range stress evidence for projected FP32 behavior,
-- sparse_nonfinite: 6037 finite samples, 107 matched NaN, 0 mismatched nonfinite.
+当前稀疏非有限值 profile 记录为：
 
-The 2026-05-06 release acceptance run reran these long statistics without `-SkipLongStats`. Fast acceptance mode is still available for quick hygiene checks, but it must be described only as a baseline-presence shortcut.
+- `6037` 个 finite 样本
+- `107` 个 matched `NaN`
+- `0` 个 nonfinite mismatch
 
-## 7. Waveform Evidence
+波形证据为可重现实验结果，而不是人工绘图：
 
-Waveform evidence is reproducible:
+- VCD：`reports/evidence/waveforms/`
+- PNG：`reports/evidence/waveform_screenshots/`
 
-- VCD generation: `sim/run_waveform_smoke.ps1`
-- PNG rendering: `sim/render_waveform_screenshots.ps1`
-- VCD location: `reports/evidence/waveforms/`
-- PNG location: `reports/evidence/waveform_screenshots/`
+三张报告级截图分别覆盖：
 
-The three report PNGs cover:
+- `tb_llmt_col_smoke`
+- `tb_llmt_col_back_to_back`
+- `tb_mx_array_smoke`
 
-- `tb_llmt_col_smoke`: clear, dot32, valid, accumulator update,
-- `tb_llmt_col_back_to_back`: continuous valid input and ordered outputs,
-- `tb_mx_array_smoke`: 16-column top-level smoke behavior.
+最终证据索引见 [final_evidence_index_2026-05-06.md](/D:/github/-/reports/evidence/final_evidence_index_2026-05-06.md)，边界条件矩阵见 [boundary_case_matrix.md](/D:/github/-/reports/evidence/boundary_case_matrix.md)。
 
-These PNGs are display evidence; the VCD and regression logs remain the reproducible evidence.
+## 7. 综合与 PPA 边界
 
-## 8. Synthesis And PPA Boundary
-
-Prepared handoff files:
+本仓库已经准备了后端接入所需的最小前置材料：
 
 - `constraints/mx_array_32x16.sdc`
 - `synth/run_dc_template.tcl`
 - `synth/run_yosys_generic.ys`
-- `reports/synthesis/environment_check_2026-05-06.md`
 - `docs/usage/02_synthesis_environment_check.md`
+- `docs/report/12_backend_handoff_checklist.md`
 
-Current blockers:
+但当前环境的真实状态是：
 
 ```text
 BLOCKED_NO_SYNTH_TOOL
 BLOCKED_NO_28NM_LIB
 ```
 
-Therefore no real 28nm mapped netlist, area, power, timing, or signoff result is included. A backend team must supply real 28nm libraries, constraints, tool scripts, and raw logs before any numeric PPA claim can be added.
+因此本次提交的正确结论是：
 
-## 9. Backend Handoff
+```text
+PASS_WITH_EXTERNAL_SYNTH_BLOCKER
+```
 
-Backend receivers should start with `docs/report/12_backend_handoff_checklist.md`.
+也就是说，前端 RTL handoff 已完成；真实 28nm 映射网表和 PPA 结果仍需后端环境补齐。
 
-They receive:
+## 8. 后端接收与后续工作
 
-- pure Verilog RTL under `rtl/`,
-- SDC template under `constraints/`,
-- synthesis templates under `synth/`,
-- verification evidence under `reports/verification/`, `reports/precision/`, and `reports/evidence/`,
-- package manifest under `docs/admin/final_submission_manifest.md`.
+后端团队收到本包后，应优先阅读 [12_backend_handoff_checklist.md](/D:/github/-/docs/report/12_backend_handoff_checklist.md)。
 
-They must produce the missing backend artifacts: mapped netlist, timing report, area report, power report, gate-level simulation evidence, and any physical signoff material required by the contest.
+本次交付的后端输入包括：
 
-## 10. Optimization Outlook
+- `rtl/` 下的纯 Verilog RTL
+- `tb/` 下的 testbench
+- `constraints/` 下的 SDC 模板
+- `synth/rtl_filelist.f` 给出的确定性 RTL 读入顺序
+- `synth/` 下的综合模板
+- `reports/verification/`、`reports/precision/`、`reports/evidence/` 下的验证证据
 
-Future optimization should focus on synthesis-measured bottlenecks:
+后端后续应补齐：
 
-- dot32 reduction tree timing,
-- FP32 accumulator path,
-- 16-column area and switching activity,
-- valid/clear control timing,
-- dataset-driven workload activity for power estimation.
+- mapped netlist
+- timing report
+- area report
+- power report
+- gate-level simulation evidence
+- 竞赛若要求的物理实现或 signoff 材料
 
-No optimization in this first handoff batch changes the top-level interface. The next technical step depends on real backend feedback or new contest benchmark vectors.
+## 9. 结论
+
+截至 2026-05-06，本项目已经形成可提交、可移交后端继续处理的第一轮 `RTL handoff package`。它满足“前端 RTL + 完整验证 + 证据链 + 后端接收说明”的交付目标。
+
+当前唯一明确未完成项不是 RTL 功能或文档缺失，而是外部环境缺口：缺少真实综合工具与真实 28nm 标准单元库。因此，本项目当前最准确的提交状态不是“真实后端完成”，而是“前端交付完成，后端环境待接入”。

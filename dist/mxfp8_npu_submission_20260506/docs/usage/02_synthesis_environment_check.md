@@ -48,6 +48,8 @@ Release mode reruns the long 4096 sampled statistics scripts before checking the
 
 ## If Yosys Becomes Available
 
+Use `synth/rtl_filelist.f` as the canonical RTL read order when creating or editing synthesis commands. The current Yosys reference script mirrors that order manually.
+
 Use the existing generic script:
 
 ```powershell
@@ -64,6 +66,8 @@ Before running commercial synthesis, the backend must provide:
 - corner, voltage, temperature, and library naming,
 - target clock period and I/O timing assumptions,
 - any required wire-load, RC, or physical guidance,
+- a synthesis tool/version and an RTL read setup based on `synth/rtl_filelist.f`,
+- load/drive assumptions and switching/activity source for power,
 - report output policy for timing, area, power, and generated netlist.
 
 Then update `synth/run_dc_template.tcl` or create a Genus equivalent, run the tool, and archive raw logs and reports under `reports/synthesis/`.

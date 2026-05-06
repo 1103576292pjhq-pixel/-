@@ -11,6 +11,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
+INCLUDE_FILES = (
+    "README.md",
+    "MAIN.md",
+    "STATUS.md",
+)
+
 INCLUDE_DIRS = (
     "rtl",
     "tb",
@@ -19,14 +25,20 @@ INCLUDE_DIRS = (
     "vectors",
     "constraints",
     "synth",
-    "docs",
-    "reports",
 )
 
-INCLUDE_FILES = (
-    "README.md",
-    "MAIN.md",
-    "STATUS.md",
+INCLUDE_TREE_DIRS = (
+    "docs/report",
+    "docs/usage",
+    "reports/evidence",
+    "reports/precision",
+    "reports/verification",
+    "reports/synthesis",
+)
+
+INCLUDE_EXTRA_FILES = (
+    "docs/admin/final_submission_manifest.md",
+    "reports/README.md",
 )
 
 FORBIDDEN_DIR_NAMES = {
@@ -129,6 +141,16 @@ def build_package(date_tag: str, allow_missing: bool) -> Path:
     for rel_dir in INCLUDE_DIRS:
         copy_tree(rel_dir, package_dir, copied, missing)
 
+    for rel_dir in INCLUDE_TREE_DIRS:
+        copy_tree(rel_dir, package_dir, copied, missing)
+
+    for rel_file in INCLUDE_EXTRA_FILES:
+        src = ROOT / rel_file
+        if not src.exists():
+            missing.append(rel_file)
+            continue
+        copy_file(src, package_dir / rel_file, copied)
+
     required_final_files = (
         "sim/run_submission_regression.ps1",
         "tools/package_submission.py",
@@ -136,6 +158,7 @@ def build_package(date_tag: str, allow_missing: bool) -> Path:
         "docs/report/submission_report.md",
         "docs/report/12_backend_handoff_checklist.md",
         "docs/usage/02_synthesis_environment_check.md",
+        "synth/rtl_filelist.f",
         "reports/evidence/final_evidence_index_2026-05-06.md",
         "reports/evidence/boundary_case_matrix.md",
         "reports/synthesis/environment_check_2026-05-06.md",

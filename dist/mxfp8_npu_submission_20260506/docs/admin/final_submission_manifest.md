@@ -25,12 +25,10 @@ dist/mxfp8_npu_submission_20260506/
 | `sim/` | yes | PowerShell regression, waveform, precision, and submission acceptance scripts. |
 | `vectors/` | yes | Fixed input/expected-output vectors and manifests. |
 | `constraints/` | yes | SDC handoff template. |
-| `synth/` | yes | DC and Yosys synthesis templates. |
+| `synth/` | yes | Deterministic RTL filelist plus DC and Yosys synthesis templates. |
 | `docs/report/` | yes | Judge-facing report chapters, single submission report, and backend checklist. |
 | `docs/usage/` | yes | Run, verification, and synthesis environment usage guides. |
 | `docs/admin/final_submission_manifest.md` | yes | This formal include/exclude list. |
-| `docs/admin/submission_readiness_review_2026-04-29.md` | yes | Historical readiness review used as supporting context. |
-| `docs/primer/`, `docs/teaching/`, `docs/line_by_line/` | yes, supplemental | Existing reader-facing learning/defense notes; not expanded in this first handoff batch. |
 | `reports/verification/` | yes | PASS logs from Verilog, Python, waveform, and precision scripts. |
 | `reports/precision/` | yes | 4096 sampled precision JSON summaries. |
 | `reports/evidence/` | yes | Evidence index, boundary matrix, VCD, PNG, and evidence notes. |
@@ -47,6 +45,10 @@ These must not appear in the formal package:
 | `.codexpotter/` | Local Potter state and progress files. |
 | `work/` | Internal task files and working notes. |
 | `dist/` inside the package | Prevent recursive packaging. |
+| `docs/primer/` | Teaching/intro material belongs to the second Potter lane, not the formal first handoff package. |
+| `docs/teaching/` | Teaching notes are not required for the contest handoff package. |
+| `docs/line_by_line/` | Line-by-line study notes are not part of the formal competition package. |
+| unrelated `docs/admin/*.md` historical planning files | Internal planning history should stay outside the formal package unless explicitly cited by the final report. |
 | `sim/*.vvp` | Generated Icarus simulation executables. |
 | `**/__pycache__/`, `*.pyc`, `*.pyo` | Python caches. |
 | `potter-run.log` | Local run history, not formal evidence. |
@@ -66,6 +68,7 @@ The package is complete only when these files are present:
 - `docs/report/submission_report.md`
 - `docs/report/12_backend_handoff_checklist.md`
 - `docs/admin/final_submission_manifest.md`
+- `synth/rtl_filelist.f`
 - `dist/mxfp8_npu_submission_20260506/PACKAGE_CONTENTS.txt`
 
 ## Current Blockers
@@ -78,3 +81,5 @@ BLOCKED_NO_28NM_LIB
 ```
 
 If a backend later provides real tools and libraries, add raw logs and generated reports under `reports/synthesis/`, then update this manifest and the report. Until then, the correct deliverable name is RTL handoff package.
+
+Backend intake should begin from `synth/rtl_filelist.f`, `constraints/mx_array_32x16.sdc`, and the synthesis templates. The backend still must provide the synthesis tool, real library, PVT corner, load/drive assumptions, activity source, raw logs, and generated timing/area/power/netlist reports before any numeric PPA claim is valid.

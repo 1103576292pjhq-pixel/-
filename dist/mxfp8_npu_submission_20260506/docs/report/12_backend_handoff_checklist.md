@@ -20,7 +20,7 @@ This checklist is for the engineer receiving the MXFP8 NPU front-end RTL handoff
 
 | Category | Paths |
 | --- | --- |
-| RTL | `rtl/*.v`, `rtl/*.vh` |
+| RTL | `rtl/*.v`, `rtl/*.vh`, with deterministic order in `synth/rtl_filelist.f` |
 | Testbench | `tb/*.v` |
 | Python reference | `tools/mx_ref.py` |
 | Regression scripts | `sim/run_iverilog.ps1`, `sim/run_python_ref.ps1`, `sim/run_waveform_smoke.ps1`, `sim/run_submission_regression.ps1` |
@@ -52,16 +52,22 @@ Expected local result after final packaging is `PASS_WITH_EXTERNAL_SYNTH_BLOCKER
 Start from:
 
 - `constraints/mx_array_32x16.sdc`
+- `synth/rtl_filelist.f`
 - `synth/run_dc_template.tcl`
 - `synth/run_yosys_generic.ys`
 
-Before real synthesis, backend must replace placeholder libraries and tune:
+Use `synth/rtl_filelist.f` as the canonical read order for `read_verilog`/`analyze` setup. Before real synthesis, backend must replace placeholder libraries and tune:
 
+- synthesis tool and version,
+- real 28nm library paths,
+- PVT corner,
 - target clock period,
 - input/output delay,
 - clock uncertainty,
 - reset/valid/clear timing assumptions,
 - load/drive/corner assumptions,
+- activity source for power,
+- raw log/report output paths,
 - library paths and link libraries.
 
 ## 5. Expected Backend Outputs

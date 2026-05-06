@@ -49,7 +49,8 @@
 - 后端接收清单：`docs/report/12_backend_handoff_checklist.md`
 - 最终提交 manifest：`docs/admin/final_submission_manifest.md`
 - 最终证据索引：`reports/evidence/final_evidence_index_2026-05-06.md`
-- 官方提交包草案：`dist/mxfp8_npu_submission_20260506/`
+- 官方提交候选包：`dist/mxfp8_npu_submission_20260506/`
+- 后端 RTL filelist：`synth/rtl_filelist.f`
 
 这些文件用于把比赛要求、用户要求、当前完成状态、后端移交边界、风险、阻塞项、后续执行优先级和提交前复核集中到可决策入口。它们不改变 RTL，也不把模板性 PPA 写成真实 28nm 结果。
 
@@ -70,6 +71,7 @@
 - 2026-05-04 复核与规划：已重跑默认 Verilog 回归、Python golden、waveform smoke 和 PNG 截图生成；已新增 `docs/admin/competition_submission_and_teaching_upgrade_plan_2026-05-04.md`，把后续工作拆成提交包卫生、RTL/验证签核、综合接入、提交报告、教学总书、逐行讲解和最终打包。
 - 2026-05-05 两次 Potter 边界：第一次 Potter 只做比赛提交与后端 RTL handoff 包，不做教学大扩写；第二次 Potter 在 handoff 包冻结后专门做零基础导学与逐行代码讲解。`netlist` 只在真实综合工具和库可用时生成，否则第一交付物是 RTL handoff package。
 - 2026-05-06 第一次 handoff 收口：已新增 `sim/run_submission_regression.ps1`、`tools/package_submission.py`、`docs/report/submission_report.md`、`docs/report/12_backend_handoff_checklist.md`、`docs/admin/final_submission_manifest.md`、`docs/usage/02_synthesis_environment_check.md`、`reports/evidence/final_evidence_index_2026-05-06.md`、`reports/evidence/boundary_case_matrix.md`、`reports/synthesis/environment_check_2026-05-06.md`，并生成 `dist/mxfp8_npu_submission_20260506/`。release 验收与 fast 验收 verdict 均为 `PASS_WITH_EXTERNAL_SYNTH_BLOCKER`，其中 release 验收已重跑 4096 sampled stats。
+- 2026-05-06 handoff 终审增强：已新增 `synth/rtl_filelist.f` 作为后端确定性 RTL 读入顺序，更新提交清单、前后端 handoff 文档、综合环境说明和最终 manifest；本轮 fast 验收再次得到 `PASS_WITH_EXTERNAL_SYNTH_BLOCKER`，重新打包后的 `dist/mxfp8_npu_submission_20260506/` 已排除 `.omx/`、`.codexpotter/`、`work/`、`.vvp`、教学目录和多余 admin 历史文件。当前第一轮包是正式提交候选包；第二轮教学 Potter 应在该包稳定后再启动。
 
 ## 仍然缺失的外部输入
 
