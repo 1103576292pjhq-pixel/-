@@ -24,69 +24,48 @@ module llmt_col (
   output [31:0] acc_o;
 
   reg valid_o;
-  reg signed [`MX_DOT_W-1:0] dot_quad_sum [0:3];
-  reg signed [`MX_DOT_W-1:0] dot_quad_sum_s1 [0:3];
+  reg [31:0] acc_reg;
+  reg signed [`MX_DOT_W-1:0] dot_sum;
   reg any_nan;
-  reg signed [`MX_ELEM_FIXED_W-1:0] a_fixed;
-  reg signed [`MX_ELEM_FIXED_W-1:0] b_fixed;
-  reg signed [`MX_PROD_W-1:0] lane_prod;
-  reg signed [`MX_DOT_W-1:0] lane_prod_ext;
+  reg signed [`MX_DOT_EXP_W-1:0] dot_exp_shift;
+  reg signed [`MX_ELEM_Q_W-1:0] a_q;
+  reg signed [`MX_ELEM_Q_W-1:0] b_q;
+  reg signed [`MX_PROD_W-1:0] prod_q;
   reg signed [9:0] a_scale_exp;
   reg signed [9:0] b_scale_exp;
-  reg signed [`MX_DOT_EXP_W-1:0] dot_exp_shift;
   reg valid_s1;
   reg acc_clear_s1;
+  reg signed [`MX_DOT_W-1:0] dot_sum_s1;
   reg signed [`MX_DOT_EXP_W-1:0] dot_exp_shift_s1;
   reg any_nan_s1;
   reg valid_s2;
   reg acc_clear_s2;
   reg [31:0] dot_fp32_s2;
-  reg [31:0] acc_reg;
-  wire signed [`MX_DOT_W-1:0] dot_half_sum0_s1;
-  wire signed [`MX_DOT_W-1:0] dot_half_sum1_s1;
-  wire signed [`MX_DOT_W-1:0] dot_sum_s1;
   wire [31:0] dot_fp32_s1;
   wire [31:0] acc_next;
-  integer quad_idx;
-  integer lane_idx;
-  integer elem_idx;
-  integer pipe_idx;
+  integer lane;
 
   `include "mx_funcs.vh"
 
   always @* begin
+    dot_sum = {`MX_DOT_W{1'b0}};
     any_nan = e8m0_is_nan(a_scale_i) || e8m0_is_nan(b_scale_i);
-
-    // Stage-1 now stops at the four 8-lane partial sums; the final merge moves
-    // into the next stage before fixed_to_fp32 so the front-end path stays
-    // shorter while the external pipeline contract remains unchanged.
-    for (quad_idx = 0; quad_idx < 4; quad_idx = quad_idx + 1) begin
-      dot_quad_sum[quad_idx] = {`MX_DOT_W{1'b0}};
-      for (lane_idx = 0; lane_idx < 8; lane_idx = lane_idx + 1) begin
-        elem_idx = (quad_idx * 8) + lane_idx;
-        if (e4m3_is_nan(a_elems_i[elem_idx*`MX_ELEM_W +: `MX_ELEM_W]) ||
-            e4m3_is_nan(b_elems_i[elem_idx*`MX_ELEM_W +: `MX_ELEM_W])) begin
-          any_nan = 1'b1;
-        end
-
-        a_fixed = e4m3_to_fixed(a_elems_i[elem_idx*`MX_ELEM_W +: `MX_ELEM_W]);
-        b_fixed = e4m3_to_fixed(b_elems_i[elem_idx*`MX_ELEM_W +: `MX_ELEM_W]);
-        lane_prod = a_fixed * b_fixed;
-        lane_prod_ext = {{(`MX_DOT_W-`MX_PROD_W){lane_prod[`MX_PROD_W-1]}}, lane_prod};
-        dot_quad_sum[quad_idx] = dot_quad_sum[quad_idx] + lane_prod_ext;
-      end
-    end
-  end
-
-  always @* begin
     a_scale_exp = e8m0_unbiased_exp(a_scale_i);
     b_scale_exp = e8m0_unbiased_exp(b_scale_i);
-    dot_exp_shift = a_scale_exp + b_scale_exp - `MX_PROD_FIXED_FRAC;
-  end
+    dot_exp_shift = a_scale_exp + b_scale_exp - `MX_PROD_Q_FRAC;
 
-  assign dot_half_sum0_s1 = dot_quad_sum_s1[0] + dot_quad_sum_s1[1];
-  assign dot_half_sum1_s1 = dot_quad_sum_s1[2] + dot_quad_sum_s1[3];
-  assign dot_sum_s1 = dot_half_sum0_s1 + dot_half_sum1_s1;
+    for (lane = 0; lane < `MX_BLOCK_K; lane = lane + 1) begin
+      if (e4m3_is_nan(a_elems_i[lane*`MX_ELEM_W +: `MX_ELEM_W]) ||
+          e4m3_is_nan(b_elems_i[lane*`MX_ELEM_W +: `MX_ELEM_W])) begin
+        any_nan = 1'b1;
+      end
+
+      a_q = e4m3_to_q9(a_elems_i[lane*`MX_ELEM_W +: `MX_ELEM_W]);
+      b_q = e4m3_to_q9(b_elems_i[lane*`MX_ELEM_W +: `MX_ELEM_W]);
+      prod_q = a_q * b_q;
+      dot_sum = dot_sum + {{(`MX_DOT_W-`MX_PROD_W){prod_q[`MX_PROD_W-1]}}, prod_q};
+    end
+  end
 
   fixed_to_fp32 dot_cast_u (
     .value_i(dot_sum_s1),
@@ -105,35 +84,18 @@ module llmt_col (
     if (!rst_n) begin
       valid_s1 <= 1'b0;
       acc_clear_s1 <= 1'b0;
-      for (pipe_idx = 0; pipe_idx < 4; pipe_idx = pipe_idx + 1) begin
-        dot_quad_sum_s1[pipe_idx] <= {`MX_DOT_W{1'b0}};
-      end
+      dot_sum_s1 <= {`MX_DOT_W{1'b0}};
       dot_exp_shift_s1 <= {`MX_DOT_EXP_W{1'b0}};
       any_nan_s1 <= 1'b0;
       valid_s2 <= 1'b0;
       acc_clear_s2 <= 1'b0;
       dot_fp32_s2 <= `MX_FP32_ZERO;
-      acc_reg <= `MX_FP32_ZERO;
       valid_o <= 1'b0;
-    end else if (acc_clear_i && !valid_i) begin
-      valid_s1 <= 1'b0;
-      acc_clear_s1 <= 1'b0;
-      for (pipe_idx = 0; pipe_idx < 4; pipe_idx = pipe_idx + 1) begin
-        dot_quad_sum_s1[pipe_idx] <= {`MX_DOT_W{1'b0}};
-      end
-      dot_exp_shift_s1 <= {`MX_DOT_EXP_W{1'b0}};
-      any_nan_s1 <= 1'b0;
-      valid_s2 <= 1'b0;
-      acc_clear_s2 <= 1'b0;
-      dot_fp32_s2 <= `MX_FP32_ZERO;
       acc_reg <= `MX_FP32_ZERO;
-      valid_o <= 1'b0;
     end else begin
       valid_s1 <= valid_i;
       acc_clear_s1 <= acc_clear_i;
-      for (pipe_idx = 0; pipe_idx < 4; pipe_idx = pipe_idx + 1) begin
-        dot_quad_sum_s1[pipe_idx] <= dot_quad_sum[pipe_idx];
-      end
+      dot_sum_s1 <= dot_sum;
       dot_exp_shift_s1 <= dot_exp_shift;
       any_nan_s1 <= any_nan;
 
@@ -148,6 +110,8 @@ module llmt_col (
         end else begin
           acc_reg <= acc_next;
         end
+      end else if (acc_clear_i && !valid_i) begin
+        acc_reg <= `MX_FP32_ZERO;
       end
     end
   end

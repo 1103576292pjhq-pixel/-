@@ -1,0 +1,74 @@
+{
+    "kind":  "sampled_matmul_stats_precision_profiles",
+    "generated_by":  "sim/run_matmul_precision_profiles.ps1",
+    "generated_at_utc":  "2026-05-10T13:42:56Z",
+    "m":  4096,
+    "n":  4096,
+    "k":  4096,
+    "k_blocks":  128,
+    "profiles":  [
+                     "baseline",
+                     "narrow-scale",
+                     "wide-scale"
+                 ],
+    "seeds":  [
+                  "20260508",
+                  "20260509",
+                  "20260510"
+              ],
+    "samples_per_seed":  256,
+    "thresholds":  {
+                       "enabled":  true,
+                       "mean_rel_error_limit":  1E-05,
+                       "max_rel_error_limit":  0.001,
+                       "status":  "pass",
+                       "failures":  [
+
+                                    ]
+                   },
+    "per_profile":  [
+                        {
+                            "profile":  "baseline",
+                            "report":  ".\\reports\\matmul_stats_4096x4096x4096_baseline_multiseed.json",
+                            "seed_count":  3,
+                            "samples_per_seed":  256,
+                            "total_samples":  768,
+                            "mean_abs_error":  0.00013348863770564398,
+                            "mean_rel_error":  5.2222516477843733E-07,
+                            "max_abs_error":  0.0011601448059082031,
+                            "max_abs_error_seed":  20260509,
+                            "max_rel_error":  8.6146481614711028E-05,
+                            "max_rel_error_seed":  20260508,
+                            "threshold_status":  "pass"
+                        },
+                        {
+                            "profile":  "narrow-scale",
+                            "report":  ".\\reports\\matmul_stats_4096x4096x4096_narrow-scale_multiseed.json",
+                            "seed_count":  3,
+                            "samples_per_seed":  256,
+                            "total_samples":  768,
+                            "mean_abs_error":  5.240862568219503E-05,
+                            "mean_rel_error":  3.0651760345498153E-07,
+                            "max_abs_error":  0.0004320144653320313,
+                            "max_abs_error_seed":  20260508,
+                            "max_rel_error":  1.9880900154143247E-05,
+                            "max_rel_error_seed":  20260509,
+                            "threshold_status":  "pass"
+                        },
+                        {
+                            "profile":  "wide-scale",
+                            "report":  ".\\reports\\matmul_stats_4096x4096x4096_wide-scale_multiseed.json",
+                            "seed_count":  3,
+                            "samples_per_seed":  256,
+                            "total_samples":  768,
+                            "mean_abs_error":  0.020422043455861665,
+                            "mean_rel_error":  4.0109366023700081E-07,
+                            "max_abs_error":  0.15652231872081757,
+                            "max_abs_error_seed":  20260510,
+                            "max_rel_error":  5.2477953446474142E-05,
+                            "max_rel_error_seed":  20260508,
+                            "threshold_status":  "pass"
+                        }
+                    ],
+    "note":  "Profile summary over deterministic multi-seed sampled stats. Baseline preserves the existing sampled distribution; narrow-scale constrains finite E8M0 scale coverage; wide-scale expands finite E8M0 scale coverage."
+}

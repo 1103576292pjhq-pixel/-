@@ -1,0 +1,8 @@
+{
+  "kind": "matmul_dataset",
+  "m": 3,
+  "n": 20,
+  "k": 64,
+  "k_blocks": 2,
+  "layout": "a rows are row-major by row,k_block; b rows are col-major by col,k_block; expected_y is row-major"
+}

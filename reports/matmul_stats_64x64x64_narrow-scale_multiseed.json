@@ -1,0 +1,114 @@
+{
+    "kind":  "sampled_matmul_stats_multiseed",
+    "generated_by":  "sim/run_matmul_stats_multiseed.ps1",
+    "generated_at_utc":  "2026-05-10T13:42:26Z",
+    "m":  64,
+    "n":  64,
+    "k":  64,
+    "k_blocks":  2,
+    "precision_profile":  "narrow-scale",
+    "seeds":  [
+                  1,
+                  2
+              ],
+    "seed_count":  2,
+    "samples_per_seed":  2,
+    "total_samples":  4,
+    "aggregate":  {
+                      "mean_abs_error":  0,
+                      "mean_rel_error":  0,
+                      "max_abs_error":  0,
+                      "max_abs_error_seed":  1,
+                      "max_rel_error":  0,
+                      "max_rel_error_seed":  1,
+                      "worst_by_rel_error":  {
+                                                 "seed":  1,
+                                                 "detail":  {
+                                                                "row":  0,
+                                                                "col":  0,
+                                                                "projected_bits":  "0x00000000",
+                                                                "ideal":  0.0,
+                                                                "abs_error":  0.0,
+                                                                "rel_error":  0.0
+                                                            }
+                                             }
+                  },
+    "thresholds":  {
+                       "enabled":  false,
+                       "mean_rel_error_limit":  1E-05,
+                       "max_rel_error_limit":  0.001,
+                       "status":  "not_checked",
+                       "failures":  [
+
+                                    ]
+                   },
+    "per_seed":  [
+                     {
+                         "kind":  "sampled_matmul_stats",
+                         "m":  64,
+                         "n":  64,
+                         "k":  64,
+                         "k_blocks":  2,
+                         "precision_profile":  "narrow-scale",
+                         "profile":  {
+                                         "name":  "narrow-scale",
+                                         "description":  "Finite sampled distribution with narrow E8M0 scale coverage from 2^-1 through 2^1.",
+                                         "elem_count":  31,
+                                         "scale_codes":  [
+                                                             "0x7e",
+                                                             "0x7f",
+                                                             "0x80"
+                                                         ]
+                                     },
+                         "samples":  2,
+                         "seed":  1,
+                         "mean_abs_error":  0.0,
+                         "mean_rel_error":  0.0,
+                         "max_abs_error":  0.0,
+                         "max_rel_error":  0.0,
+                         "worst":  {
+                                       "row":  0,
+                                       "col":  0,
+                                       "projected_bits":  "0x00000000",
+                                       "ideal":  0.0,
+                                       "abs_error":  0.0,
+                                       "rel_error":  0.0
+                                   },
+                         "note":  "projected path rounds each dot and FP32 accumulation; ideal path accumulates Python double values"
+                     },
+                     {
+                         "kind":  "sampled_matmul_stats",
+                         "m":  64,
+                         "n":  64,
+                         "k":  64,
+                         "k_blocks":  2,
+                         "precision_profile":  "narrow-scale",
+                         "profile":  {
+                                         "name":  "narrow-scale",
+                                         "description":  "Finite sampled distribution with narrow E8M0 scale coverage from 2^-1 through 2^1.",
+                                         "elem_count":  31,
+                                         "scale_codes":  [
+                                                             "0x7e",
+                                                             "0x7f",
+                                                             "0x80"
+                                                         ]
+                                     },
+                         "samples":  2,
+                         "seed":  2,
+                         "mean_abs_error":  0.0,
+                         "mean_rel_error":  0.0,
+                         "max_abs_error":  0.0,
+                         "max_rel_error":  0.0,
+                         "worst":  {
+                                       "row":  0,
+                                       "col":  0,
+                                       "projected_bits":  "0x00000000",
+                                       "ideal":  0.0,
+                                       "abs_error":  0.0,
+                                       "rel_error":  0.0
+                                   },
+                         "note":  "projected path rounds each dot and FP32 accumulation; ideal path accumulates Python double values"
+                     }
+                 ],
+    "note":  "Each seed uses tools/mx_ref.py --report-matmul-stats with sampled row/column points and the requested precision profile; this is diagnostic precision evidence, not an exhaustive matrix dump."
+}

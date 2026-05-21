@@ -1,35 +1,67 @@
 # STATUS
 
-- 当前阶段：2026-05-06 第一次比赛提交与后端 RTL handoff 包已收口为正式提交候选包。
-- 本批已完成：已新增一键验收脚本、最终证据索引、边界 case 矩阵、综合环境检查、综合检查使用说明、最终提交 manifest、单入口提交报告、后端接收清单、确定性 RTL filelist、官方打包脚本和 `dist/mxfp8_npu_submission_20260506/` 正式提交候选包。
-- 当前验收：`sim/run_submission_regression.ps1` release 口径已跑通；本轮 `sim/run_submission_regression.ps1 -Fast` 也已重新跑通，verdict 为 `PASS_WITH_EXTERNAL_SYNTH_BLOCKER`。
-- 下一步：若拿到真实后端工具和 28nm 库，再补真实综合/PPA；若收到主办方模板或答辩规则，再按模板裁剪提交报告。
-- 阻塞项：`BLOCKED_NO_SYNTH_TOOL`、`BLOCKED_NO_28NM_LIB`；主办方补充通知、提交模板和答辩规则仍未提供。因此不声明真实 28nm 面积、功耗、频率、时序、WNS/TNS、mapped netlist 或 signoff。
+## Current Phase
 
-## 当前交付判断
+Frontend RTL restart: write, test, and simulate only.
 
-- 交付物名称：`RTL handoff package`。
-- RTL 基线：纯 Verilog RTL 存在，顶层为 `mx_array_32x16`，本批未改变顶层接口。
-- 验证基线：`sim/run_iverilog.ps1`、`sim/run_python_ref.ps1`、`sim/run_waveform_smoke.ps1`、`sim/render_waveform_screenshots.ps1` 均已由提交验收脚本串联检查。
-- 精度基线：4096 sampled profile JSON 和统计日志已由 release 口径重跑；fast 模式只作为后续快验收，不把旧证据伪装成新跑 release 统计。
-- 证据基线：最终证据索引在 `reports/evidence/final_evidence_index_2026-05-06.md`，边界矩阵在 `reports/evidence/boundary_case_matrix.md`。
-- PPA 基线：只具备 SDC、DC/Yosys 模板和环境检查；真实 PPA 等待后端工具链与 28nm 标准单元库。
-- 正式包：`tools/package_submission.py` 生成 `dist/mxfp8_npu_submission_20260506/`，当前作为正式提交候选包；污染检查已确认排除 `.git/`、`.omx/`、`.codexpotter/`、`work/`、`sim/*.vvp`、教学目录和历史 admin 规划文件。
+## Latest Acceptance
 
-## 关键入口
+- 2026-05-10 frontend regression lane final accepted.
+- Acceptance final: `reports/acceptance_2026-05-10_frontend_regression_lane.md`.
+- Recommended regression entry: `.\sim\run_frontend_regression.ps1`.
+- Regression gates passed: `python .\tools\mx_ref.py --selftest`, `.\sim\run_iverilog.ps1`, `.\sim\run_waveform_smoke.ps1`, `.\sim\run_matmul_stats.ps1`.
+- 2026-05-10 multi-seed sampled precision evidence final accepted.
+- Multi-seed acceptance final: `reports/acceptance_2026-05-10_frontend_precision_multiseed.md`.
+- Multi-seed command: `.\sim\run_matmul_stats_multiseed.ps1`.
+- Multi-seed report: `reports/matmul_stats_4096x4096x4096_multiseed.json`.
+- Multi-seed defaults: seeds `20260508,20260509,20260510`, 256 samples per seed, 768 total sampled points, `mean_rel_error <= 1.0e-5`, `max_rel_error <= 1.0e-3`.
+- 2026-05-10 precision profile wrapper final accepted.
+- Precision profile acceptance final: `reports/acceptance_2026-05-10_frontend_precision_profiles.md`.
+- Precision profile command: `.\sim\run_matmul_precision_profiles.ps1`.
+- Precision profile summary: `reports/matmul_stats_4096x4096x4096_profiles.json`.
+- Precision profile reports: `reports/matmul_stats_4096x4096x4096_baseline_multiseed.json`, `reports/matmul_stats_4096x4096x4096_narrow-scale_multiseed.json`, `reports/matmul_stats_4096x4096x4096_wide-scale_multiseed.json`.
+- Precision profile defaults: profiles `baseline,narrow-scale,wide-scale`, seeds `20260508,20260509,20260510`, 256 samples per seed per profile, `mean_rel_error <= 1.0e-5`, `max_rel_error <= 1.0e-3`.
+- 2026-05-09 LLMT / Array e2e directed frontend batch passed.
+- Acceptance report: `reports/acceptance_2026-05-09_frontend_e2e_directed.md`.
+- Plan record: `.omx/plans/mxfp8_frontend_batch3_e2e_directed_plan_2026-05-09.md`.
+- Regression gates passed: `python .\tools\mx_ref.py --selftest`, `.\sim\run_iverilog.ps1`, `.\sim\run_waveform_smoke.ps1`, `.\sim\run_matmul_stats.ps1`.
+- 2026-05-09 directed corner expansion frontend batch passed.
+- Acceptance report: `reports/acceptance_2026-05-09_frontend_corner_expansion.md`.
+- Plan record: `.omx/plans/mxfp8_frontend_batch2_minimal_corner_plan_2026-05-09.md`.
+- Regression gates passed: `python .\tools\mx_ref.py --selftest`, `.\sim\run_iverilog.ps1`, `.\sim\run_waveform_smoke.ps1`, `.\sim\run_matmul_stats.ps1`.
+- 2026-05-09 subnormal / RNE frontend batch passed.
+- Acceptance report: `reports/acceptance_2026-05-09_frontend_subnormal_rne.md`.
+- Plan record: `.omx/plans/mxfp8_frontend_batch_plan_2026-05-09.md`.
+- Regression gates passed: `python .\tools\mx_ref.py --selftest`, `.\sim\run_iverilog.ps1`, `.\sim\run_waveform_smoke.ps1`, `.\sim\run_matmul_stats.ps1`.
 
-- 单入口提交报告：`docs/report/submission_report.md`
-- 后端接收清单：`docs/report/12_backend_handoff_checklist.md`
-- 后端 RTL filelist：`synth/rtl_filelist.f`
-- 最终提交 manifest：`docs/admin/final_submission_manifest.md`
-- 综合环境检查：`reports/synthesis/environment_check_2026-05-06.md`
-- 综合检查说明：`docs/usage/02_synthesis_environment_check.md`
-- 一键验收脚本：`sim/run_submission_regression.ps1`
-- 官方打包脚本：`tools/package_submission.py`
+## Active Decisions
 
-## 后续触发条件
+- Ignore previous report/package/synthesis history for this phase.
+- Keep the design small and readable.
+- Do not produce netlist, SDC, area, power, or timing reports yet.
+- Use Windows Icarus Verilog for the first simulation loop.
 
-1. 如果收到主办方模板或答辩规则，先更新 `docs/report/09_submission_checklist.md` 和 `docs/report/submission_report.md`。
-2. 如果获得真实 28nm `.db/.lib`、约束要求和综合工具，先归档真实 logs/reports，再更新 `docs/report/07_synthesis_and_ppa.md`、`reports/synthesis/` 和最终 manifest。
-3. 如果新增 benchmark 或评分样例，先扩展 `vectors/` 与 `sim/` 回归，再同步 `reports/evidence/` 和 `reports/precision/`。
-4. 第二轮教学 Potter 只应在当前正式提交候选包稳定后启动；教学资料继续保留在仓库中，但不进入第一轮正式 handoff 包。
+## Implemented Baseline
+
+- `llmt_col`: one MXFP8 dot32 column with FP32 accumulator output.
+- `mx_array_32x16`: 16 `llmt_col` instances, A block broadcast, B block per column.
+- Basic smoke tests for column accumulation, subnormal element input, NaN propagation, and 16-column array wiring.
+- LLMT boundary directed tests for FP32 min subnormal, negative min subnormal, min normal, NaN propagation, idle clear, and post-clear accumulation.
+- Array directed test for 16-column independence and per-column `acc_clear_i` behavior.
+- Directed `fp32_add_rne` tests for NaN/Inf, cancellation, and round-to-even half-ULP behavior.
+- Directed `fixed_to_fp32` and `fp32_add_rne` subnormal boundary tests.
+- Expanded directed `fixed_to_fp32` tests for negative subnormal, `nan_i`, overflow, and normal-path RNE ties.
+- Expanded directed `fp32_add_rne` tests for signed zero, subnormal-to-normal, and Inf + finite behavior.
+- Python-generated `3x20x64` matrix dataset with a Verilog scoreboard test.
+- Python-generated `2x17x32` nonfinite matrix dataset with E4M3 NaN and E8M0 scale-NaN propagation.
+- Python-generated `4x33x96` random finite matrix dataset with 3 K-blocks and 3 column tiles.
+- Python sampled `4096x4096x4096` precision statistics.
+- Optional multi-seed sampled `4096x4096x4096` precision statistics wrapper and aggregate report.
+- Optional precision-profile sampled `4096x4096x4096` wrapper for baseline, narrow-scale, and wide-scale finite distributions.
+- Optional VCD smoke generation for `llmt_col` and `mx_array_32x16` basics.
+
+## Next Work
+
+- Increase sampled stats sample count and add more precision profiles if needed.
+- Keep multi-seed precision reports separate from `.\sim\run_frontend_regression.ps1` unless runtime expectations change.
+- Only after RTL simulation is stable, revisit synthesis and SDC.

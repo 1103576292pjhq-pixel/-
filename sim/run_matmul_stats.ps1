@@ -1,62 +1,22 @@
-param(
-  [int]$M = 4096,
-  [int]$N = 4096,
-  [int]$K = 4096,
-  [int]$Samples = 2048,
-  [int]$Seed = 20260423,
-  [int]$ScaleExpMin = -8,
-  [int]$ScaleExpMax = 8,
-  [int]$ElemNanStride = 0,
-  [int]$ScaleNanStride = 0,
-  [switch]$AllowNonFinite,
-  [string]$Tag = "",
-  [string]$OutFile = ""
-)
-
 $ErrorActionPreference = "Stop"
+Set-StrictMode -Version 2.0
 
-$workdir = Split-Path -Parent $PSScriptRoot
-if (-not $OutFile) {
-  $reportDir = Join-Path $workdir "reports\\precision"
-  $suffix = ""
-  if ($Tag) {
-    $suffix = "_$Tag"
-  } elseif (($ElemNanStride -gt 0) -or ($ScaleNanStride -gt 0)) {
-    $suffix = "_sparse_nonfinite"
-  } elseif ($AllowNonFinite) {
-    $suffix = "_mixed_nonfinite"
-  }
-  $OutFile = Join-Path $reportDir ("matmul_stats_{0}x{1}x{2}{3}.json" -f $M, $N, $K, $suffix)
+$Root = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+$ReportDir = Join-Path $Root "reports"
+New-Item -ItemType Directory -Force -Path $ReportDir | Out-Null
+
+$Out = Join-Path $ReportDir "matmul_stats_4096x4096x4096_sampled.json"
+python (Join-Path $Root "tools\mx_ref.py") `
+  --report-matmul-stats `
+  --out-dir $Out `
+  --m 4096 `
+  --n 4096 `
+  --k 4096 `
+  --samples 256 `
+  --seed 20260508
+
+if ($LASTEXITCODE -ne 0) {
+  throw "matmul stats failed"
 }
 
-$pythonArgs = @(
-  (Join-Path $workdir "tools\\mx_ref.py"),
-  "--report-matmul-stats",
-  "--m", "$M",
-  "--n", "$N",
-  "--k", "$K",
-  "--samples", "$Samples",
-  "--seed", "$Seed",
-  "--summary-out", "$OutFile"
-)
-
-if (($ElemNanStride -gt 0) -or ($ScaleNanStride -gt 0)) {
-  $pythonArgs += @(
-    "--scale-exp-min", "$ScaleExpMin",
-    "--scale-exp-max", "$ScaleExpMax"
-  )
-  if ($ElemNanStride -gt 0) {
-    $pythonArgs += @("--elem-nan-stride", "$ElemNanStride")
-  }
-  if ($ScaleNanStride -gt 0) {
-    $pythonArgs += @("--scale-nan-stride", "$ScaleNanStride")
-  }
-} elseif (-not $AllowNonFinite) {
-  $pythonArgs += @(
-    "--finite-only",
-    "--scale-exp-min", "$ScaleExpMin",
-    "--scale-exp-max", "$ScaleExpMax"
-  )
-}
-
-& python @pythonArgs
+Write-Host "PASS run_matmul_stats $Out"

@@ -1,0 +1,36 @@
+{
+  "kind": "sampled_matmul_stats",
+  "m": 4096,
+  "n": 4096,
+  "k": 4096,
+  "k_blocks": 128,
+  "precision_profile": "baseline",
+  "profile": {
+    "name": "baseline",
+    "description": "Existing finite sampled distribution with E8M0 scales 2^-2 through 2^2.",
+    "elem_count": 31,
+    "scale_codes": [
+      "0x7d",
+      "0x7e",
+      "0x7f",
+      "0x80",
+      "0x81"
+    ]
+  },
+  "samples": 256,
+  "seed": 20260508,
+  "mean_abs_error": 0.00013804063200950623,
+  "mean_rel_error": 9.391798466636242e-07,
+  "max_abs_error": 0.0008134841918945312,
+  "max_rel_error": 8.614648161471103e-05,
+  "worst": {
+    "row": 3396,
+    "col": 2704,
+    "projected_bits": "0xbdd1b300",
+    "projected": -0.10239219665527344,
+    "ideal": -0.1024010181427002,
+    "abs_error": 8.821487426757812e-06,
+    "rel_error": 8.614648161471103e-05
+  },
+  "note": "projected path rounds each dot and FP32 accumulation; ideal path accumulates Python double values"
+}

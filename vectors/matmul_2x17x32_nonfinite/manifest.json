@@ -1,0 +1,9 @@
+{
+  "kind": "matmul_dataset",
+  "m": 2,
+  "n": 17,
+  "k": 32,
+  "k_blocks": 1,
+  "inject_nonfinite": true,
+  "layout": "a rows are row-major by row,k_block; b rows are col-major by col,k_block; expected_y is row-major"
+}

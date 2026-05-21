@@ -1,41 +1,115 @@
-# MXFP8 NPU Contest Project
+# MXFP8 32x16 Frontend RTL Baseline
 
-这个仓库用于完成“**大语言模型块浮点计算阵列的设计与实现**”赛题，目标是交付一套可综合的纯 Verilog RTL、完整验证链路、综合/PPA 脚本骨架，以及中文技术文档。
+This workspace is in a frontend-only RTL phase for the MXFP8 32x16 compute-array
+contest task.
 
-当前主线：
+Current scope:
 
-- 设计一个 `32x16` 的 `MXFP8` 计算阵列
-- 输入 `A/B` 为 `MXFP8`，输出累加为 `FP32`
-- 代码语言保持纯 Verilog，当前 `llmt_col` 为三级流水，且 Stage-1 只寄存 `4x8` partial sums
-- 默认 Verilog 回归已覆盖 `4x16x64`、`5x20x96` 尾 tile、`8x32x128`、`9x65x192` 四组有限值矩阵数据集，以及 `3x18x64`、`6x33x160`、`7x49x224` 三组 mixed finite / `inf` / `NaN` 矩阵数据集；其中 `7x49x224` 采用 sparse mixed-nonfinite 注入，覆盖四列 tile、单 lane 尾 tile、`K=224` 与 scale-NaN
-- `4096x4096x4096` 抽样统计已支持 baseline `[-8,8]`、`finite_exp32` `[-32,32]`、`finite_exp64` `[-64,64]` 和 `sparse_nonfinite` 四档 profile；当前 `reports/precision/matmul_stats_4096x4096x4096_sparse_nonfinite_sweep.json` 记录三 seed 合计 `6037` 个 finite、`107` 个 matched `NaN`、`0` 个 nonfinite mismatch
-- 第一轮正式包只面向比赛提交与后端 RTL handoff；教学资料继续保留在仓库源树中，但不进入 `dist/mxfp8_npu_submission_20260506/`。
+- write clean synthesizable Verilog RTL
+- run deterministic simulations with Icarus Verilog
+- keep a lightweight Python reference and dataset generator
+- keep acceptance reports for each completed frontend batch
+- do not run synthesis, PPA, netlist, SDC, packaging, or old report flows
 
-快速入口：
+Top module:
 
-- 工程总览：[MAIN.md](/D:/github/-/MAIN.md)
-- 当前状态：[STATUS.md](/D:/github/-/STATUS.md)
-- 一键提交验收脚本：[sim/run_submission_regression.ps1](/D:/github/-/sim/run_submission_regression.ps1)
-- 官方打包脚本：[tools/package_submission.py](/D:/github/-/tools/package_submission.py)
-- 正式提交候选包：[dist/mxfp8_npu_submission_20260506](/D:/github/-/dist/mxfp8_npu_submission_20260506)
-- 最终提交报告：[docs/report/submission_report.md](/D:/github/-/docs/report/submission_report.md)
-- 后端接收清单：[docs/report/12_backend_handoff_checklist.md](/D:/github/-/docs/report/12_backend_handoff_checklist.md)
-- 后端 RTL filelist：[synth/rtl_filelist.f](/D:/github/-/synth/rtl_filelist.f)
-- 最终证据索引：[reports/evidence/final_evidence_index_2026-05-06.md](/D:/github/-/reports/evidence/final_evidence_index_2026-05-06.md)
-- 总技术方案与执行计划：[docs/report/10_technical_solution_and_execution_plan.md](/D:/github/-/docs/report/10_technical_solution_and_execution_plan.md)
-- 前端到后端移交与打包：[docs/report/11_frontend_handoff_and_packaging.md](docs/report/11_frontend_handoff_and_packaging.md)
-- 综合环境检查：[docs/usage/02_synthesis_environment_check.md](/D:/github/-/docs/usage/02_synthesis_environment_check.md)
-- 波形证据状态：[reports/evidence/waveform_capture_status.md](reports/evidence/waveform_capture_status.md)
-- 综合环境结果：[reports/synthesis/environment_check_2026-05-06.md](/D:/github/-/reports/synthesis/environment_check_2026-05-06.md)
-- 最终提交 manifest：[docs/admin/final_submission_manifest.md](/D:/github/-/docs/admin/final_submission_manifest.md)
-- 比赛要求映射：[docs/report/00_requirements_traceability.md](/D:/github/-/docs/report/00_requirements_traceability.md)
-- 提交版报告目录：[docs/report/README.md](/D:/github/-/docs/report/README.md)
-- Verilog 回归脚本：[sim/run_iverilog.ps1](/D:/github/-/sim/run_iverilog.ps1)
-- Python 参考模型脚本：[sim/run_python_ref.ps1](/D:/github/-/sim/run_python_ref.ps1)
-- 波形烟雾脚本：[sim/run_waveform_smoke.ps1](/D:/github/-/sim/run_waveform_smoke.ps1)
-- 波形截图脚本：[sim/render_waveform_screenshots.ps1](/D:/github/-/sim/render_waveform_screenshots.ps1)
-- `4096x4096` 抽样统计脚本：[sim/run_matmul_stats.ps1](/D:/github/-/sim/run_matmul_stats.ps1)
-- `4096x4096` 多 seed sweep 脚本：[sim/run_matmul_stats_sweep.ps1](/D:/github/-/sim/run_matmul_stats_sweep.ps1)
-- `4096x4096` profile sweep 脚本：[sim/run_matmul_stats_profiles.ps1](/D:/github/-/sim/run_matmul_stats_profiles.ps1)
-- 报告与证据目录：[reports/README.md](/D:/github/-/reports/README.md)
-- 使用说明：[docs/usage/README.md](/D:/github/-/docs/usage/README.md)
+- `rtl/mx_array_32x16.v`
+
+## What Is Implemented
+
+- `rtl/llmt_col.v`: one MXFP8 dot32 column with FP32 accumulation.
+- `rtl/mx_array_32x16.v`: 16-column array; A block broadcast, B block per column.
+- `rtl/fixed_to_fp32.v`: fixed-point dot result to FP32 with gradual underflow and RNE.
+- `rtl/fp32_add_rne.v`: FP32 add helper for the accumulator path.
+- `tools/mx_ref.py`: Python reference, dataset generation, and sampled 4096 stats.
+
+## Current Usability Status
+
+As of the latest frontend acceptance pass, the code is usable for RTL simulation
+and frontend verification. It is not yet a synthesis handoff package.
+
+Passing gates:
+
+- Python reference self-test.
+- Icarus build/run for 10 Verilog testbenches.
+- VCD smoke generation for LLMT and array basics.
+- Sampled `4096x4096x4096` precision statistics.
+- Multi-seed sampled `4096x4096x4096` precision evidence.
+
+Known limits:
+
+- No synthesis, SDC, netlist, timing, area, or power report in this phase.
+- `4096x4096x4096` is sampled precision statistics, not a full output dump.
+- More seeds and broader precision sweeps are still recommended before backend work.
+
+## Run The Frontend Checks
+
+Recommended one-shot entry:
+
+```powershell
+.\sim\run_frontend_regression.ps1
+```
+
+This wrapper runs the current frontend acceptance chain in order: Python
+self-test, directed RTL regression, waveform smoke, and sampled matmul stats.
+
+```powershell
+python .\tools\mx_ref.py --selftest
+.\sim\run_iverilog.ps1
+.\sim\run_waveform_smoke.ps1
+.\sim\run_matmul_stats.ps1
+```
+
+Useful generated artifacts:
+
+- `build/tb_llmt_col_basic.vcd`
+- `build/tb_mx_array_basic.vcd`
+- `reports/matmul_stats_4096x4096x4096_sampled.json`
+
+Optional multi-seed precision evidence:
+
+```powershell
+.\sim\run_matmul_stats_multiseed.ps1
+```
+
+The default multi-seed run uses three seeds with 256 sampled row/column points
+per seed and writes `reports/matmul_stats_4096x4096x4096_multiseed.json`.
+It checks default frontend guardrails of `mean_rel_error <= 1.0e-5` and
+`max_rel_error <= 1.0e-3`. Override with `-Seeds`, `-Samples`, `-M`, `-N`,
+`-K`, `-Out`, `-MeanRelErrorLimit`, `-MaxRelErrorLimit`, or
+`-NoThresholdCheck` when needed.
+
+Optional precision-profile sweep:
+
+```powershell
+.\sim\run_matmul_precision_profiles.ps1
+```
+
+The default profile run evaluates `baseline`, `narrow-scale`, and `wide-scale`
+over the same three-seed sampled `4096x4096x4096` shape and writes:
+
+- `reports/matmul_stats_4096x4096x4096_profiles.json`
+- `reports/matmul_stats_4096x4096x4096_baseline_multiseed.json`
+- `reports/matmul_stats_4096x4096x4096_narrow-scale_multiseed.json`
+- `reports/matmul_stats_4096x4096x4096_wide-scale_multiseed.json`
+
+`baseline` preserves the existing finite sampled distribution. `narrow-scale`
+uses E8M0 scales from `2^-1` through `2^1`. `wide-scale` uses the same finite
+E4M3 element set with a wider E8M0 scale profile from `2^-6` through `2^6`.
+Use `-Profiles`, `-Seeds`, `-Samples`, `-M`, `-N`, `-K`, `-Out`,
+`-MeanRelErrorLimit`, `-MaxRelErrorLimit`, or `-NoThresholdCheck` to change the
+run.
+
+Use the individual commands when you only need one part of the frontend flow.
+
+## Dataset Regeneration
+
+The checked-in generated datasets can be regenerated with:
+
+```powershell
+python .\tools\mx_ref.py --emit-matmul-dataset --out-dir .\vectors\matmul_3x20x64_smoke --m 3 --n 20 --k-blocks 2
+python .\tools\mx_ref.py --emit-matmul-dataset --out-dir .\vectors\matmul_2x17x32_nonfinite --m 2 --n 17 --k-blocks 1 --inject-nonfinite
+python .\tools\mx_ref.py --emit-matmul-dataset --out-dir .\vectors\matmul_4x33x96_random --m 4 --n 33 --k-blocks 3 --random --seed 20260508
+```
+
+Acceptance reports are under `reports/acceptance_*.md`.

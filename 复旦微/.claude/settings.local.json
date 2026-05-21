@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(command -v python3)",
+      "Bash(command -v python)",
+      "Bash(command -v yosys)",
+      "Bash(command -v iverilog)",
+      "Bash(command -v verilator)",
+      "Bash(make -C sim all)",
+      "Bash(iverilog -g2012 -s tb_llmt32_dot -o build/tb_llmt32_dot.vvp rtl/mxfp8_pkg.sv rtl/llmt32_dot.sv tb/tb_llmt32_dot.sv)",
+      "Bash(vvp build/tb_llmt32_dot.vvp)",
+      "Bash(iverilog -g2012 -s tb_mxfp8_array_top -o build/tb_mxfp8_array_top.vvp rtl/mxfp8_pkg.sv rtl/llmt32_dot.sv rtl/llmt_array16.sv rtl/mxfp8_array_top.sv tb/tb_mxfp8_array_top.sv)",
+      "Bash(vvp build/tb_mxfp8_array_top.vvp)"
+    ]
+  }
+}

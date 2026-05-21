@@ -10,254 +10,146 @@ module fp32_add_rne (
   output [31:0] sum_o;
 
   reg [31:0] sum_o;
-  integer i;
-  integer exp_a;
-  integer exp_b;
-  integer exp_big;
-  integer exp_small;
-  integer exp_res;
-  integer diff_exp;
-  integer lead_idx;
-  integer sub_shift_amt;
+  reg [31:0] sum_pre_o;
   reg sign_a;
   reg sign_b;
-  reg sign_big;
-  reg sign_small;
-  reg [7:0] exp_field_a;
-  reg [7:0] exp_field_b;
-  reg [23:0] mant_a;
-  reg [23:0] mant_b;
-  reg [23:0] mant_big_raw;
-  reg [23:0] mant_small_raw;
-  reg [26:0] mant_big_ext;
-  reg [26:0] mant_small_ext;
-  reg [26:0] mant_small_aligned;
-  reg [27:0] mant_sum;
-  reg [27:0] mant_norm;
-  reg [23:0] mant_main;
-  reg guard_bit;
-  reg round_bit;
-  reg sticky_bit;
-  reg round_up;
-  reg [24:0] mant_rounded;
-  reg [24:0] sub_sig_work;
-  reg [24:0] sub_sig_rounded;
-  reg sub_guard_bit;
-  reg sub_sticky_bit;
-  reg sub_round_up;
-  reg [7:0] exp_field_out;
-  reg a_is_zero;
-  reg b_is_zero;
-  reg a_is_nan;
-  reg b_is_nan;
-  reg a_is_inf;
-  reg b_is_inf;
+  reg [7:0] exp_a_f;
+  reg [7:0] exp_b_f;
+  reg [22:0] frac_a;
+  reg [22:0] frac_b;
+  reg [27:0] sig_a;
+  reg [27:0] sig_b;
+  reg signed [30:0] signed_a;
+  reg signed [30:0] signed_b;
+  reg signed [31:0] signed_sum;
+  reg signed [`MX_DOT_W-1:0] sum_value;
+  reg signed [`MX_DOT_EXP_W-1:0] sum_exp_shift;
+  reg [7:0] exp_field_s;
+  integer exp_a;
+  integer exp_b;
+  integer exp_s;
+  integer shift_a;
+  integer shift_b;
+  reg use_cast;
+  wire [31:0] sum_cast_o;
 
-  function [26:0] shr_sticky_27;
-    input [26:0] value;
-    input integer shift_amt;
-    reg [26:0] shifted;
-    reg sticky;
-    integer j;
+  function fp32_is_nan;
+    input [31:0] x;
     begin
-      if (shift_amt <= 0) begin
-        shifted = value;
-      end else if (shift_amt >= 27) begin
-        shifted = 27'd0;
-        shifted[0] = |value;
-      end else begin
-        shifted = value >> shift_amt;
-        sticky = 1'b0;
-        for (j = 0; j < shift_amt; j = j + 1) begin
-          sticky = sticky | value[j];
-        end
-        shifted[0] = shifted[0] | sticky;
-      end
-      shr_sticky_27 = shifted;
+      fp32_is_nan = (x[30:23] == 8'hff) && (x[22:0] != 23'd0);
     end
   endfunction
 
+  function fp32_is_inf;
+    input [31:0] x;
+    begin
+      fp32_is_inf = (x[30:23] == 8'hff) && (x[22:0] == 23'd0);
+    end
+  endfunction
+
+  function fp32_is_zero;
+    input [31:0] x;
+    begin
+      fp32_is_zero = (x[30:0] == 31'd0);
+    end
+  endfunction
+
+  function [27:0] shr_sticky;
+    input [27:0] value;
+    input integer shift;
+    integer j;
+    reg sticky;
+    begin
+      if (shift <= 0) begin
+        shr_sticky = value;
+      end else if (shift >= 28) begin
+        shr_sticky = {27'd0, |value};
+      end else begin
+        sticky = 1'b0;
+        for (j = 0; j < shift; j = j + 1) begin
+          sticky = sticky | value[j];
+        end
+        shr_sticky = (value >> shift);
+        shr_sticky[0] = shr_sticky[0] | sticky;
+      end
+    end
+  endfunction
+
+  fixed_to_fp32 sum_cast_u (
+    .value_i(sum_value),
+    .exp_shift_i(sum_exp_shift),
+    .nan_i(1'b0),
+    .fp32_o(sum_cast_o)
+  );
+
   always @* begin
+    sum_pre_o = `MX_FP32_ZERO;
     sign_a = a_i[31];
     sign_b = b_i[31];
-    exp_field_a = a_i[30:23];
-    exp_field_b = b_i[30:23];
-    if (exp_field_a == 8'd0) begin
-      mant_a = {1'b0, a_i[22:0]};
-    end else begin
-      mant_a = {1'b1, a_i[22:0]};
-    end
-    if (exp_field_b == 8'd0) begin
-      mant_b = {1'b0, b_i[22:0]};
-    end else begin
-      mant_b = {1'b1, b_i[22:0]};
-    end
-    if (exp_field_a == 8'd0) begin
-      exp_a = -126;
-    end else begin
-      exp_a = exp_field_a - 127;
-    end
-    if (exp_field_b == 8'd0) begin
-      exp_b = -126;
-    end else begin
-      exp_b = exp_field_b - 127;
-    end
+    exp_a_f = a_i[30:23];
+    exp_b_f = b_i[30:23];
+    frac_a = a_i[22:0];
+    frac_b = b_i[22:0];
+    sig_a = 28'd0;
+    sig_b = 28'd0;
+    signed_a = 31'sd0;
+    signed_b = 31'sd0;
+    signed_sum = 32'sd0;
+    sum_value = {`MX_DOT_W{1'b0}};
+    sum_exp_shift = {`MX_DOT_EXP_W{1'b0}};
+    exp_field_s = 8'd0;
+    exp_a = 0;
+    exp_b = 0;
+    exp_s = 0;
+    shift_a = 0;
+    shift_b = 0;
+    use_cast = 1'b0;
 
-    a_is_zero = (a_i[30:0] == 31'd0);
-    b_is_zero = (b_i[30:0] == 31'd0);
-    a_is_nan = (exp_field_a == 8'hff) && (a_i[22:0] != 23'd0);
-    b_is_nan = (exp_field_b == 8'hff) && (b_i[22:0] != 23'd0);
-    a_is_inf = (exp_field_a == 8'hff) && (a_i[22:0] == 23'd0);
-    b_is_inf = (exp_field_b == 8'hff) && (b_i[22:0] == 23'd0);
-
-    sum_o = `MX_FP32_ZERO;
-    mant_big_ext = 27'd0;
-    mant_small_ext = 27'd0;
-    mant_small_aligned = 27'd0;
-    mant_sum = 28'd0;
-    mant_norm = 28'd0;
-    mant_main = 24'd0;
-    guard_bit = 1'b0;
-    round_bit = 1'b0;
-    sticky_bit = 1'b0;
-    round_up = 1'b0;
-    mant_rounded = 25'd0;
-    sub_sig_work = 25'd0;
-    sub_sig_rounded = 25'd0;
-    sub_guard_bit = 1'b0;
-    sub_sticky_bit = 1'b0;
-    sub_round_up = 1'b0;
-    exp_field_out = 8'd0;
-    lead_idx = -1;
-
-    if (a_is_nan || b_is_nan) begin
-      sum_o = `MX_FP32_QNAN;
-    end else if (a_is_inf && b_is_inf && (sign_a != sign_b)) begin
-      sum_o = `MX_FP32_QNAN;
-    end else if (a_is_inf) begin
-      sum_o = a_i;
-    end else if (b_is_inf) begin
-      sum_o = b_i;
-    end else if (a_is_zero) begin
-      sum_o = b_i;
-    end else if (b_is_zero) begin
-      sum_o = a_i;
+    if (fp32_is_nan(a_i) || fp32_is_nan(b_i)) begin
+      sum_pre_o = `MX_FP32_QNAN;
+    end else if (fp32_is_inf(a_i) && fp32_is_inf(b_i) && (sign_a != sign_b)) begin
+      sum_pre_o = `MX_FP32_QNAN;
+    end else if (fp32_is_inf(a_i)) begin
+      sum_pre_o = a_i;
+    end else if (fp32_is_inf(b_i)) begin
+      sum_pre_o = b_i;
+    end else if (fp32_is_zero(a_i) && fp32_is_zero(b_i)) begin
+      sum_pre_o = (sign_a && sign_b) ? 32'h80000000 : `MX_FP32_ZERO;
+    end else if (fp32_is_zero(a_i)) begin
+      sum_pre_o = b_i;
+    end else if (fp32_is_zero(b_i)) begin
+      sum_pre_o = a_i;
     end else begin
-      if ((exp_a > exp_b) || ((exp_a == exp_b) && (mant_a >= mant_b))) begin
-        sign_big = sign_a;
-        sign_small = sign_b;
-        exp_big = exp_a;
-        exp_small = exp_b;
-        mant_big_raw = mant_a;
-        mant_small_raw = mant_b;
+      exp_a = (exp_a_f == 8'd0) ? -126 : (exp_a_f - 127);
+      exp_b = (exp_b_f == 8'd0) ? -126 : (exp_b_f - 127);
+      sig_a = {((exp_a_f == 8'd0) ? 1'b0 : 1'b1), frac_a, 4'b0000};
+      sig_b = {((exp_b_f == 8'd0) ? 1'b0 : 1'b1), frac_b, 4'b0000};
+
+      if (exp_a >= exp_b) begin
+        exp_s = exp_a;
+        shift_b = exp_a - exp_b;
+        sig_b = shr_sticky(sig_b, shift_b);
       end else begin
-        sign_big = sign_b;
-        sign_small = sign_a;
-        exp_big = exp_b;
-        exp_small = exp_a;
-        mant_big_raw = mant_b;
-        mant_small_raw = mant_a;
+        exp_s = exp_b;
+        shift_a = exp_b - exp_a;
+        sig_a = shr_sticky(sig_a, shift_a);
       end
 
-      diff_exp = exp_big - exp_small;
-      mant_big_ext = {mant_big_raw, 3'b000};
-      mant_small_ext = {mant_small_raw, 3'b000};
-      mant_small_aligned = shr_sticky_27(mant_small_ext, diff_exp);
-      exp_res = exp_big;
+      signed_a = sign_a ? -$signed({3'b000, sig_a}) : $signed({3'b000, sig_a});
+      signed_b = sign_b ? -$signed({3'b000, sig_b}) : $signed({3'b000, sig_b});
+      signed_sum = signed_a + signed_b;
 
-      if (sign_big == sign_small) begin
-        mant_sum = {1'b0, mant_big_ext} + {1'b0, mant_small_aligned};
-        if (mant_sum[27]) begin
-          mant_norm = mant_sum >> 1;
-          mant_norm[0] = mant_norm[0] | mant_sum[0];
-          exp_res = exp_res + 1;
-        end else begin
-          mant_norm = mant_sum;
-        end
+      if (signed_sum == 32'sd0) begin
+        sum_pre_o = `MX_FP32_ZERO;
       end else begin
-        mant_sum = {1'b0, mant_big_ext} - {1'b0, mant_small_aligned};
-        if (mant_sum == 28'd0) begin
-          sum_o = `MX_FP32_ZERO;
-        end else begin
-          for (i = 27; i >= 0; i = i - 1) begin
-            if ((lead_idx == -1) && mant_sum[i]) begin
-              lead_idx = i;
-            end
-          end
-          if (lead_idx > 26) begin
-            mant_norm = mant_sum >> (lead_idx - 26);
-            exp_res = exp_res + (lead_idx - 26);
-          end else begin
-            mant_norm = mant_sum << (26 - lead_idx);
-            exp_res = exp_res - (26 - lead_idx);
-          end
-        end
-      end
-
-      if ((mant_sum != 28'd0) || (sign_big == sign_small)) begin
-        if (exp_res > 127) begin
-          sum_o = {sign_big, 8'hff, 23'd0};
-        end else if (exp_res <= -126) begin
-          sub_shift_amt = -123 - exp_res;
-          if (sub_shift_amt <= 0) begin
-            sub_sig_rounded = mant_norm << (-sub_shift_amt);
-          end else if (sub_shift_amt > 28) begin
-            sub_sig_work = 25'd0;
-            sub_guard_bit = 1'b0;
-            sub_sticky_bit = 1'b0;
-            for (i = 0; i < 28; i = i + 1) begin
-              sub_sticky_bit = sub_sticky_bit | mant_norm[i];
-            end
-            sub_round_up = sub_guard_bit & (sub_sticky_bit | sub_sig_work[0]);
-            sub_sig_rounded = sub_sig_work + sub_round_up;
-          end else if (sub_shift_amt == 28) begin
-            sub_sig_work = 25'd0;
-            sub_guard_bit = mant_norm[27];
-            sub_sticky_bit = 1'b0;
-            for (i = 0; i < 27; i = i + 1) begin
-              sub_sticky_bit = sub_sticky_bit | mant_norm[i];
-            end
-            sub_round_up = sub_guard_bit & (sub_sticky_bit | sub_sig_work[0]);
-            sub_sig_rounded = sub_sig_work + sub_round_up;
-          end else begin
-            sub_sig_work = mant_norm >> sub_shift_amt;
-            sub_guard_bit = mant_norm[sub_shift_amt - 1];
-            sub_sticky_bit = 1'b0;
-            for (i = 0; i < sub_shift_amt - 1; i = i + 1) begin
-              sub_sticky_bit = sub_sticky_bit | mant_norm[i];
-            end
-            sub_round_up = sub_guard_bit & (sub_sticky_bit | sub_sig_work[0]);
-            sub_sig_rounded = sub_sig_work + sub_round_up;
-          end
-
-          if (sub_sig_rounded[24]) begin
-            sum_o = {sign_big, 8'd2, 23'd0};
-          end else if (sub_sig_rounded[23]) begin
-            sum_o = {sign_big, 8'd1, sub_sig_rounded[22:0]};
-          end else begin
-            sum_o = {sign_big, 8'd0, sub_sig_rounded[22:0]};
-          end
-        end else begin
-          mant_main = mant_norm[26:3];
-          guard_bit = mant_norm[2];
-          round_bit = mant_norm[1];
-          sticky_bit = mant_norm[0];
-          round_up = guard_bit & (round_bit | sticky_bit | mant_main[0]);
-          mant_rounded = {1'b0, mant_main} + round_up;
-
-          if (mant_rounded[24]) begin
-            mant_rounded = mant_rounded >> 1;
-            exp_res = exp_res + 1;
-          end
-
-          if (exp_res > 127) begin
-            sum_o = {sign_big, 8'hff, 23'd0};
-          end else begin
-            exp_field_out = exp_res + 127;
-            sum_o = {sign_big, exp_field_out, mant_rounded[22:0]};
-          end
-        end
+        sum_value = {{(`MX_DOT_W-32){signed_sum[31]}}, signed_sum};
+        sum_exp_shift = exp_s - 27;
+        use_cast = 1'b1;
       end
     end
+  end
+
+  always @* begin
+    sum_o = use_cast ? sum_cast_o : sum_pre_o;
   end
 endmodule

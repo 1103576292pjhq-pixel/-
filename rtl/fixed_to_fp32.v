@@ -1,141 +1,128 @@
 `include "mx_defs.vh"
 
-module fixed_to_fp32 #(
-  parameter IN_W = `MX_DOT_W,
-  parameter EXP_W = `MX_DOT_EXP_W
-) (
+module fixed_to_fp32 (
   value_i,
   exp_shift_i,
   nan_i,
   fp32_o
 );
-  input signed [IN_W-1:0] value_i;
-  input signed [EXP_W-1:0] exp_shift_i;
+  parameter WIDE_W = 512;
+
+  input signed [`MX_DOT_W-1:0] value_i;
+  input signed [`MX_DOT_EXP_W-1:0] exp_shift_i;
   input nan_i;
   output [31:0] fp32_o;
 
   reg [31:0] fp32_o;
+  reg sign;
+  reg [`MX_DOT_W-1:0] abs_value;
+  reg [WIDE_W-1:0] wide_abs;
+  reg [WIDE_W-1:0] wide_scaled;
+  reg [WIDE_W-1:0] wide_rounded;
+  reg [23:0] sig24;
+  reg [22:0] frac;
   integer i;
-  integer msb_idx;
+  integer wide_msb;
+  integer scale_shift;
   integer shift_amt;
-  integer sub_shift_amt;
   integer exp_unbiased;
-  reg sign_bit;
-  reg [IN_W-1:0] abs_value;
-  reg [24:0] sig_rounded;
-  reg [24:0] sig_work;
-  reg [24:0] sub_sig_rounded;
-  reg [24:0] sub_sig_work;
-  reg guard_bit;
-  reg sticky_bit;
-  reg round_up;
-  reg sub_guard_bit;
-  reg sub_sticky_bit;
-  reg sub_round_up;
-  reg [7:0] exp_field_out;
+  integer exp_field;
+
+  function [WIDE_W-1:0] round_shift_right_wide;
+    input [WIDE_W-1:0] value;
+    input integer shift;
+    reg [WIDE_W-1:0] shifted;
+    reg guard_bit;
+    reg sticky_bit;
+    reg round_inc;
+    integer sticky_idx;
+    begin
+      if (shift <= 0) begin
+        round_shift_right_wide = value << (-shift);
+      end else if (shift >= WIDE_W) begin
+        round_shift_right_wide = {WIDE_W{1'b0}};
+      end else begin
+        shifted = value >> shift;
+        guard_bit = value[shift-1];
+        sticky_bit = 1'b0;
+        for (sticky_idx = 0; sticky_idx < shift-1; sticky_idx = sticky_idx + 1) begin
+          sticky_bit = sticky_bit | value[sticky_idx];
+        end
+        round_inc = guard_bit & (sticky_bit | shifted[0]);
+        if (round_inc) begin
+          shifted = shifted + 1'b1;
+        end
+        round_shift_right_wide = shifted;
+      end
+    end
+  endfunction
 
   always @* begin
     fp32_o = `MX_FP32_ZERO;
-    sign_bit = value_i[IN_W-1];
-    if (sign_bit) begin
-      abs_value = -value_i;
-    end else begin
-      abs_value = value_i;
-    end
-    msb_idx = -1;
-    sig_rounded = 25'd0;
-    sig_work = 25'd0;
-    sub_sig_rounded = 25'd0;
-    sub_sig_work = 25'd0;
-    guard_bit = 1'b0;
-    sticky_bit = 1'b0;
-    round_up = 1'b0;
-    sub_guard_bit = 1'b0;
-    sub_sticky_bit = 1'b0;
-    sub_round_up = 1'b0;
-    exp_field_out = 8'd0;
+    sign = 1'b0;
+    abs_value = {`MX_DOT_W{1'b0}};
+    wide_abs = {WIDE_W{1'b0}};
+    wide_scaled = {WIDE_W{1'b0}};
+    wide_rounded = {WIDE_W{1'b0}};
+    sig24 = 24'd0;
+    frac = 23'd0;
+    wide_msb = -1;
+    scale_shift = 0;
+    shift_amt = 0;
+    exp_unbiased = 0;
+    exp_field = 0;
 
     if (nan_i) begin
       fp32_o = `MX_FP32_QNAN;
-    end else if (value_i == {IN_W{1'b0}}) begin
+    end else if (value_i == {`MX_DOT_W{1'b0}}) begin
       fp32_o = `MX_FP32_ZERO;
     end else begin
-      for (i = IN_W - 1; i >= 0; i = i - 1) begin
-        if ((msb_idx == -1) && abs_value[i]) begin
-          msb_idx = i;
-        end
+      sign = value_i[`MX_DOT_W-1];
+      abs_value = sign ? -value_i : value_i;
+      wide_abs[`MX_DOT_W-1:0] = abs_value;
+
+      scale_shift = exp_shift_i + 149;
+      if (scale_shift >= 0) begin
+        wide_scaled = wide_abs << scale_shift;
+      end else begin
+        wide_scaled = round_shift_right_wide(wide_abs, -scale_shift);
       end
 
-      exp_unbiased = exp_shift_i + msb_idx;
-
-      if (exp_unbiased > 127) begin
-        fp32_o = {sign_bit, 8'hff, 23'd0};
-      end else if (exp_unbiased < -126) begin
-        sub_shift_amt = -149 - exp_shift_i;
-        if (sub_shift_amt <= 0) begin
-          sub_sig_rounded = abs_value << (-sub_shift_amt);
-        end else if (sub_shift_amt > IN_W) begin
-          sub_sig_work = 25'd0;
-          sub_guard_bit = 1'b0;
-          sub_sticky_bit = 1'b0;
-          for (i = 0; i < IN_W; i = i + 1) begin
-            sub_sticky_bit = sub_sticky_bit | abs_value[i];
-          end
-          sub_round_up = sub_guard_bit & (sub_sticky_bit | sub_sig_work[0]);
-          sub_sig_rounded = sub_sig_work + sub_round_up;
-        end else if (sub_shift_amt == IN_W) begin
-          sub_sig_work = 25'd0;
-          sub_guard_bit = abs_value[IN_W-1];
-          sub_sticky_bit = 1'b0;
-          for (i = 0; i < IN_W - 1; i = i + 1) begin
-            sub_sticky_bit = sub_sticky_bit | abs_value[i];
-          end
-          sub_round_up = sub_guard_bit & (sub_sticky_bit | sub_sig_work[0]);
-          sub_sig_rounded = sub_sig_work + sub_round_up;
-        end else begin
-          sub_sig_work = abs_value >> sub_shift_amt;
-          sub_guard_bit = abs_value[sub_shift_amt - 1];
-          sub_sticky_bit = 1'b0;
-          for (i = 0; i < sub_shift_amt - 1; i = i + 1) begin
-            sub_sticky_bit = sub_sticky_bit | abs_value[i];
-          end
-          sub_round_up = sub_guard_bit & (sub_sticky_bit | sub_sig_work[0]);
-          sub_sig_rounded = sub_sig_work + sub_round_up;
-        end
-
-        if (sub_sig_rounded[24]) begin
-          fp32_o = {sign_bit, 8'd2, 23'd0};
-        end else if (sub_sig_rounded[23]) begin
-          fp32_o = {sign_bit, 8'd1, sub_sig_rounded[22:0]};
-        end else begin
-          fp32_o = {sign_bit, 8'd0, sub_sig_rounded[22:0]};
-        end
+      if (wide_scaled == {WIDE_W{1'b0}}) begin
+        fp32_o = {sign, 31'd0};
       end else begin
-        if (msb_idx > 23) begin
-          shift_amt = msb_idx - 23;
-          sig_work = abs_value >> shift_amt;
-          guard_bit = abs_value[shift_amt - 1];
-          sticky_bit = 1'b0;
-          for (i = 0; i < shift_amt - 1; i = i + 1) begin
-            sticky_bit = sticky_bit | abs_value[i];
+        for (i = 0; i < WIDE_W; i = i + 1) begin
+          if (wide_scaled[i]) begin
+            wide_msb = i;
           end
-          round_up = guard_bit & (sticky_bit | sig_work[0]);
-          sig_rounded = sig_work + round_up;
-        end else begin
-          shift_amt = 23 - msb_idx;
-          sig_rounded = abs_value << shift_amt;
         end
 
-        if (sig_rounded[24]) begin
-          sig_rounded = sig_rounded >> 1;
-          exp_unbiased = exp_unbiased + 1;
-        end
-
-        if (exp_unbiased > 127) begin
-          fp32_o = {sign_bit, 8'hff, 23'd0};
+        if (wide_msb > 276) begin
+          fp32_o = sign ? `MX_FP32_NINF : `MX_FP32_PINF;
+        end else if (wide_msb < 23) begin
+          frac = wide_scaled[22:0];
+          fp32_o = {sign, 8'd0, frac};
         end else begin
-          exp_field_out = exp_unbiased + 127;
-          fp32_o = {sign_bit, exp_field_out, sig_rounded[22:0]};
+          exp_unbiased = wide_msb - 149;
+          if (exp_unbiased > 127) begin
+            fp32_o = sign ? `MX_FP32_NINF : `MX_FP32_PINF;
+          end else begin
+            shift_amt = wide_msb - 23;
+            exp_field = exp_unbiased + 127;
+            wide_rounded = round_shift_right_wide(wide_scaled, shift_amt);
+            if (wide_rounded[24]) begin
+              sig24 = wide_rounded[24:1];
+              exp_field = exp_field + 1;
+            end else begin
+              sig24 = wide_rounded[23:0];
+            end
+
+            if (exp_field >= 255) begin
+              fp32_o = sign ? `MX_FP32_NINF : `MX_FP32_PINF;
+            end else begin
+              fp32_o = {sign, exp_field[7:0], sig24[22:0]};
+            end
+          end
         end
       end
     end

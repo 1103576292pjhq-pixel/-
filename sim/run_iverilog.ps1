@@ -1,57 +1,55 @@
 $ErrorActionPreference = "Stop"
+Set-StrictMode -Version 2.0
 
-$workdir = Split-Path -Parent $PSScriptRoot
-$buildDir = Join-Path $workdir "sim"
-$rtlIncludeDir = Join-Path $workdir "rtl"
-$tbIncludeDir = Join-Path $workdir "tb"
-$rtlFiles = @(
-  (Join-Path $workdir "rtl\\e4m3_decode.v"),
-  (Join-Path $workdir "rtl\\e8m0_scale_decode.v"),
-  (Join-Path $workdir "rtl\\fixed_to_fp32.v"),
-  (Join-Path $workdir "rtl\\fp32_add_rne.v"),
-  (Join-Path $workdir "rtl\\llmt_col.v"),
-  (Join-Path $workdir "rtl\\mx_array_32x16.v")
+$Root = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+$BuildDir = Join-Path $Root "build"
+New-Item -ItemType Directory -Force -Path $BuildDir | Out-Null
+
+$Rtl = @(
+  "rtl/fixed_to_fp32.v",
+  "rtl/fp32_add_rne.v",
+  "rtl/llmt_col.v",
+  "rtl/mx_array_32x16.v"
 )
 
-function Invoke-IverilogTest {
-  param(
-    [Parameter(Mandatory = $true)][string]$Name,
-    [Parameter(Mandatory = $true)][string]$Testbench,
-    [string[]]$Defines = @()
-  )
+$Tests = @(
+  "tb/tb_fixed_to_fp32_boundary.v",
+  "tb/tb_fp32_add_basic.v",
+  "tb/tb_fp32_add_subnormal.v",
+  "tb/tb_llmt_col_basic.v",
+  "tb/tb_llmt_col_boundary.v",
+  "tb/tb_mx_array_basic.v",
+  "tb/tb_mx_array_col_independence.v",
+  "tb/tb_mx_array_dataset_3x20x64.v",
+  "tb/tb_mx_array_dataset_2x17x32_nonfinite.v",
+  "tb/tb_mx_array_dataset_4x33x96_random.v"
+)
 
-  $outFile = Join-Path $buildDir "$Name.vvp"
-  & iverilog -g2001 -I $rtlIncludeDir -I $tbIncludeDir @Defines -o $outFile @rtlFiles $Testbench
-  & vvp $outFile
+foreach ($test in $Tests) {
+  $name = [System.IO.Path]::GetFileNameWithoutExtension($test)
+  $out = Join-Path $BuildDir "$name.vvp"
+  $args = @(
+    "-g2012",
+    "-I", (Join-Path $Root "rtl"),
+    "-I", (Join-Path $Root "tb"),
+    "-o", $out
+  )
+  foreach ($file in $Rtl) {
+    $args += (Join-Path $Root $file)
+  }
+  $args += (Join-Path $Root $test)
+
+  Write-Host "BUILD $name"
+  & iverilog @args
+  if ($LASTEXITCODE -ne 0) {
+    throw "iverilog failed for $name"
+  }
+
+  Write-Host "RUN   $name"
+  & vvp $out
+  if ($LASTEXITCODE -ne 0) {
+    throw "vvp failed for $name"
+  }
 }
 
-Invoke-IverilogTest -Name "tb_llmt_col_smoke" -Testbench (Join-Path $workdir "tb\\tb_llmt_col_smoke.v")
-Invoke-IverilogTest -Name "tb_llmt_col_back_to_back" -Testbench (Join-Path $workdir "tb\\tb_llmt_col_back_to_back.v")
-Invoke-IverilogTest -Name "tb_llmt_col_corner" -Testbench (Join-Path $workdir "tb\\tb_llmt_col_corner.v")
-Invoke-IverilogTest -Name "tb_mx_array_smoke" -Testbench (Join-Path $workdir "tb\\tb_mx_array_smoke.v")
-Invoke-IverilogTest `
-  -Name "tb_mx_array_dataset" `
-  -Testbench (Join-Path $workdir "tb\\tb_mx_array_dataset.v") `
-  -Defines @(
-    "-DTB_M=4",
-    "-DTB_N=16",
-    "-DTB_K_BLOCKS=2"
-  )
-Invoke-IverilogTest `
-  -Name "tb_mx_array_dataset_3x18x64_nonfinite" `
-  -Testbench (Join-Path $workdir "tb\\tb_mx_array_dataset_3x18x64_nonfinite.v")
-Invoke-IverilogTest `
-  -Name "tb_mx_array_dataset_6x33x160_nonfinite" `
-  -Testbench (Join-Path $workdir "tb\\tb_mx_array_dataset_6x33x160_nonfinite.v")
-Invoke-IverilogTest `
-  -Name "tb_mx_array_dataset_7x49x224_sparse_nonfinite" `
-  -Testbench (Join-Path $workdir "tb\\tb_mx_array_dataset_7x49x224_sparse_nonfinite.v")
-Invoke-IverilogTest `
-  -Name "tb_mx_array_dataset_8x32x128" `
-  -Testbench (Join-Path $workdir "tb\\tb_mx_array_dataset_8x32x128.v")
-Invoke-IverilogTest `
-  -Name "tb_mx_array_dataset_9x65x192" `
-  -Testbench (Join-Path $workdir "tb\\tb_mx_array_dataset_9x65x192.v")
-Invoke-IverilogTest `
-  -Name "tb_mx_array_dataset_5x20x96" `
-  -Testbench (Join-Path $workdir "tb\\tb_mx_array_dataset_5x20x96.v")
+Write-Host "PASS run_iverilog"

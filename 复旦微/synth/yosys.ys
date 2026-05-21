@@ -1,0 +1,20 @@
+read_verilog -sv ../rtl/mxfp8_pkg.sv
+read_verilog -sv ../rtl/fp8_e4m3_decode.sv
+read_verilog -sv ../rtl/fp8_e8m0_decode.sv
+read_verilog -sv ../rtl/mxfp8_mul.sv
+read_verilog -sv ../rtl/fp32_mulprod_to_fp32.sv
+read_verilog -sv ../rtl/fp32_add_rne.sv
+read_verilog -sv ../rtl/llmt32_dot.sv
+read_verilog -sv ../rtl/llmt_array16.sv
+read_verilog -sv ../rtl/mxfp8_array_top.sv
+hierarchy -check -top mxfp8_array_top
+proc
+opt
+fsm
+opt
+memory
+opt
+techmap
+opt
+stat
+write_verilog ../build/mxfp8_array_top_generic_netlist.v

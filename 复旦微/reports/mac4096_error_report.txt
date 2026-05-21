@@ -1,0 +1,43 @@
+MXFP8 4096-point MAC relative error report
+cases=32
+terms_per_case=4096
+base_seed=100
+max_relative_error=2.280316845e-05
+mean_relative_error=2.382290779e-06
+rms_relative_error=5.088891755e-06
+max_absolute_error=1.351562500e+00
+worst_case=12 worst_seed=112 reference_seq_fp32=476786d2 array_order_fp32=47678578
+
+Per-case details:
+case=0 seed=100 seq=4a27815c array=4a27815c abs_err=0.000000000e+00 rel_err=0.000000000e+00
+case=1 seed=101 seq=cafd7b54 array=cafd7b4d abs_err=3.500000000e+00 rel_err=4.213775675e-07
+case=2 seed=102 seq=c952a074 array=c952a07c abs_err=5.000000000e-01 rel_err=5.795574441e-07
+case=3 seed=103 seq=4a5d6e60 array=4a5d6e63 abs_err=7.500000000e-01 rel_err=2.067295713e-07
+case=4 seed=104 seq=4ad26e01 array=4ad26e0f abs_err=7.000000000e+00 rel_err=1.015175349e-06
+case=5 seed=105 seq=c9c00a28 array=c9c00a2c abs_err=5.000000000e-01 rel_err=3.178257666e-07
+case=6 seed=106 seq=4a18b9b6 array=4a18b9bf abs_err=2.250000000e+00 rel_err=8.991894706e-07
+case=7 seed=107 seq=4a68dea9 array=4a68deb6 abs_err=3.250000000e+00 rel_err=8.518248677e-07
+case=8 seed=108 seq=c8dcb870 array=c8dcb807 abs_err=3.281250000e+00 rel_err=7.258832547e-06
+case=9 seed=109 seq=cb6fb014 array=cb6fb01e abs_err=1.000000000e+01 rel_err=6.366109887e-07
+case=10 seed=110 seq=ca1fb1c4 array=ca1fb1b8 abs_err=3.000000000e+00 rel_err=1.146599206e-06
+case=11 seed=111 seq=c9e584be array=c9e584c2 abs_err=5.000000000e-01 rel_err=2.659269289e-07
+case=12 seed=112 seq=476786d2 array=47678578 abs_err=1.351562500e+00 rel_err=2.280316845e-05
+case=13 seed=113 seq=4aa800e9 array=4aa800ed abs_err=2.000000000e+00 rel_err=3.632968132e-07
+case=14 seed=114 seq=4a1a1a04 array=4a1a19f5 abs_err=3.750000000e+00 rel_err=1.485265571e-06
+case=15 seed=115 seq=ca139fdd array=ca139fe2 abs_err=1.250000000e+00 rel_err=5.168109827e-07
+case=16 seed=116 seq=ca1bc33c array=ca1bc340 abs_err=1.000000000e+00 rel_err=3.918472266e-07
+case=17 seed=117 seq=c9869de8 array=c9869e22 abs_err=7.250000000e+00 rel_err=6.574288095e-06
+case=18 seed=118 seq=4b84d19f array=4b84d1a1 abs_err=4.000000000e+00 rel_err=2.297684566e-07
+case=19 seed=119 seq=cb33849a array=cb338499 abs_err=1.000000000e+00 rel_err=8.499866977e-08
+case=20 seed=120 seq=c7fa2365 array=c7fa23c8 abs_err=7.734375000e-01 rel_err=6.039140585e-06
+case=21 seed=121 seq=4a0f3d92 array=4a0f3d86 abs_err=3.000000000e+00 rel_err=1.278307861e-06
+case=22 seed=122 seq=c9814b58 array=c9814b46 abs_err=2.250000000e+00 rel_err=2.124286830e-06
+case=23 seed=123 seq=4a947757 array=4a947759 abs_err=1.000000000e+00 rel_err=2.055524020e-07
+case=24 seed=124 seq=c68d1a11 array=c68d1a5b abs_err=1.445312500e-01 rel_err=8.002379951e-06
+case=25 seed=125 seq=cad21f13 array=cad21f18 abs_err=2.500000000e+00 rel_err=3.630946265e-07
+case=26 seed=126 seq=4976a5a2 array=4976a503 abs_err=9.937500000e+00 rel_err=9.836517086e-06
+case=27 seed=127 seq=4a7a20da array=4a7a20de abs_err=1.000000000e+00 rel_err=2.440153705e-07
+case=28 seed=128 seq=ca7fd52a array=ca7fd51d abs_err=3.250000000e+00 rel_err=7.753671811e-07
+case=29 seed=129 seq=4ad0d5d7 array=4ad0d5d2 abs_err=2.500000000e+00 rel_err=3.653306743e-07
+case=30 seed=130 seq=ca10d123 array=ca10d11c abs_err=1.750000000e+00 rel_err=7.375623543e-07
+case=31 seed=131 seq=cb0f81bb array=cb0f81b9 abs_err=2.000000000e+00 rel_err=2.126560324e-07

@@ -1,0 +1,158 @@
+{
+    "kind":  "sampled_matmul_stats_multiseed",
+    "generated_by":  "sim/run_matmul_stats_multiseed.ps1",
+    "generated_at_utc":  "2026-05-10T13:43:34Z",
+    "m":  4096,
+    "n":  4096,
+    "k":  4096,
+    "k_blocks":  128,
+    "precision_profile":  "baseline",
+    "seeds":  [
+                  20260508,
+                  20260509,
+                  20260510
+              ],
+    "seed_count":  3,
+    "samples_per_seed":  256,
+    "total_samples":  768,
+    "aggregate":  {
+                      "mean_abs_error":  0.00013348863770564398,
+                      "mean_rel_error":  5.2222516477843733E-07,
+                      "max_abs_error":  0.0011601448059082031,
+                      "max_abs_error_seed":  20260509,
+                      "max_rel_error":  8.6146481614711028E-05,
+                      "max_rel_error_seed":  20260508,
+                      "worst_by_rel_error":  {
+                                                 "seed":  20260508,
+                                                 "detail":  {
+                                                                "row":  3396,
+                                                                "col":  2704,
+                                                                "projected_bits":  "0xbdd1b300",
+                                                                "projected":  -0.10239219665527344,
+                                                                "ideal":  -0.1024010181427002,
+                                                                "abs_error":  8.8214874267578125E-06,
+                                                                "rel_error":  8.6146481614711028E-05
+                                                            }
+                                             }
+                  },
+    "thresholds":  {
+                       "enabled":  true,
+                       "mean_rel_error_limit":  1E-05,
+                       "max_rel_error_limit":  0.001,
+                       "status":  "pass",
+                       "failures":  [
+
+                                    ]
+                   },
+    "per_seed":  [
+                     {
+                         "kind":  "sampled_matmul_stats",
+                         "m":  4096,
+                         "n":  4096,
+                         "k":  4096,
+                         "k_blocks":  128,
+                         "precision_profile":  "baseline",
+                         "profile":  {
+                                         "name":  "baseline",
+                                         "description":  "Existing finite sampled distribution with E8M0 scales 2^-2 through 2^2.",
+                                         "elem_count":  31,
+                                         "scale_codes":  [
+                                                             "0x7d",
+                                                             "0x7e",
+                                                             "0x7f",
+                                                             "0x80",
+                                                             "0x81"
+                                                         ]
+                                     },
+                         "samples":  256,
+                         "seed":  20260508,
+                         "mean_abs_error":  0.00013804063200950623,
+                         "mean_rel_error":  9.3917984666362416E-07,
+                         "max_abs_error":  0.0008134841918945312,
+                         "max_rel_error":  8.6146481614711028E-05,
+                         "worst":  {
+                                       "row":  3396,
+                                       "col":  2704,
+                                       "projected_bits":  "0xbdd1b300",
+                                       "projected":  -0.10239219665527344,
+                                       "ideal":  -0.1024010181427002,
+                                       "abs_error":  8.8214874267578125E-06,
+                                       "rel_error":  8.6146481614711028E-05
+                                   },
+                         "note":  "projected path rounds each dot and FP32 accumulation; ideal path accumulates Python double values"
+                     },
+                     {
+                         "kind":  "sampled_matmul_stats",
+                         "m":  4096,
+                         "n":  4096,
+                         "k":  4096,
+                         "k_blocks":  128,
+                         "precision_profile":  "baseline",
+                         "profile":  {
+                                         "name":  "baseline",
+                                         "description":  "Existing finite sampled distribution with E8M0 scales 2^-2 through 2^2.",
+                                         "elem_count":  31,
+                                         "scale_codes":  [
+                                                             "0x7d",
+                                                             "0x7e",
+                                                             "0x7f",
+                                                             "0x80",
+                                                             "0x81"
+                                                         ]
+                                     },
+                         "samples":  256,
+                         "seed":  20260509,
+                         "mean_abs_error":  0.00014037732034921646,
+                         "mean_rel_error":  3.04313280076109E-07,
+                         "max_abs_error":  0.0011601448059082031,
+                         "max_rel_error":  7.1924961189792741E-06,
+                         "worst":  {
+                                       "row":  2911,
+                                       "col":  1647,
+                                       "projected_bits":  "0xc0367300",
+                                       "projected":  -2.85076904296875,
+                                       "ideal":  -2.8507485389709473,
+                                       "abs_error":  2.0503997802734375E-05,
+                                       "rel_error":  7.1924961189792741E-06
+                                   },
+                         "note":  "projected path rounds each dot and FP32 accumulation; ideal path accumulates Python double values"
+                     },
+                     {
+                         "kind":  "sampled_matmul_stats",
+                         "m":  4096,
+                         "n":  4096,
+                         "k":  4096,
+                         "k_blocks":  128,
+                         "precision_profile":  "baseline",
+                         "profile":  {
+                                         "name":  "baseline",
+                                         "description":  "Existing finite sampled distribution with E8M0 scales 2^-2 through 2^2.",
+                                         "elem_count":  31,
+                                         "scale_codes":  [
+                                                             "0x7d",
+                                                             "0x7e",
+                                                             "0x7f",
+                                                             "0x80",
+                                                             "0x81"
+                                                         ]
+                                     },
+                         "samples":  256,
+                         "seed":  20260510,
+                         "mean_abs_error":  0.00012204796075820923,
+                         "mean_rel_error":  3.2318236759557869E-07,
+                         "max_abs_error":  0.0009584426879882812,
+                         "max_rel_error":  1.1375183114595456E-05,
+                         "worst":  {
+                                       "row":  730,
+                                       "col":  3172,
+                                       "projected_bits":  "0xc0138db0",
+                                       "projected":  -2.305522918701172,
+                                       "ideal":  -2.305549144744873,
+                                       "abs_error":  2.6226043701171875E-05,
+                                       "rel_error":  1.1375183114595456E-05
+                                   },
+                         "note":  "projected path rounds each dot and FP32 accumulation; ideal path accumulates Python double values"
+                     }
+                 ],
+    "note":  "Each seed uses tools/mx_ref.py --report-matmul-stats with sampled row/column points and the requested precision profile; this is diagnostic precision evidence, not an exhaustive matrix dump."
+}
